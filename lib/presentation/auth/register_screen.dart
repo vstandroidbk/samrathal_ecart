@@ -196,6 +196,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     Utils.showErrorMsg("Please select a user type", context);
                     return;
                   }
+
                   Navigator.pushReplacementNamed(
                       context, SubmitUserDetailsScreen.routeName);
                   // if (selectedValue.value == null) {
