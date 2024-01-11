@@ -1,8 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:samrathal_ecart/core/app_colors.dart';
-import 'package:samrathal_ecart/core/app_strings.dart';
 import 'package:samrathal_ecart/core/app_text_styles.dart';
 
 class ProfileLabelWidget extends StatelessWidget {
@@ -26,7 +23,10 @@ class ProfileLabelWidget extends StatelessWidget {
             style:
                 AppTextStyles.bodyBlack14.copyWith(fontWeight: FontWeight.w600),
           ),
-          const Icon(Icons.navigate_next,size: 18,),
+          const Icon(
+            Icons.navigate_next,
+            size: 18,
+          ),
         ],
       ),
     );

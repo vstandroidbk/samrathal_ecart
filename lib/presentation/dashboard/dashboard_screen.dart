@@ -14,7 +14,7 @@ class DashboardScreen extends StatefulWidget {
 
   const DashboardScreen({super.key, required this.selectedTab});
 
-  static const String routeName = "Dashboard Screen";
+  // static const String routeName = "Dashboard Screen";
 
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();

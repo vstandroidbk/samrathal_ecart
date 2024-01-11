@@ -11,7 +11,7 @@ import '../dashboard/dashboard_screen.dart';
 class RegisterCompanyScreen extends StatefulWidget {
   const RegisterCompanyScreen({super.key});
 
-  static const String routeName = "Register Company Screen";
+  // static const String routeName = "Register Company Screen";
 
   @override
   State<RegisterCompanyScreen> createState() => _RegisterCompanyScreenState();
@@ -247,9 +247,14 @@ class _RegisterCompanyScreenState extends State<RegisterCompanyScreen> {
               CustomButton(
                 onPressed: () {
                   removeFocus(context);
-                  Navigator.pushNamedAndRemoveUntil(
-                      context, DashboardScreen.routeName, (route) => false,
-                      arguments: 0);
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          const DashboardScreen(selectedTab: 0),
+                    ),
+                    (route) => false,
+                  );
                 },
                 isGradient: false,
                 child: Text(

@@ -8,7 +8,7 @@ import '../../../../../core/app_strings.dart';
 import '../../../../../widgets/custom_button.dart';
 
 class PaymentSuccessScreen extends StatefulWidget {
-  static const String routeName = "Payment Success Screen";
+  // static const String routeName = "Payment Success Screen";
 
   const PaymentSuccessScreen({super.key});
 
@@ -43,10 +43,11 @@ class _PaymentSuccessScreenState extends State<PaymentSuccessScreen> {
           child: CustomButton(
             backgroundColor: Colors.black,
             onPressed: () {
-              Navigator.pushNamedAndRemoveUntil(
+              Navigator.pushAndRemoveUntil(
                   context,
-                  DashboardScreen.routeName,
-                  arguments: 0,
+                  MaterialPageRoute(
+                    builder: (context) => const DashboardScreen(selectedTab: 0),
+                  ),
                   (route) => false);
             },
             isGradient: false,
@@ -62,8 +63,12 @@ class _PaymentSuccessScreenState extends State<PaymentSuccessScreen> {
 
   bool onBackPressed() {
     // Navigator.pop(context);
-    Navigator.pushNamedAndRemoveUntil(
-        context, DashboardScreen.routeName, arguments: 0, (route) => false);
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const DashboardScreen(selectedTab: 0),
+        ),
+        (route) => false);
     return true;
   }
 }

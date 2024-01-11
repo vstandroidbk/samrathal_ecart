@@ -142,6 +142,9 @@ class AppStrings {
 
   static String introDescTxt =
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nunc augue, tristique quis facilisis eget, lobortis ut augue. Sed nunc augue, tristique quis facilisis eget, lobortis ut augue. Sed nunc augue, tristique quis facilisis eget, lobortis ut augue.";
+
+  static String areYouSureTxt = "Are you sure, do you want to logout?";
+  static String successTxt = "SUCCESS";
 }
 
 final List<Map<String, String>> productList = [

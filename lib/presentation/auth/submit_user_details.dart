@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:samrathal_ecart/core/app_colors.dart';
 import '../../core/app_strings.dart';
 import '../../core/app_text_styles.dart';
@@ -11,7 +12,7 @@ import '../dashboard/dashboard_screen.dart';
 class SubmitUserDetailsScreen extends StatefulWidget {
   const SubmitUserDetailsScreen({super.key});
 
-  static const String routeName = "Register Individual Screen";
+  // static const String routeName = "Register Individual Screen";
 
   @override
   State<SubmitUserDetailsScreen> createState() =>
@@ -46,7 +47,9 @@ class _SubmitUserDetailsScreenState extends State<SubmitUserDetailsScreen> {
         // backgroundColor: Colors.white,
         elevation: 0.0,
         centerTitle: true,
-        title: Text(AppStrings.fillDetailsScreenTitle),
+        title: Text(AppStrings.fillDetailsScreenTitle)
+            .animate()
+            .fadeIn(duration: 500.ms),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -197,16 +200,21 @@ class _SubmitUserDetailsScreenState extends State<SubmitUserDetailsScreen> {
               CustomButton(
                 onPressed: () {
                   removeFocus(context);
-                  Navigator.pushNamedAndRemoveUntil(
-                      context, DashboardScreen.routeName, (route) => false,
-                      arguments: 0);
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          const DashboardScreen(selectedTab: 0),
+                    ),
+                    (route) => false,
+                  );
                 },
                 isGradient: false,
                 child: Text(
                   AppStrings.submitTxt.toUpperCase(),
                   style: AppTextStyles.bodyWhite16,
                 ),
-              )
+              ).animate().fadeIn(duration: 500.ms)
             ],
           ),
         ),

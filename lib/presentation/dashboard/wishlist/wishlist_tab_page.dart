@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:samrathal_ecart/core/app_strings.dart';
 import 'package:samrathal_ecart/core/app_text_styles.dart';
-
 import '../../../core/app_colors.dart';
 import '../shop/product_details_screen.dart';
 
@@ -17,22 +17,27 @@ class _WishlistTabPageState extends State<WishlistTabPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          titleSpacing: 12,
-          title: const Text("Wishlist"),
-        ),
-        body: GridView.builder(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2, // Number of columns in the grid
-              crossAxisSpacing: 30, // Spacing between columns
-              mainAxisSpacing: 8, // Spacing between rows
-              mainAxisExtent: 200),
-          itemCount: productList.length,
-          itemBuilder: (BuildContext context, int index) {
-            return WishlistProductListCard(index: index);
-          },
-        ));
+      appBar: AppBar(
+        titleSpacing: 12,
+        title: const Text("Wishlist")
+            .animate()
+            .fadeIn(duration: 500.ms)
+            .animate()
+            .fadeIn(duration: 500.ms),
+      ),
+      body: GridView.builder(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2, // Number of columns in the grid
+            crossAxisSpacing: 30, // Spacing between columns
+            mainAxisSpacing: 8, // Spacing between rows
+            mainAxisExtent: 200),
+        itemCount: productList.length,
+        itemBuilder: (BuildContext context, int index) {
+          return WishlistProductListCard(index: index);
+        },
+      ).animate().slideY(duration: 500.ms),
+    );
   }
 }
 
@@ -45,7 +50,12 @@ class WishlistProductListCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.pushNamed(context, ProductDetailsScreen.routeName);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const ProductDetailsScreen(),
+          ),
+        );
       },
       child: Stack(
         children: [
@@ -123,7 +133,7 @@ class WishlistProductListCard extends StatelessWidget {
                     color: Colors.black,
                     borderRadius: BorderRadius.all(Radius.circular(16))),
                 padding:
-                const EdgeInsets.only(left: 8, right: 8, top: 3, bottom: 5),
+                    const EdgeInsets.only(left: 8, right: 8, top: 3, bottom: 5),
                 child: Text(
                   "Most Selling",
                   style: AppTextStyles.bodyWhite10,

@@ -5,7 +5,6 @@ import 'package:samrathal_ecart/core/app_strings.dart';
 import 'package:samrathal_ecart/core/app_text_styles.dart';
 import 'package:samrathal_ecart/logic/services/formatter.dart';
 import 'package:samrathal_ecart/utils/utils.dart';
-
 import '../../../../../widgets/custom_button.dart';
 import '../payment_details_screen.dart';
 
@@ -139,8 +138,12 @@ class PaymentListCard extends StatelessWidget {
                     width: 100,
                     height: 35,
                     onPressed: () {
-                      Navigator.pushNamed(
-                          context, PaymentDetailsScreen.routeName);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const PaymentDetailsScreen(),
+                        ),
+                      );
                     },
                     isGradient: false,
                     backgroundColor: AppColors.greenBtnColor,

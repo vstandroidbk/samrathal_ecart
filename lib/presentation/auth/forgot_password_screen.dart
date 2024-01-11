@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:samrathal_ecart/presentation/auth/forgot_pass_otp_verify_screen.dart';
 import 'package:samrathal_ecart/utils/utils.dart';
 import '../../core/app_colors.dart';
@@ -12,7 +13,7 @@ import '../../widgets/label_widget.dart';
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
 
-  static const String routeName = "Forgot Password Screen";
+  // static const String routeName = "Forgot Password Screen";
 
   @override
   State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
@@ -35,7 +36,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           icon: const Icon(Icons.arrow_back),
         ),*/
         centerTitle: true,
-        title: Text(AppStrings.forgotPasswordScreenTitle),
+        title: Text(AppStrings.forgotPasswordScreenTitle)
+            .animate()
+            .fadeIn(duration: 500.ms),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -49,11 +52,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               Text(
                 AppStrings.forgotPasswordTitle,
                 style: AppTextStyles.headingBlack24,
-              ),
+              ).animate().slideX(duration: 500.ms),
               Text(
                 AppStrings.forgotPasswordDesc,
                 style: AppTextStyles.bodyBlack16,
-              ),
+              ).animate().slideX(duration: 500.ms),
               SizedBox(
                 height: mq.height * 0.08,
               ),
@@ -64,14 +67,14 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   height: 80,
                   width: 80,
                 ),
-              ),
+              ).animate().fadeIn(duration: 500.ms),
               12.ph,
               Center(
                 child: Text(
                   AppStrings.appName,
                   style: AppTextStyles.bodyBlack20,
                 ),
-              ),
+              ).animate().fadeIn(duration: 500.ms),
               SizedBox(
                 height: mq.height * 0.08,
               ),
@@ -93,15 +96,19 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               CustomButton(
                 onPressed: () {
                   removeFocus(context);
-                  Navigator.pushNamed(
-                      context, ForgotPassOtpVerifyScreen.routeName);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ForgotPassOtpVerifyScreen(),
+                    ),
+                  );
                 },
                 isGradient: false,
                 child: Text(
                   AppStrings.nextTxt.toUpperCase(),
                   style: AppTextStyles.bodyWhite16,
                 ),
-              ),
+              ).animate().fadeIn(duration: 500.ms),
               SizedBox(
                 height: mq.height * 0.08,
               ),

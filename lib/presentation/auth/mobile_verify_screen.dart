@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:samrathal_ecart/core/app_colors.dart';
 import 'package:samrathal_ecart/core/app_images.dart';
 import 'package:samrathal_ecart/core/app_strings.dart';
 import 'package:samrathal_ecart/core/app_text_styles.dart';
+import 'package:samrathal_ecart/logic/services/preferences.dart';
 import 'package:samrathal_ecart/presentation/auth/password_verify_screen.dart';
 import 'package:samrathal_ecart/presentation/auth/register_otp_verify_screen.dart';
-import 'package:samrathal_ecart/presentation/auth/register_screen.dart';
 import 'package:samrathal_ecart/utils/utils.dart';
 import 'package:samrathal_ecart/widgets/custom_button.dart';
 import 'package:samrathal_ecart/widgets/custom_text_field.dart';
+
 import '../../widgets/label_widget.dart';
 
 class MobileVerifyScreen extends StatefulWidget {
   const MobileVerifyScreen({super.key});
 
-  static const String routeName = "Mobile Verify Screen";
+  // static const String routeName = "Mobile Verify Screen";
 
   @override
   State<MobileVerifyScreen> createState() => _MobileVerifyScreenState();
@@ -29,16 +31,11 @@ class _MobileVerifyScreenState extends State<MobileVerifyScreen> {
     var mq = MediaQuery.sizeOf(context);
     return Scaffold(
       appBar: AppBar(
-        // backgroundColor: Colors.white,
         elevation: 0.0,
-        /*leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(Icons.arrow_back),
-        ),*/
         centerTitle: true,
-        title: Text(AppStrings.mobileVerifyScreenTitle),
+        title: Text(AppStrings.mobileVerifyScreenTitle)
+            .animate()
+            .fadeIn(duration: 500.ms),
       ),
       body: SingleChildScrollView(
         child: Form(
@@ -57,14 +54,14 @@ class _MobileVerifyScreenState extends State<MobileVerifyScreen> {
                     AppStrings.verifyMobileTitle,
                     style: AppTextStyles.headingBlack24,
                   ),
-                ),
+                ).animate().slideX(duration: 500.ms),
                 Align(
                   alignment: AlignmentDirectional.topStart,
                   child: Text(
                     AppStrings.verifyMobileDesc,
                     style: AppTextStyles.bodyBlack16,
                   ),
-                ),
+                ).animate().slideX(duration: 500.ms),
                 SizedBox(
                   height: mq.height * 0.08,
                 ),
@@ -75,14 +72,14 @@ class _MobileVerifyScreenState extends State<MobileVerifyScreen> {
                     height: 80,
                     width: 80,
                   ),
-                ),
+                ).animate().fadeIn(duration: 500.ms),
                 12.ph,
                 Center(
                   child: Text(
                     AppStrings.appName,
                     style: AppTextStyles.bodyBlack20,
                   ),
-                ),
+                ).animate().fadeIn(duration: 500.ms),
                 SizedBox(
                   height: mq.height * 0.08,
                 ),
@@ -119,12 +116,25 @@ class _MobileVerifyScreenState extends State<MobileVerifyScreen> {
                     if (_formKey.currentState!.validate()) {
                       if (mobile == "1111111111") {
                         removeFocus(context);
-                        Navigator.pushNamed(
-                            context, PasswordVerifyScreen.routeName);
+                        SharedPrefProvider.setString(
+                            SharedPrefProvider.token, "425435345");
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const PasswordVerifyScreen(),
+                          ),
+                        );
                       } else {
                         removeFocus(context);
-                        Navigator.pushNamed(
-                            context, RegisterOtpVerifyScreen.routeName);
+                        SharedPrefProvider.setString(
+                            SharedPrefProvider.token, "425435345");
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                const RegisterOtpVerifyScreen(),
+                          ),
+                        );
                       }
                     }
                   },
@@ -133,7 +143,7 @@ class _MobileVerifyScreenState extends State<MobileVerifyScreen> {
                     AppStrings.nextTxt.toUpperCase(),
                     style: AppTextStyles.bodyWhite16,
                   ),
-                ),
+                ).animate().fadeIn(duration: 500.ms),
                 SizedBox(
                   height: mq.height * 0.08,
                 ),

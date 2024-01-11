@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:samrathal_ecart/core/app_text_styles.dart';
 import 'package:samrathal_ecart/presentation/dashboard/profile/address/address_page.dart';
 import 'package:samrathal_ecart/presentation/dashboard/profile/order/order_screen.dart';
 import 'package:samrathal_ecart/presentation/dashboard/profile/payment/payment_list_screen.dart';
+import 'package:samrathal_ecart/presentation/dashboard/profile/widget/logout_dialog.dart';
 import 'package:samrathal_ecart/presentation/dashboard/profile/widget/profile_label_widget.dart';
 import 'package:samrathal_ecart/utils/utils.dart';
 import 'package:samrathal_ecart/widgets/custom_button.dart';
+
 import '../../../core/app_colors.dart';
 import '../../../core/app_strings.dart';
-import '../../auth/mobile_verify_screen.dart';
 
 class ProfileTabPage extends StatefulWidget {
   const ProfileTabPage({super.key});
@@ -28,7 +30,7 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
           children: [
             Text(AppStrings.appName),
           ],
-        ),
+        ).animate().fadeIn(duration: 500.ms),
       ),
       body: ListView(
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
@@ -74,37 +76,67 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
                 ),
               ],
             ),
-          ),
-          12.ph,
-          InkWell(
-              onTap: () {
-                Navigator.pushNamed(context, AddressPage.routeName);
-              },
-              child: ProfileLabelWidget(labelName: AppStrings.addressTxt)),
-          12.ph,
-          InkWell(
-              onTap: () {
-                Navigator.pushNamed(context, OrderScreen.routeName);
-              },
-              child: ProfileLabelWidget(labelName: AppStrings.orderTxt)),
-          12.ph,
-          InkWell(
-              onTap: () {
-                Navigator.pushNamed(context, PaymentListScreen.routeName);
-              },
-              child: ProfileLabelWidget(labelName: AppStrings.paymentTxt)),
-          12.ph,
-          ProfileLabelWidget(labelName: AppStrings.helpTxt),
-          12.ph,
-          ProfileLabelWidget(labelName: AppStrings.supportTxt),
+          ).animate().slide(
+                duration: 500.ms,
+                begin: const Offset(-1, 0),
+                // end: Offset(dx, dy),
+              ),
+          Column(
+            children: [
+              12.ph,
+              InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const AddressPage(),
+                      ),
+                    );
+                  },
+                  child: ProfileLabelWidget(labelName: AppStrings.addressTxt)),
+              12.ph,
+              InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const OrderScreen(),
+                      ),
+                    );
+                  },
+                  child: ProfileLabelWidget(labelName: AppStrings.orderTxt)),
+              12.ph,
+              InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const PaymentListScreen(),
+                      ),
+                    );
+                  },
+                  child: ProfileLabelWidget(labelName: AppStrings.paymentTxt)),
+              12.ph,
+              ProfileLabelWidget(labelName: AppStrings.helpTxt),
+              12.ph,
+              ProfileLabelWidget(labelName: AppStrings.supportTxt),
+            ],
+          ).animate().slide(
+                duration: 500.ms,
+                begin: const Offset(1, 0),
+              ),
         ],
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(16.0),
         child: CustomButton(
           onPressed: () {
-            Navigator.pushNamedAndRemoveUntil(
-                context, MobileVerifyScreen.routeName, (route) => false);
+            showDialog<String>(
+              context: context,
+              builder: (BuildContext context) {
+                return const LogoutDialog();
+              },
+            );
           },
           isGradient: false,
           child: Text(
@@ -112,7 +144,7 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
             style: AppTextStyles.bodyWhite14,
           ),
         ),
-      ),
+      ).animate().fadeIn(duration: 500.ms),
     );
   }
 }

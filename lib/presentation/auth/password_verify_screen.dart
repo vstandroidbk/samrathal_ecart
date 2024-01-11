@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:samrathal_ecart/core/app_colors.dart';
 import 'package:samrathal_ecart/presentation/auth/forgot_password_screen.dart';
 import 'package:samrathal_ecart/presentation/auth/login_otp_verify_screen.dart';
@@ -14,7 +15,7 @@ import '../../widgets/label_widget.dart';
 class PasswordVerifyScreen extends StatefulWidget {
   const PasswordVerifyScreen({super.key});
 
-  static const String routeName = "Password Verify Screen";
+  // static const String routeName = "Password Verify Screen";
 
   @override
   State<PasswordVerifyScreen> createState() => _PasswordVerifyScreenState();
@@ -37,7 +38,9 @@ class _PasswordVerifyScreenState extends State<PasswordVerifyScreen> {
           icon: const Icon(Icons.arrow_back),
         ),*/
         centerTitle: true,
-        title: Text(AppStrings.passwordVerifyScreenTitle),
+        title: Text(AppStrings.passwordVerifyScreenTitle)
+            .animate()
+            .fadeIn(duration: 500.ms),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -51,11 +54,11 @@ class _PasswordVerifyScreenState extends State<PasswordVerifyScreen> {
               Text(
                 AppStrings.verifyPasswordTitle,
                 style: AppTextStyles.headingBlack24,
-              ),
+              ).animate().slideX(duration: 500.ms),
               Text(
                 AppStrings.verifyPasswordDesc,
                 style: AppTextStyles.bodyBlack16,
-              ),
+              ).animate().slideX(duration: 500.ms),
               SizedBox(
                 height: mq.height * 0.08,
               ),
@@ -66,14 +69,14 @@ class _PasswordVerifyScreenState extends State<PasswordVerifyScreen> {
                   height: 80,
                   width: 80,
                 ),
-              ),
+              ).animate().fadeIn(duration: 500.ms),
               12.ph,
               Center(
                 child: Text(
                   AppStrings.appName,
                   style: AppTextStyles.bodyBlack20,
                 ),
-              ),
+              ).animate().fadeIn(duration: 500.ms),
               SizedBox(
                 height: mq.height * 0.08,
               ),
@@ -87,8 +90,12 @@ class _PasswordVerifyScreenState extends State<PasswordVerifyScreen> {
                   InkWell(
                     onTap: () {
                       removeFocus(context);
-                      Navigator.pushNamed(
-                          context, ForgotPasswordScreen.routeName);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ForgotPasswordScreen(),
+                        ),
+                      );
                     },
                     child: Text(
                       AppStrings.forgotPasswordTxt,
@@ -111,28 +118,38 @@ class _PasswordVerifyScreenState extends State<PasswordVerifyScreen> {
               CustomButton(
                 onPressed: () {
                   removeFocus(context);
-                  Navigator.pushNamedAndRemoveUntil(
-                      context, DashboardScreen.routeName, (route) => false,
-                      arguments: 0);
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          const DashboardScreen(selectedTab: 0),
+                    ),
+                    (route) => false,
+                  );
                 },
                 isGradient: false,
                 child: Text(
                   AppStrings.submitTxt.toUpperCase(),
                   style: AppTextStyles.bodyWhite16,
                 ),
-              ),
+              ).animate().fadeIn(duration: 500.ms),
+              8.ph,
               Align(
                 alignment: AlignmentDirectional.center,
                 child: TextButton(
                   onPressed: () {
                     removeFocus(context);
-                    Navigator.pushNamed(
-                        context, LoginOtpVerifyScreen.routeName);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const LoginOtpVerifyScreen(),
+                      ),
+                    );
                   },
                   child: Text(AppStrings.loginWithOtpTxt,
                       style: AppTextStyles.bodyBlack16),
                 ),
-              )
+              ).animate().fadeIn(duration: 500.ms)
             ],
           ),
         ),

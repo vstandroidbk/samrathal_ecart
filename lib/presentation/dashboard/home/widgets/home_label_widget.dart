@@ -1,11 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:samrathal_ecart/core/app_colors.dart';
 import 'package:samrathal_ecart/core/app_strings.dart';
 import 'package:samrathal_ecart/core/app_text_styles.dart';
 import 'package:samrathal_ecart/presentation/dashboard/offers/offer_list_screen.dart';
-
 import '../../dashboard_screen.dart';
 
 class HomeLabelWidget extends StatelessWidget {
@@ -26,12 +23,18 @@ class HomeLabelWidget extends StatelessWidget {
         InkWell(
           onTap: () {
             if (labelName == AppStrings.offersTxt) {
-              Navigator.pushNamed(context, OfferListScreen.routeName);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const OfferListScreen(),
+                ),
+              );
             } else if (labelName == AppStrings.productsTxt) {
-              Navigator.pushNamedAndRemoveUntil(
+              Navigator.pushAndRemoveUntil(
                   context,
-                  DashboardScreen.routeName,
-                  arguments: 1,
+                  MaterialPageRoute(
+                    builder: (context) => const DashboardScreen(selectedTab: 1),
+                  ),
                   (route) => false);
             }
           },

@@ -22,7 +22,6 @@ class _ProductSliderWidgetState extends State<ProductSliderWidget> {
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
     return Stack(
       alignment: Alignment.center,
       children: [

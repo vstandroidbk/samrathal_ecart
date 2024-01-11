@@ -10,8 +10,7 @@ import 'package:samrathal_ecart/core/app_images.dart';
 import 'package:samrathal_ecart/core/app_text_styles.dart';
 import 'package:samrathal_ecart/utils/utils.dart';
 import 'package:samrathal_ecart/widgets/custom_button.dart';
-
-import '../data/dashboard/profile/location_data_model.dart';
+import '../data/model/dashboard/profile/location_data_model.dart';
 import '../logic/provider/dashboard/profile/location_data_provider.dart';
 
 class PickLocationScreen extends StatefulWidget {

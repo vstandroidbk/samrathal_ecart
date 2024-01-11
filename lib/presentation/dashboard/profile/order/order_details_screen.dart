@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:samrathal_ecart/core/app_images.dart';
 import 'package:samrathal_ecart/logic/services/formatter.dart';
 import 'package:samrathal_ecart/presentation/dashboard/profile/order/order_items_screen.dart';
-import 'package:samrathal_ecart/presentation/dashboard/profile/order/widget/order_success_screen.dart';
 import 'package:samrathal_ecart/presentation/dashboard/profile/order/widget/order_status_widget.dart';
 import 'package:samrathal_ecart/presentation/verify_otp_screen.dart';
 import 'package:samrathal_ecart/utils/utils.dart';
 import 'package:samrathal_ecart/widgets/custom_button.dart';
-
 import '../../../../core/app_colors.dart';
 import '../../../../core/app_strings.dart';
 import '../../../../core/app_text_styles.dart';
@@ -18,7 +17,7 @@ class OrderDetailsScreen extends StatefulWidget {
 
   const OrderDetailsScreen({super.key, required this.orderNumber});
 
-  static const String routeName = "Order Details Screen";
+  // static const String routeName = "Order Details Screen";
 
   @override
   State<OrderDetailsScreen> createState() => _OrderDetailsScreenState();
@@ -31,20 +30,30 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
       appBar: AppBar(
         // backgroundColor: Colors.white,
         centerTitle: true,
-        title: Text("${AppStrings.orderTxt} #${widget.orderNumber}"),
+        title: Text("${AppStrings.orderTxt} #${widget.orderNumber}")
+            .animate()
+            .fadeIn(
+              duration: 500.ms,
+            ),
       ),
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
         children: [
           // order status
-          const OrderStatusWidget(orderStatus: 2),
+          const OrderStatusWidget(orderStatus: 2).animate().slide(
+                duration: 500.ms,
+                begin: const Offset(1, 0),
+              ),
           12.ph,
           // total items
           Text(
             AppStrings.orderItemTxt,
             style:
                 AppTextStyles.bodyBlack14.copyWith(fontWeight: FontWeight.w700),
-          ),
+          ).animate().slide(
+                duration: 500.ms,
+                begin: const Offset(1, 0),
+              ),
           5.ph,
           Container(
             padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
@@ -66,8 +75,12 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                     8.pw,
                     InkWell(
                       onTap: () {
-                        Navigator.pushNamed(
-                            context, OrderItemsScreen.routeName);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const OrderItemsScreen(),
+                          ),
+                        );
                       },
                       child: Text(
                         "View All",
@@ -80,7 +93,11 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                 ),
               ],
             ),
-          ),
+          ).animate().slide(
+                duration: 500.ms,
+                begin: const Offset(-1, 0),
+                // end: Offset(dx, dy),
+              ),
           12.ph,
           // total amount
           Container(
@@ -176,14 +193,22 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                 ),
               ],
             ),
-          ),
+          ).animate().slide(
+                duration: 500.ms,
+                begin: const Offset(-1, 0),
+                // end: Offset(dx, dy),
+              ),
           12.ph,
           // address
           Text(
             AppStrings.shipAddressTxt,
             style:
                 AppTextStyles.bodyBlack14.copyWith(fontWeight: FontWeight.w700),
-          ),
+          ).animate().slide(
+                duration: 500.ms,
+                begin: const Offset(-1, 0),
+                // end: Offset(dx, dy),
+              ),
           5.ph,
           Container(
             padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
@@ -207,7 +232,11 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                 )
               ],
             ),
-          ),
+          ).animate().slide(
+                duration: 500.ms,
+                begin: const Offset(-1, 0),
+                // end: Offset(dx, dy),
+              ),
           12.ph,
           // receive now and pay now buttons
           Row(
@@ -215,8 +244,13 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
               Expanded(
                 child: CustomButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, VerifyOtpScreen.routeName,
-                        arguments: AppStrings.fromOrderScreen);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => VerifyOtpScreen(
+                            fromScreen: AppStrings.fromOrderScreen),
+                      ),
+                    );
                   },
                   isGradient: false,
                   backgroundColor: AppColors.redBtnColor,
@@ -224,13 +258,20 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                     AppStrings.receiveNowTxt.toUpperCase(),
                     style: AppTextStyles.bodyWhite14,
                   ),
-                ),
+                ).animate().fadeIn(
+                      duration: 500.ms,
+                    ),
               ),
               16.pw,
               Expanded(
                 child: CustomButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, PaymentListScreen.routeName);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const PaymentListScreen(),
+                      ),
+                    );
                   },
                   isGradient: false,
                   backgroundColor: AppColors.greenBtnColor,
@@ -238,7 +279,9 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                     AppStrings.payNowTxt.toUpperCase(),
                     style: AppTextStyles.bodyWhite14,
                   ),
-                ),
+                ).animate().fadeIn(
+                      duration: 500.ms,
+                    ),
               ),
             ],
           ),

@@ -1,6 +1,6 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:samrathal_ecart/presentation/dashboard/cart/select_address_page.dart';
 import 'package:samrathal_ecart/presentation/dashboard/cart/widget/cart_item_view_card.dart';
 import 'package:samrathal_ecart/presentation/dashboard/profile/order/widget/order_success_screen.dart';
@@ -12,8 +12,6 @@ import '../../../core/app_strings.dart';
 import '../../../core/app_text_styles.dart';
 import '../../../logic/services/formatter.dart';
 import '../../../widgets/custom_button.dart';
-import '../../../widgets/custom_text_field.dart';
-import '../profile/payment/widget/get_ac_details_widget.dart';
 
 class CartTabPage extends StatefulWidget {
   const CartTabPage({super.key});
@@ -28,7 +26,7 @@ class _CartTabPageState extends State<CartTabPage> {
     return Scaffold(
       appBar: AppBar(
         titleSpacing: 12,
-        title: Text(AppStrings.cartTabTxt),
+        title: Text(AppStrings.cartTabTxt).animate().fadeIn(duration: 500.ms),
       ),
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -38,7 +36,11 @@ class _CartTabPageState extends State<CartTabPage> {
             AppStrings.cartItemsTxt,
             style:
                 AppTextStyles.bodyBlack14.copyWith(fontWeight: FontWeight.w700),
-          ),
+          ).animate().slide(
+                duration: 500.ms,
+                begin: const Offset(-1, 0),
+                // end: Offset(dx, dy),
+              ),
           ListView.builder(
             itemCount: 3,
             physics: const NeverScrollableScrollPhysics(),
@@ -46,7 +48,10 @@ class _CartTabPageState extends State<CartTabPage> {
             itemBuilder: (ctx, index) {
               return CartItemViewCard(index: index);
             },
-          ),
+          ).animate().slide(
+                duration: 500.ms,
+                begin: const Offset(-1, 0),
+              ),
           5.ph,
           // total amount
           Container(
@@ -142,19 +147,31 @@ class _CartTabPageState extends State<CartTabPage> {
                 ),
               ],
             ),
-          ),
+          ).animate().slide(
+                duration: 500.ms,
+                begin: const Offset(1, 0),
+                // end: Offset(dx, dy),
+              ),
           12.ph,
           Text(
             "Estimate Distance 10 km",
             style: AppTextStyles.bodyBlack14,
-          ),
+          ).animate().slide(
+                duration: 500.ms,
+                begin: const Offset(1, 0),
+                // end: Offset(dx, dy),
+              ),
           12.ph,
           // address
           Text(
             AppStrings.shipAddressTxt,
             style:
                 AppTextStyles.bodyBlack14.copyWith(fontWeight: FontWeight.w700),
-          ),
+          ).animate().slide(
+                duration: 500.ms,
+                begin: const Offset(-1, 0),
+                // end: Offset(dx, dy),
+              ),
           5.ph,
           Container(
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
@@ -176,12 +193,12 @@ class _CartTabPageState extends State<CartTabPage> {
                       height: 30,
                       child: OutlinedButton(
                         onPressed: () {
-                          // Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //         builder: (context) => const AddressListScreen()));
-                          Navigator.pushNamed(
-                              context, SelectAddressPage.routeName);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const SelectAddressPage(),
+                            ),
+                          );
                         },
                         style: OutlinedButton.styleFrom(
                           backgroundColor: Colors.white,
@@ -223,7 +240,11 @@ class _CartTabPageState extends State<CartTabPage> {
                 ),
               ],
             ),
-          ),
+          ).animate().slide(
+                duration: 500.ms,
+                begin: const Offset(-1, 0),
+                // end: Offset(dx, dy),
+              ),
           12.ph,
           // receive now and pay now buttons
           CustomButton(
@@ -243,7 +264,7 @@ class _CartTabPageState extends State<CartTabPage> {
               AppStrings.checkoutTxt.toUpperCase(),
               style: AppTextStyles.bodyWhite14,
             ),
-          ),
+          ).animate().fadeIn(duration: 500.ms),
           16.ph,
         ],
       ),
@@ -350,11 +371,19 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
                       return;
                     }
                     if (selectedIndex == 0) {
-                      Navigator.pushNamed(
-                          context, OrderSuccessScreen.routeName);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const OrderSuccessScreen(),
+                        ),
+                      );
                     } else if (selectedIndex == 1) {
-                      Navigator.pushNamed(
-                          context, PaymentDetailsScreen.routeName);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const PaymentDetailsScreen(),
+                        ),
+                      );
                     }
                   },
                   isGradient: false,

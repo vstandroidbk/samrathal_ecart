@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:samrathal_ecart/presentation/dashboard/profile/order/widget/order_items_view_card.dart';
 import 'package:samrathal_ecart/utils/utils.dart';
 import '../../../../core/app_colors.dart';
@@ -9,7 +10,7 @@ import '../../../../logic/services/formatter.dart';
 class OrderItemsScreen extends StatefulWidget {
   const OrderItemsScreen({super.key});
 
-  static const String routeName = "Order Item Screen";
+  // static const String routeName = "Order Item Screen";
 
   @override
   State<OrderItemsScreen> createState() => _OrderItemsScreenState();
@@ -22,7 +23,9 @@ class _OrderItemsScreenState extends State<OrderItemsScreen> {
       appBar: AppBar(
         // backgroundColor: Colors.white,
         centerTitle: true,
-        title: Text(AppStrings.orderItemTxt),
+        title: Text(AppStrings.orderItemTxt).animate().fadeIn(
+              duration: 500.ms,
+            ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -31,12 +34,15 @@ class _OrderItemsScreenState extends State<OrderItemsScreen> {
           child: Column(
             children: [
               ListView.builder(
-                  itemCount: productList.length,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemBuilder: (ctx, index) {
-                    return OrderItemsViewCard(index: index);
-                  }),
+                      itemCount: productList.length,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemBuilder: (ctx, index) {
+                        return OrderItemsViewCard(index: index);
+                      }).animate().slide(
+                    duration: 500.ms,
+                    begin: const Offset(1, 0),
+                  ),
               // total amount
               Container(
                 padding:
@@ -90,7 +96,9 @@ class _OrderItemsScreenState extends State<OrderItemsScreen> {
                     ),
                   ],
                 ),
-              ),
+              ).animate().slideX(
+                    duration: 500.ms,
+                  ),
               12.ph,
               Container(
                 padding:
@@ -186,7 +194,9 @@ class _OrderItemsScreenState extends State<OrderItemsScreen> {
                     ),
                   ],
                 ),
-              ),
+              ).animate().slideX(
+                    duration: 500.ms,
+                  ),
             ],
           ),
         ),

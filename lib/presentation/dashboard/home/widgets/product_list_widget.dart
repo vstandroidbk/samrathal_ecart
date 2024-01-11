@@ -29,7 +29,12 @@ class ProductListCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.pushNamed(context, ProductDetailsScreen.routeName);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const ProductDetailsScreen(),
+          ),
+        );
       },
       child: Stack(
         children: [
@@ -59,9 +64,9 @@ class ProductListCard extends StatelessWidget {
                             child: FloatingActionButton(
                               mini: true,
                               heroTag: index.toString(),
-                              shape: CircleBorder(),
+                              shape: const CircleBorder(),
                               backgroundColor: Colors.white,
-                              child: Icon(CupertinoIcons.heart),
+                              child: const Icon(CupertinoIcons.heart),
                               onPressed: () {},
                             ),
                           )

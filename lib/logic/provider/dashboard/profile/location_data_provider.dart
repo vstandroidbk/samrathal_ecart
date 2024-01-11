@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../../data/dashboard/profile/location_data_model.dart';
+
+import '../../../../data/model/dashboard/profile/location_data_model.dart';
 
 class LocationProvider extends ChangeNotifier {
   double? _latitude;

@@ -6,7 +6,7 @@ import '../../../core/app_strings.dart';
 class OfferListScreen extends StatefulWidget {
   const OfferListScreen({super.key});
 
-  static const String routeName = "Offer List Screen";
+  // static const String routeName = "Offer List Screen";
 
   @override
   State<OfferListScreen> createState() => _OfferListScreenState();

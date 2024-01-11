@@ -15,8 +15,12 @@ class OrderViewCard extends StatelessWidget {
     var orderData = orderList[index];
     return InkWell(
       onTap: () {
-        Navigator.pushNamed(context, OrderDetailsScreen.routeName,
-            arguments: 5242);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const OrderDetailsScreen(orderNumber: 5242),
+          ),
+        );
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 8),

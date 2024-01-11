@@ -1,23 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:samrathal_ecart/core/app_colors.dart';
 import 'package:samrathal_ecart/core/app_images.dart';
 import 'package:samrathal_ecart/core/app_strings.dart';
 import 'package:samrathal_ecart/core/app_text_styles.dart';
 import 'package:samrathal_ecart/logic/services/formatter.dart';
-import 'package:samrathal_ecart/presentation/dashboard/shop/widget/product_slider_widget.dart';
 import 'package:samrathal_ecart/utils/utils.dart';
 import 'package:samrathal_ecart/widgets/custom_button.dart';
 import 'package:samrathal_ecart/widgets/custom_paragraph.dart';
-import 'package:samrathal_ecart/widgets/label_widget.dart';
-
 import '../../../widgets/custom_text_field.dart';
 import '../dashboard_screen.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   const ProductDetailsScreen({super.key});
 
-  static const String routeName = "Product Details Screen";
+  // static const String routeName = "Product Details Screen";
 
   @override
   State<ProductDetailsScreen> createState() => _ProductDetailsScreenState();
@@ -39,10 +37,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         actions: [
           InkWell(
             onTap: () {
-              Navigator.pushNamedAndRemoveUntil(
+              Navigator.pushAndRemoveUntil(
                   context,
-                  DashboardScreen.routeName,
-                  arguments: 2,
+                  MaterialPageRoute(
+                    builder: (context) => const DashboardScreen(selectedTab: 2),
+                  ),
                   (route) => false);
             },
             child: Badge(
@@ -68,7 +67,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             borderRadius: BorderRadius.circular(10),
             child: Container(
                 // width: size.width,
-                margin: const EdgeInsets.only(right: 12),
                 decoration: BoxDecoration(
                     color: Colors.grey.shade300,
                     borderRadius: BorderRadius.circular(10)),
@@ -212,6 +210,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             ),
           )
         ],
+      ).animate().slideY(
+        duration: 500.ms,
       ),
     );
   }

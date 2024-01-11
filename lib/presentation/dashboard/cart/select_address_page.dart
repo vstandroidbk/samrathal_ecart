@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:samrathal_ecart/core/app_strings.dart';
 import 'package:samrathal_ecart/presentation/dashboard/profile/address/add_address_page.dart';
-import 'package:samrathal_ecart/presentation/dashboard/profile/address/widget/address_view_card.dart';
 import 'package:samrathal_ecart/utils/utils.dart';
+
 import '../../../../core/app_text_styles.dart';
 import '../../../../widgets/custom_button.dart';
 import '../../../core/app_colors.dart';
@@ -11,7 +12,7 @@ import '../profile/address/edit_address_page.dart';
 class SelectAddressPage extends StatefulWidget {
   const SelectAddressPage({super.key});
 
-  static const String routeName = "Select Address page";
+  // static const String routeName = "Select Address page";
 
   @override
   State<SelectAddressPage> createState() => _SelectAddressPageState();
@@ -44,6 +45,8 @@ class _SelectAddressPageState extends State<SelectAddressPage> {
             ),
           );
         },
+      ).animate().slideY(
+        duration: 500.ms,
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.only(left: 16, right: 16, bottom: 20),
@@ -62,6 +65,8 @@ class _SelectAddressPageState extends State<SelectAddressPage> {
                   "Deliver Here".toUpperCase(),
                   style: AppTextStyles.bodyWhite14,
                 ),
+              ).animate().fadeIn(
+                duration: 500.ms,
               ),
             ),
             12.ph,
@@ -69,7 +74,12 @@ class _SelectAddressPageState extends State<SelectAddressPage> {
               height: 40,
               child: OutlinedButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, AddAddressPage.routeName);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const AddAddressPage(),
+                    ),
+                  );
                 },
                 style: OutlinedButton.styleFrom(
                   backgroundColor: Colors.white,
@@ -87,6 +97,8 @@ class _SelectAddressPageState extends State<SelectAddressPage> {
                   style: AppTextStyles.bodyBlack14
                       .copyWith(color: AppColors.primaryColor),
                 ),
+              ).animate().fadeIn(
+                duration: 500.ms,
               ),
             )
           ],
@@ -151,7 +163,12 @@ class SelectAddressViewCard extends StatelessWidget {
                   8.pw,
                   InkWell(
                     onTap: () {
-                      Navigator.pushNamed(context, EditAddressPage.routeName);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const EditAddressPage(),
+                        ),
+                      );
                     },
                     child: Text(
                       "Edit",
@@ -174,7 +191,7 @@ class AddressListScreen extends StatefulWidget {
   const AddressListScreen({super.key});
 
   @override
-  _AddressListScreenState createState() => _AddressListScreenState();
+  State<AddressListScreen> createState() => _AddressListScreenState();
 }
 
 class _AddressListScreenState extends State<AddressListScreen> {

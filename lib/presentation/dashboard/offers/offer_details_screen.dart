@@ -10,7 +10,7 @@ import '../../../core/app_text_styles.dart';
 class OfferDetailsScreen extends StatefulWidget {
   const OfferDetailsScreen({super.key});
 
-  static const String routeName = "Offer Details Screen";
+  // static const String routeName = "Offer Details Screen";
 
   @override
   State<OfferDetailsScreen> createState() => _OfferDetailsScreenState();

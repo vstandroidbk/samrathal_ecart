@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:samrathal_ecart/core/app_images.dart';
 import 'package:samrathal_ecart/core/app_strings.dart';
 import 'package:samrathal_ecart/presentation/dashboard/offers/offer_details_screen.dart';
 
@@ -12,7 +11,12 @@ class OfferListViewCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.pushNamed(context, OfferDetailsScreen.routeName);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const OfferDetailsScreen(),
+          ),
+        );
       },
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10),

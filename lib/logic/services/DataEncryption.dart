@@ -2,12 +2,12 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:encrypt/encrypt.dart';
-
 import '../../core/api_const.dart';
+import 'dart:developer' as dev;
 
 class DataEncryption {
   static String encodeKeyWith(String key) {
-    print(key);
+    dev.log(key);
     for (int i = 0; i < 32; i++) {
       if (i > 7 && i < 16) {
         var asciiCode = key.codeUnitAt(i);
@@ -224,24 +224,20 @@ class DataEncryption {
   //Decrypt received data
   static String? decryptWithAES(String key, String? strToDecrypt) {
     // var iv = getRandString(16);
-    if (key != null) {
-      // print('strToDecrypt: $strToDecrypt');
-      final decodedKey = decodeKey(key, -3);
+    // print('strToDecrypt: $strToDecrypt');
+    final decodedKey = decodeKey(key, -3);
 
-      // print('encodedKey: $decodedKey');
+    // print('encodedKey: $decodedKey');
 
-      final encrypter = encrypt.Encrypter(
-          AES(Key.fromUtf8(decodedKey), mode: AESMode.ecb, padding: "PKCS7"));
+    final encrypter = encrypt.Encrypter(
+        AES(Key.fromUtf8(decodedKey), mode: AESMode.ecb, padding: "PKCS7"));
 
-      final decrypted = encrypter.decrypt(Encrypted.fromBase64(strToDecrypt!),
-          iv: IV.fromUtf8(""));
+    final decrypted = encrypter.decrypt(Encrypted.fromBase64(strToDecrypt!),
+        iv: IV.fromUtf8(""));
 
-      print("Decrypted Data: " + decrypted.toString());
+    dev.log("Decrypted Data: $decrypted");
 
-      return decrypted;
-    } else {
-      return strToDecrypt;
-    }
+    return decrypted;
   }
 
   static Map<String, dynamic> getEncryptedData(
@@ -252,7 +248,7 @@ class DataEncryption {
 
     var encodedReqKey = DataEncryption.encodeKey(generateKey, -3).toString();
 
-    print("mainJsonObject: ${jsonEncode(jsonObject)}");
+    dev.log("mainJsonObject: ${jsonEncode(jsonObject)}");
 
     var encryptedData =
         DataEncryption.encryptWithAES(json.encode(jsonObject), generateKey);
@@ -263,7 +259,7 @@ class DataEncryption {
       "reqkey": encodedReqKey
     };
 
-    print("encryptedJsonObject: ${jsonEncode(encryptedJsonObject)}");
+    dev.log("encryptedJsonObject: ${jsonEncode(encryptedJsonObject)}");
 
     return encryptedJsonObject;
   }

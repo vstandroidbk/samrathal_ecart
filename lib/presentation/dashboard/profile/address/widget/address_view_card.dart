@@ -45,7 +45,12 @@ class AddressViewCard extends StatelessWidget {
                   8.pw,
                   InkWell(
                     onTap: () {
-                      Navigator.pushNamed(context, EditAddressPage.routeName);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const EditAddressPage(),
+                        ),
+                      );
                     },
                     child: Text(
                       "Edit",

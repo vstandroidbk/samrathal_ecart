@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:samrathal_ecart/presentation/dashboard/profile/payment/payment_details_screen.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:samrathal_ecart/presentation/dashboard/profile/payment/widget/payment_list_card.dart';
 import 'package:samrathal_ecart/utils/utils.dart';
-import '../../../../core/app_colors.dart';
 import '../../../../core/app_images.dart';
 import '../../../../core/app_strings.dart';
 import '../../../../core/app_text_styles.dart';
-import '../../../../widgets/custom_button.dart';
 
 class PaymentListScreen extends StatefulWidget {
   const PaymentListScreen({super.key});
 
-  static const String routeName = "Payment List Screen";
+  // static const String routeName = "Payment List Screen";
 
   @override
   State<PaymentListScreen> createState() => _PaymentListScreenState();
@@ -26,7 +24,8 @@ class _PaymentListScreenState extends State<PaymentListScreen> {
       appBar: AppBar(
         // centerTitle: true,
         // backgroundColor: Colors.white,
-        title: Text(AppStrings.paymentListTxt),
+        title:
+            Text(AppStrings.paymentListTxt).animate().fadeIn(duration: 500.ms),
         actions: [
           Container(
             height: 35,
@@ -78,7 +77,7 @@ class _PaymentListScreenState extends State<PaymentListScreen> {
                 ),
               ),
             ),
-          ),
+          ).animate().fadeIn(duration: 500.ms),
           12.pw
         ],
       ),
@@ -88,6 +87,8 @@ class _PaymentListScreenState extends State<PaymentListScreen> {
         itemBuilder: (ctx, index) {
           return PaymentListCard(index: index);
         },
+      ).animate().slideY(
+        duration: 500.ms,
       ),
       /*bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(16.0),

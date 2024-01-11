@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:samrathal_ecart/core/app_colors.dart';
@@ -29,7 +28,6 @@ class _SliderWidgetState extends State<SliderWidget> {
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
     return Stack(
       alignment: Alignment.center,
       children: [
@@ -53,7 +51,7 @@ class _SliderWidgetState extends State<SliderWidget> {
                   borderRadius: BorderRadius.circular(10),
                   child: Container(
                       // width: size.width,
-                      margin: const EdgeInsets.only(right: 12),
+                      margin: const EdgeInsets.only(right: 5,left: 5),
                       decoration: BoxDecoration(
                           color: Colors.grey.shade300,
                           borderRadius: BorderRadius.circular(10)),

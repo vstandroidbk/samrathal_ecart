@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:samrathal_ecart/presentation/auth/register_company_screen.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:samrathal_ecart/presentation/auth/submit_user_details.dart';
 import 'package:samrathal_ecart/utils/utils.dart';
+
 import '../../core/app_strings.dart';
 import '../../core/app_text_styles.dart';
 import '../../widgets/custom_button.dart';
@@ -11,7 +12,7 @@ import '../../widgets/label_widget.dart';
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
 
-  static const String routeName = "Register Screen";
+  // static const String routeName = "Register Screen";
 
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
@@ -24,19 +25,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var mq = MediaQuery.sizeOf(context);
     return Scaffold(
       appBar: AppBar(
         // backgroundColor: Colors.white,
         elevation: 0.0,
-        /*leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(Icons.arrow_back),
-        ),*/
         centerTitle: true,
-        title: Text(AppStrings.registerScreenTitle),
+        title: Text(AppStrings.registerScreenTitle)
+            .animate()
+            .fadeIn(duration: 500.ms),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -196,9 +192,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     Utils.showErrorMsg("Please select a user type", context);
                     return;
                   }
-
-                  Navigator.pushReplacementNamed(
-                      context, SubmitUserDetailsScreen.routeName);
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const SubmitUserDetailsScreen(),
+                    ),
+                  );
                   // if (selectedValue.value == null) {
                   //   Utils.showErrorMsg("Please select a user type", context);
                   //   return;
@@ -215,7 +214,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   AppStrings.nextTxt.toUpperCase(),
                   style: AppTextStyles.bodyWhite16,
                 ),
-              )
+              ).animate().fadeIn(duration: 500.ms)
             ],
           ),
         ),

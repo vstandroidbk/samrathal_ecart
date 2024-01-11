@@ -5,7 +5,6 @@ import 'package:samrathal_ecart/core/app_colors.dart';
 import 'package:samrathal_ecart/logic/provider/dashboard/profile/location_data_provider.dart';
 import 'package:samrathal_ecart/presentation/splash_screen.dart';
 import 'core/app_theme.dart';
-import 'core/routes.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,8 +33,9 @@ class MyApp extends StatelessWidget {
         title: 'Samrathal E-cart',
         debugShowCheckedModeBanner: false,
         theme: AppThemes.defaultTheme,
-        onGenerateRoute: Routes.onGenerateRoute,
-        initialRoute: SplashScreen.routeName,
+        home: const SplashScreen(),
+        // onGenerateRoute: Routes.onGenerateRoute,
+        // initialRoute: SplashScreen.routeName,
       ),
     );
   }

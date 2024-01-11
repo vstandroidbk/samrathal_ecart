@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:samrathal_ecart/core/app_images.dart';
 import 'package:samrathal_ecart/core/app_text_styles.dart';
 import 'package:samrathal_ecart/presentation/dashboard/profile/order/widget/order_view_card.dart';
@@ -8,7 +9,7 @@ import '../../../../core/app_strings.dart';
 class OrderScreen extends StatefulWidget {
   const OrderScreen({super.key});
 
-  static const String routeName = "Order Screen";
+  // static const String routeName = "Order Screen";
 
   @override
   State<OrderScreen> createState() => _OrderScreenState();
@@ -22,7 +23,9 @@ class _OrderScreenState extends State<OrderScreen> {
     return Scaffold(
       appBar: AppBar(
         // backgroundColor: Colors.white,
-        title: Text(AppStrings.orderTxt),
+        title: Text(AppStrings.orderTxt).animate().fadeIn(
+              duration: 500.ms,
+            ),
         actions: [
           Container(
             height: 35,
@@ -74,17 +77,21 @@ class _OrderScreenState extends State<OrderScreen> {
                 ),
               ),
             ),
-          ),
+          ).animate().fadeIn(
+                duration: 500.ms,
+              ),
           12.pw
         ],
       ),
       body: Padding(
         padding: const EdgeInsets.only(left: 16, right: 16, top: 5, bottom: 5),
         child: ListView.builder(
-            itemCount: orderList.length,
-            itemBuilder: (ctx, index) {
-              return OrderViewCard(index: index);
-            }),
+                itemCount: orderList.length,
+                itemBuilder: (ctx, index) {
+                  return OrderViewCard(index: index);
+                }).animate().slideY(
+              duration: 500.ms,
+            ),
       ),
     );
   }

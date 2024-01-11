@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:samrathal_ecart/core/app_colors.dart';
 import 'package:samrathal_ecart/presentation/dashboard/profile/order/widget/order_success_screen.dart';
@@ -17,7 +18,7 @@ class VerifyOtpScreen extends StatefulWidget {
 
   const VerifyOtpScreen({super.key, required this.fromScreen});
 
-  static const String routeName = "Verify Otp Screen";
+  // static const String routeName = "Verify Otp Screen";
 
   @override
   State<VerifyOtpScreen> createState() => _VerifyOtpScreenState();
@@ -58,7 +59,12 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
       return;
     }
     if (widget.fromScreen == AppStrings.fromOrderScreen) {
-      Navigator.pushReplacementNamed(context, OrderSuccessScreen.routeName);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const OrderSuccessScreen(),
+        ),
+      );
       return;
     }
   }
@@ -71,7 +77,9 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
         // backgroundColor: Colors.white,
         elevation: 0.0,
         centerTitle: true,
-        title: Text(AppStrings.otpVerifyScreenTitle),
+        title: Text(AppStrings.otpVerifyScreenTitle)
+            .animate()
+            .fadeIn(duration: 500.ms),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -85,11 +93,11 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
               Text(
                 AppStrings.verifyOtpTitle,
                 style: AppTextStyles.headingBlack24,
-              ),
+              ).animate().slideX(duration: 500.ms),
               Text(
                 "${AppStrings.verifyOtpDesc} ${"9876543210".replaceRange(0, 7, "*******")}",
                 style: AppTextStyles.bodyBlack16,
-              ),
+              ).animate().slideX(duration: 500.ms),
               SizedBox(
                 height: mq.height * 0.08,
               ),
@@ -100,14 +108,14 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                   height: 100,
                   width: 100,
                 ),
-              ),
+              ).animate().fadeIn(duration: 500.ms),
               12.ph,
               Center(
                 child: Text(
                   AppStrings.appName,
                   style: AppTextStyles.bodyBlack24,
                 ),
-              ),
+              ).animate().fadeIn(duration: 500.ms),
               SizedBox(
                 height: mq.height * 0.08,
               ),
@@ -185,7 +193,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                   AppStrings.verifyTxt.toUpperCase(),
                   style: AppTextStyles.bodyWhite16,
                 ),
-              ),
+              ).animate().fadeIn(duration: 500.ms),
               12.ph,
               ValueListenableBuilder(
                 valueListenable: _timerNotifier,

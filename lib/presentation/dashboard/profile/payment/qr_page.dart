@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:samrathal_ecart/presentation/dashboard/profile/payment/widget/payment_success_screen.dart';
-
 import '../../../../core/app_colors.dart';
 import '../../../../core/app_images.dart';
 import '../../../../core/app_strings.dart';
@@ -10,12 +11,38 @@ import '../../../../utils/utils.dart';
 import '../../../../widgets/custom_button.dart';
 import '../../../../widgets/custom_text_field.dart';
 import '../../../../widgets/label_widget.dart';
+import 'dart:io';
 
-class QrPage extends StatelessWidget {
+class QrPage extends StatefulWidget {
   const QrPage({super.key});
 
   @override
+  State<QrPage> createState() => _QrPageState();
+}
+
+class _QrPageState extends State<QrPage> with AutomaticKeepAliveClientMixin {
+  var selectedImage = ValueNotifier<File?>(null);
+  var imageName = ValueNotifier<String?>(null);
+
+  Future<void> chooseImage() async {
+    var image = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+    );
+    if (image != null) {
+      selectedImage.value = File(image.path);
+      imageName.value = selectedImage.value!.path.split('/').last;
+      debugPrint("selected image $selectedImage ");
+      debugPrint("selected image name $imageName ");
+      debugPrint("selected image image ${image.toString()} ");
+    }
+  }
+
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     return ListView(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
       children: [
@@ -36,7 +63,11 @@ class QrPage extends StatelessWidget {
               width: 180,
             ),
           ),
-        ),
+        ).animate().slide(
+              duration: 500.ms,
+              begin: const Offset(-1, 0),
+              // end: Offset(dx, dy),
+            ),
         12.ph,
         // total and remaining amount
         Card(
@@ -93,40 +124,100 @@ class QrPage extends StatelessWidget {
               ],
             ),
           ),
-        ),
+        ).animate().slide(
+              duration: 500.ms,
+              begin: const Offset(-1, 0),
+              // end: Offset(dx, dy),
+            ),
         12.ph,
         CustomLabelWidget(
           labelText: AppStrings.uploadScreenshotTxt,
           mandatory: true,
           fontSize: 14,
-        ),
+        ).animate().slide(
+              duration: 500.ms,
+              begin: const Offset(1, 0),
+              // end: Offset(dx, dy),
+            ),
         5.ph,
         Container(
           height: 45,
           padding: const EdgeInsets.only(left: 12, right: 8),
           decoration: const BoxDecoration(color: AppColors.textFieldBgColor),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                AppStrings.uploadScreenshotTxt,
-                style: AppTextStyles.bodyBlack14
-                    .copyWith(color: AppColors.textHintColor),
-              ),
-              Image.asset(
-                AppImages.uploadImg,
-                height: 25,
-                width: 25,
-              )
-            ],
+          child: InkWell(
+            onTap: () {
+              chooseImage();
+            },
+            child: ValueListenableBuilder(
+              valueListenable: selectedImage,
+              builder: (BuildContext context, value, Widget? child) {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        selectedImage.value == null
+                            ? AppStrings.uploadScreenshotTxt
+                            : imageName.value!,
+                        style: AppTextStyles.bodyBlack14
+                            .copyWith(color: AppColors.textHintColor),
+                      ),
+                    ),
+                    8.pw,
+                    Row(
+                      children: [
+                        ValueListenableBuilder(
+                          valueListenable: selectedImage,
+                          builder:
+                              (BuildContext context, value, Widget? child) {
+                            return value != null
+                                ? Image.file(
+                                    value,
+                                    width: 25,
+                                    height: 25,
+                                    fit: BoxFit.cover,
+                                  )
+                                : Image.asset(
+                                    AppImages.uploadImg,
+                                    height: 25,
+                                    width: 25,
+                                  );
+                          },
+                        ),
+                        12.pw,
+                        if (selectedImage.value != null)
+                          InkWell(
+                            onTap: () {
+                              selectedImage.value = null;
+                              imageName.value = null;
+                            },
+                            child: const Icon(
+                              Icons.close,
+                              color: AppColors.primaryColor,
+                            ),
+                          )
+                      ],
+                    )
+                  ],
+                );
+              },
+            ),
           ),
-        ),
+        ).animate().slide(
+              duration: 500.ms,
+              begin: const Offset(1, 0),
+              // end: Offset(dx, dy),
+            ),
         12.ph,
         CustomLabelWidget(
           labelText: AppStrings.amtPaidTxt,
           mandatory: true,
           fontSize: 14,
-        ),
+        ).animate().slide(
+              duration: 500.ms,
+              begin: const Offset(1, 0),
+              // end: Offset(dx, dy),
+            ),
         5.ph,
         SizedBox(
           height: 45,
@@ -140,20 +231,28 @@ class QrPage extends StatelessWidget {
             textInputAction: TextInputAction.done,
             keyboardType: TextInputType.number,
           ),
-        ),
+        ).animate().slide(
+              duration: 500.ms,
+              begin: const Offset(1, 0),
+              // end: Offset(dx, dy),
+            ),
         20.ph,
         CustomButton(
           onPressed: () {
             removeFocus(context);
-            Navigator.pushReplacementNamed(
-                context, PaymentSuccessScreen.routeName);
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const PaymentSuccessScreen(),
+              ),
+            );
           },
           isGradient: false,
           child: Text(
             AppStrings.submitTxt.toUpperCase(),
             style: AppTextStyles.bodyWhite16,
           ),
-        )
+        ).animate().fadeIn(duration: 500.ms),
       ],
     );
   }

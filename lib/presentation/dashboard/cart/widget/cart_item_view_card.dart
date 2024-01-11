@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:samrathal_ecart/utils/utils.dart';
+
 import '../../../../core/app_colors.dart';
 import '../../../../core/app_strings.dart';
 import '../../../../core/app_text_styles.dart';
-import '../../../../logic/services/formatter.dart';
 import '../../shop/product_details_screen.dart';
 
 class CartItemViewCard extends StatelessWidget {

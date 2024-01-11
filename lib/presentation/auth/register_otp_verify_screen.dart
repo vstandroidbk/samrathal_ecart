@@ -1,21 +1,24 @@
 import 'dart:async';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:samrathal_ecart/presentation/auth/register_screen.dart';
 import 'package:samrathal_ecart/utils/utils.dart';
+
 import '../../core/app_colors.dart';
 import '../../core/app_images.dart';
 import '../../core/app_strings.dart';
 import '../../core/app_text_styles.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/label_widget.dart';
-import '../dashboard/dashboard_screen.dart';
 
 class RegisterOtpVerifyScreen extends StatefulWidget {
   const RegisterOtpVerifyScreen({super.key});
 
-  static const String routeName = "Register Otp Screen";
+  // static const String routeName = "Register Otp Screen";
 
   @override
   State<RegisterOtpVerifyScreen> createState() =>
@@ -53,7 +56,9 @@ class _RegisterOtpVerifyScreenState extends State<RegisterOtpVerifyScreen> {
         // backgroundColor: Colors.white,
         elevation: 0.0,
         centerTitle: true,
-        title: Text(AppStrings.otpVerifyScreenTitle),
+        title: Text(AppStrings.otpVerifyScreenTitle)
+            .animate()
+            .fadeIn(duration: 500.ms),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -68,11 +73,11 @@ class _RegisterOtpVerifyScreenState extends State<RegisterOtpVerifyScreen> {
               Text(
                 AppStrings.verifyOtpTitle,
                 style: AppTextStyles.headingBlack24,
-              ),
+              ).animate().slideX(duration: 500.ms),
               Text(
                 "${AppStrings.verifyOtpDesc} ${"9876543210".replaceRange(0, 7, "*******")}",
                 style: AppTextStyles.bodyBlack16,
-              ),
+              ).animate().slideX(duration: 500.ms),
               SizedBox(
                 height: mq.height * 0.08,
               ),
@@ -83,14 +88,14 @@ class _RegisterOtpVerifyScreenState extends State<RegisterOtpVerifyScreen> {
                   height: 80,
                   width: 80,
                 ),
-              ),
+              ).animate().fadeIn(duration: 500.ms),
               8.ph,
               Center(
                 child: Text(
                   AppStrings.appName,
                   style: AppTextStyles.bodyBlack20,
                 ),
-              ),
+              ).animate().fadeIn(duration: 500.ms),
               SizedBox(
                 height: mq.height * 0.08,
               ),
@@ -147,7 +152,7 @@ class _RegisterOtpVerifyScreenState extends State<RegisterOtpVerifyScreen> {
                 keyboardType: TextInputType.number,
                 onChanged: (value) {},
                 beforeTextPaste: (text) {
-                  print("Allowing to paste $text");
+                  log("Allowing to paste $text");
                   //if you return true then it will show the paste confirmation dialog. Otherwise if false, then nothing will happen.
                   //but you can show anything you want here, like your pop up saying wrong paste format or etc
                   return true;
@@ -157,15 +162,19 @@ class _RegisterOtpVerifyScreenState extends State<RegisterOtpVerifyScreen> {
               16.ph,
               CustomButton(
                 onPressed: () {
-                  Navigator.pushReplacementNamed(
-                      context, RegisterScreen.routeName);
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const RegisterScreen(),
+                    ),
+                  );
                 },
                 isGradient: false,
                 child: Text(
                   AppStrings.verifyTxt.toUpperCase(),
                   style: AppTextStyles.bodyWhite16,
                 ),
-              ),
+              ).animate().fadeIn(duration: 500.ms),
               12.ph,
               ValueListenableBuilder(
                 valueListenable: _timerNotifier,

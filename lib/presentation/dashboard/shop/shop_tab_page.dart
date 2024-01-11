@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:samrathal_ecart/presentation/dashboard/shop/product_details_screen.dart';
 import '../../../core/app_colors.dart';
 import '../../../core/app_strings.dart';
@@ -16,22 +17,25 @@ class _ShopTabPageState extends State<ShopTabPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          titleSpacing: 12,
-          title: const Text("Product List"),
-        ),
-        body: GridView.builder(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2, // Number of columns in the grid
-              crossAxisSpacing: 30, // Spacing between columns
-              mainAxisSpacing: 8, // Spacing between rows
-              mainAxisExtent: 200),
-          itemCount: productList.length,
-          itemBuilder: (BuildContext context, int index) {
-            return ShopProductListCard(index: index);
-          },
-        ));
+      appBar: AppBar(
+        titleSpacing: 12,
+        title: const Text("Product List").animate().fadeIn(duration: 500.ms),
+      ),
+      body: GridView.builder(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2, // Number of columns in the grid
+            crossAxisSpacing: 30, // Spacing between columns
+            mainAxisSpacing: 8, // Spacing between rows
+            mainAxisExtent: 200),
+        itemCount: productList.length,
+        itemBuilder: (BuildContext context, int index) {
+          return ShopProductListCard(index: index);
+        },
+      ).animate().slideY(
+            duration: 500.ms,
+          ),
+    );
   }
 }
 
@@ -44,7 +48,12 @@ class ShopProductListCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.pushNamed(context, ProductDetailsScreen.routeName);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const ProductDetailsScreen(),
+          ),
+        );
       },
       child: Stack(
         children: [

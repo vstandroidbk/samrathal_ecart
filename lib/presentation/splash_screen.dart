@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:samrathal_ecart/core/app_colors.dart';
 import 'package:samrathal_ecart/core/app_strings.dart';
@@ -8,11 +9,12 @@ import '../core/api.dart';
 import '../core/app_images.dart';
 import '../logic/services/preferences.dart';
 import '../utils/utils.dart';
+import 'dashboard/dashboard_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
-  static const String routeName = "Splash Screen";
+  // static const String routeName = "Splash Screen";
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -25,14 +27,23 @@ class _SplashScreenState extends State<SplashScreen> {
 
     if (isOnline) {
       if (token != null && token.isNotEmpty) {
-        // Future.delayed(const Duration(milliseconds: 1500), () async {
-        //   Navigator.pushNamedAndRemoveUntil(
-        //       context, DashboardScreen.routeName, (route) => false);
-        // });
+        Future.delayed(const Duration(milliseconds: 1500), () async {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const DashboardScreen(selectedTab: 0),
+            ),
+            (route) => false,
+          );
+        });
       } else {
         Future.delayed(const Duration(milliseconds: 1500), () async {
-          Navigator.pushNamedAndRemoveUntil(
-              context, MobileVerifyScreen.routeName, (route) => false);
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const MobileVerifyScreen(),
+              ),
+              (route) => false);
         });
       }
     } else {
@@ -71,7 +82,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 )
               ],
             ),
-          ),
+          ).animate().fadeIn(duration: 500.ms),
           Positioned(
             bottom: mq.height / 9,
             width: mq.width,

@@ -1,35 +1,5 @@
-import 'package:flutter/cupertino.dart';
-import 'package:samrathal_ecart/presentation/auth/forgot_pass_otp_verify_screen.dart';
-import 'package:samrathal_ecart/presentation/auth/forgot_password_screen.dart';
-import 'package:samrathal_ecart/presentation/auth/login_otp_verify_screen.dart';
-import 'package:samrathal_ecart/presentation/auth/mobile_verify_screen.dart';
-import 'package:samrathal_ecart/presentation/auth/new_password_screen.dart';
-import 'package:samrathal_ecart/presentation/auth/password_verify_screen.dart';
-import 'package:samrathal_ecart/presentation/auth/register_company_screen.dart';
-import 'package:samrathal_ecart/presentation/auth/submit_user_details.dart';
-import 'package:samrathal_ecart/presentation/auth/register_otp_verify_screen.dart';
-import 'package:samrathal_ecart/presentation/auth/register_screen.dart';
-import 'package:samrathal_ecart/presentation/dashboard/dashboard_screen.dart';
-import 'package:samrathal_ecart/presentation/dashboard/home/widgets/offers_list_view_card.dart';
-import 'package:samrathal_ecart/presentation/dashboard/profile/address/add_address_page.dart';
-import 'package:samrathal_ecart/presentation/dashboard/profile/address/address_page.dart';
-import 'package:samrathal_ecart/presentation/dashboard/profile/address/edit_address_page.dart';
-import 'package:samrathal_ecart/presentation/dashboard/profile/order/order_details_screen.dart';
-import 'package:samrathal_ecart/presentation/dashboard/profile/order/order_items_screen.dart';
-import 'package:samrathal_ecart/presentation/dashboard/profile/order/order_screen.dart';
-import 'package:samrathal_ecart/presentation/dashboard/profile/order/widget/order_success_screen.dart';
-import 'package:samrathal_ecart/presentation/dashboard/profile/payment/payment_details_screen.dart';
-import 'package:samrathal_ecart/presentation/dashboard/profile/payment/payment_list_screen.dart';
-import 'package:samrathal_ecart/presentation/dashboard/profile/payment/widget/payment_success_screen.dart';
-import 'package:samrathal_ecart/presentation/dashboard/shop/product_details_screen.dart';
-import 'package:samrathal_ecart/presentation/verify_otp_screen.dart';
-import '../presentation/dashboard/cart/select_address_page.dart';
-import '../presentation/dashboard/offers/offer_details_screen.dart';
-import '../presentation/dashboard/offers/offer_list_screen.dart';
-import '../presentation/splash_screen.dart';
-
 class Routes {
-  static Route? onGenerateRoute(RouteSettings settings) {
+  /* static Route? onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
       case SplashScreen.routeName:
         return CupertinoPageRoute(builder: (context) => const SplashScreen());
@@ -176,5 +146,5 @@ class Routes {
       //   );
     }
     return null;
-  }
+  }*/
 }

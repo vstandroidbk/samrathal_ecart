@@ -1,9 +1,11 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
 import 'package:samrathal_ecart/presentation/pick_location_screen.dart';
 import 'package:samrathal_ecart/utils/utils.dart';
+
 import '../../../../core/app_colors.dart';
 import '../../../../core/app_strings.dart';
 import '../../../../core/app_text_styles.dart';
@@ -15,7 +17,7 @@ import '../../../../widgets/label_widget.dart';
 class AddAddressPage extends StatefulWidget {
   const AddAddressPage({super.key});
 
-  static const String routeName = "Add Address Page";
+  // static const String routeName = "Add Address Page";
 
   @override
   State<AddAddressPage> createState() => _AddAddressPageState();
@@ -44,21 +46,14 @@ class _AddAddressPageState extends State<AddAddressPage> {
 
   @override
   Widget build(BuildContext context) {
-    Color getColor(Set<MaterialState> states) {
-      const Set<MaterialState> interactiveStates = <MaterialState>{
-        MaterialState.pressed,
-        MaterialState.hovered,
-        MaterialState.focused,
-      };
-      return AppColors.primaryColor;
-    }
-
     var mq = MediaQuery.sizeOf(context);
     return Scaffold(
       appBar: AppBar(
         // backgroundColor: Colors.white,
         centerTitle: true,
-        title: Text(AppStrings.addAddressTxt),
+        title: Text(AppStrings.addAddressTxt).animate().fadeIn(
+              duration: 500.ms,
+            ),
       ),
       body: SizedBox(
         width: mq.width,
@@ -277,11 +272,15 @@ class _AddAddressPageState extends State<AddAddressPage> {
                     AppStrings.submitTxt.toUpperCase(),
                     style: AppTextStyles.bodyWhite14,
                   ),
-                )
+                ).animate().fadeIn(
+                  duration: 500.ms,
+                ),
               ],
             ),
           ),
-        ),
+        ).animate().slideX(
+              duration: 500.ms,
+            ),
       ),
     );
   }
