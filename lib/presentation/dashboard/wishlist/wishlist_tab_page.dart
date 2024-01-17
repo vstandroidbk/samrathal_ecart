@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:samrathal_ecart/core/app_strings.dart';
 import 'package:samrathal_ecart/core/app_text_styles.dart';
 import '../../../core/app_colors.dart';
@@ -14,6 +15,9 @@ class WishlistTabPage extends StatefulWidget {
 }
 
 class _WishlistTabPageState extends State<WishlistTabPage> {
+  final RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,18 +29,28 @@ class _WishlistTabPageState extends State<WishlistTabPage> {
             .animate()
             .fadeIn(duration: 500.ms),
       ),
-      body: GridView.builder(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2, // Number of columns in the grid
-            crossAxisSpacing: 30, // Spacing between columns
-            mainAxisSpacing: 8, // Spacing between rows
-            mainAxisExtent: 200),
-        itemCount: productList.length,
-        itemBuilder: (BuildContext context, int index) {
-          return WishlistProductListCard(index: index);
+      body: SmartRefresher(
+        controller: _refreshController,
+        onRefresh: () {
+          _refreshController.refreshCompleted();
         },
-      ).animate().slideY(duration: 500.ms),
+        child: SingleChildScrollView(
+          child: GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2, // Number of columns in the grid
+                crossAxisSpacing: 30, // Spacing between columns
+                mainAxisSpacing: 8, // Spacing between rows
+                mainAxisExtent: 200),
+            itemCount: productList.length,
+            itemBuilder: (BuildContext context, int index) {
+              return WishlistProductListCard(index: index);
+            },
+          ).animate().slideY(duration: 500.ms),
+        ),
+      ),
     );
   }
 }
@@ -53,7 +67,9 @@ class WishlistProductListCard extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const ProductDetailsScreen(),
+            builder: (context) => const ProductDetailsScreen(
+              productId: '',
+            ),
           ),
         );
       },

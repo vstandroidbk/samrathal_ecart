@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:provider/provider.dart';
 import 'package:samrathal_ecart/core/app_colors.dart';
 import 'package:samrathal_ecart/core/app_images.dart';
 import 'package:samrathal_ecart/core/app_strings.dart';
 import 'package:samrathal_ecart/core/app_text_styles.dart';
-import 'package:samrathal_ecart/logic/services/preferences.dart';
-import 'package:samrathal_ecart/presentation/auth/password_verify_screen.dart';
-import 'package:samrathal_ecart/presentation/auth/register_otp_verify_screen.dart';
+import 'package:samrathal_ecart/logic/provider/auth/auth_api_provider.dart';
 import 'package:samrathal_ecart/utils/utils.dart';
 import 'package:samrathal_ecart/widgets/custom_button.dart';
 import 'package:samrathal_ecart/widgets/custom_text_field.dart';
-
+import 'package:samrathal_ecart/widgets/loader_widget.dart';
 import '../../widgets/label_widget.dart';
 
 class MobileVerifyScreen extends StatefulWidget {
@@ -110,40 +109,30 @@ class _MobileVerifyScreenState extends State<MobileVerifyScreen> {
                   },
                 ),
                 16.ph,
-                CustomButton(
-                  onPressed: () {
-                    var mobile = _mobileController.text.trim();
-                    if (_formKey.currentState!.validate()) {
-                      if (mobile == "1111111111") {
-                        removeFocus(context);
-                        SharedPrefProvider.setString(
-                            SharedPrefProvider.token, "425435345");
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const PasswordVerifyScreen(),
-                          ),
-                        );
-                      } else {
-                        removeFocus(context);
-                        SharedPrefProvider.setString(
-                            SharedPrefProvider.token, "425435345");
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                const RegisterOtpVerifyScreen(),
-                          ),
-                        );
-                      }
-                    }
+                Consumer<AuthApiProvider>(
+                  builder:
+                      (BuildContext context, checkUserProvider, Widget? child) {
+                    return checkUserProvider.loading
+                        ? const CustomButtonLoader()
+                        : CustomButton(
+                            onPressed: () {
+                              removeFocus(context);
+                              var mobile = _mobileController.text.trim();
+                              if (_formKey.currentState!.validate()) {
+                                checkUserProvider.checkUserType(
+                                  mobile: mobile,
+                                  context: context,
+                                );
+                              }
+                            },
+                            isGradient: false,
+                            child: Text(
+                              AppStrings.nextTxt.toUpperCase(),
+                              style: AppTextStyles.bodyWhite16,
+                            ),
+                          ).animate().fadeIn(duration: 500.ms);
                   },
-                  isGradient: false,
-                  child: Text(
-                    AppStrings.nextTxt.toUpperCase(),
-                    style: AppTextStyles.bodyWhite16,
-                  ),
-                ).animate().fadeIn(duration: 500.ms),
+                ),
                 SizedBox(
                   height: mq.height * 0.08,
                 ),

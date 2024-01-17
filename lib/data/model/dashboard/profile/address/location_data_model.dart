@@ -5,6 +5,7 @@ class LocationData {
   final String city;
   final String state;
   final String zipCode;
+  final String landmark;
 
   LocationData({
     required this.latitude,
@@ -13,5 +14,6 @@ class LocationData {
     required this.city,
     required this.state,
     required this.zipCode,
+    required this.landmark,
   });
 }

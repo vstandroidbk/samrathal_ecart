@@ -25,4 +25,5 @@ class AppImages {
   static String markerLottie = "assets/animation/marker_lotie.json";
   static String uploadImg = "assets/icons/upload_img.png";
   static String sampleQrImg = "assets/images/sample_qr_img.png";
+  static String noDataImg = "assets/icons/no_data.png";
 }

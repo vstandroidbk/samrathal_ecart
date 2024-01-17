@@ -1,8 +1,13 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:provider/provider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:samrathal_ecart/logic/provider/dashboard/cart/cart_api_provider.dart';
 import 'package:samrathal_ecart/presentation/dashboard/cart/select_address_page.dart';
 import 'package:samrathal_ecart/presentation/dashboard/cart/widget/cart_item_view_card.dart';
+import 'package:samrathal_ecart/presentation/dashboard/cart/widget/cart_loading_shimmer.dart';
 import 'package:samrathal_ecart/presentation/dashboard/profile/order/widget/order_success_screen.dart';
 import 'package:samrathal_ecart/presentation/dashboard/profile/payment/payment_details_screen.dart';
 import 'package:samrathal_ecart/utils/utils.dart';
@@ -21,6 +26,22 @@ class CartTabPage extends StatefulWidget {
 }
 
 class _CartTabPageState extends State<CartTabPage> {
+  final RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
+
+  @override
+  void initState() {
+    callApi();
+    super.initState();
+  }
+
+  Future<void> callApi() async {
+    var dataProvider = Provider.of<CartApiProvider>(context, listen: false);
+    dataProvider.setCartListDataNull();
+    await dataProvider.getCartListApi();
+    _refreshController.refreshCompleted();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,245 +49,272 @@ class _CartTabPageState extends State<CartTabPage> {
         titleSpacing: 12,
         title: Text(AppStrings.cartTabTxt).animate().fadeIn(duration: 500.ms),
       ),
-      body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        children: [
-          12.ph,
-          Text(
-            AppStrings.cartItemsTxt,
-            style:
-                AppTextStyles.bodyBlack14.copyWith(fontWeight: FontWeight.w700),
-          ).animate().slide(
-                duration: 500.ms,
-                begin: const Offset(-1, 0),
-                // end: Offset(dx, dy),
-              ),
-          ListView.builder(
-            itemCount: 3,
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemBuilder: (ctx, index) {
-              return CartItemViewCard(index: index);
-            },
-          ).animate().slide(
-                duration: 500.ms,
-                begin: const Offset(-1, 0),
-              ),
-          5.ph,
-          // total amount
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
-            decoration: const BoxDecoration(
-              color: AppColors.profileLabelBg,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Flexible(
-                      child: Text(
-                        "Total",
-                        style: AppTextStyles.bodyBlack14.copyWith(
-                            color: AppColors.blackColor,
-                            fontWeight: FontWeight.w600),
-                      ),
-                    ),
-                    8.pw,
-                    Text(
-                      Formatter.formatPrice(12000),
-                      style: AppTextStyles.bodyBlack14.copyWith(
-                          color: AppColors.primaryColor,
-                          fontWeight: FontWeight.w600),
-                    )
-                  ],
-                ),
-                5.ph,
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Flexible(
-                      child: Text(
-                        "Shipping Charge",
-                        style: AppTextStyles.bodyBlack14.copyWith(
-                            color: AppColors.blackColor,
-                            fontWeight: FontWeight.w600),
-                      ),
-                    ),
-                    8.pw,
-                    Text(
-                      Formatter.formatPrice(500),
-                      style: AppTextStyles.bodyBlack14.copyWith(
-                          color: AppColors.primaryColor,
-                          fontWeight: FontWeight.w600),
-                    )
-                  ],
-                ),
-                5.ph,
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Flexible(
-                      child: Text(
-                        "Discount",
-                        style: AppTextStyles.bodyBlack14.copyWith(
-                            color: AppColors.blackColor,
-                            fontWeight: FontWeight.w600),
-                      ),
-                    ),
-                    8.pw,
-                    Text(
-                      Formatter.formatPrice(1000),
-                      style: AppTextStyles.bodyBlack14.copyWith(
-                          color: AppColors.primaryColor,
-                          fontWeight: FontWeight.w600),
-                    )
-                  ],
-                ),
-                5.ph,
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Flexible(
-                      child: Text(
-                        "Grand Total",
-                        style: AppTextStyles.bodyBlack14.copyWith(
-                            color: AppColors.blackColor,
-                            fontWeight: FontWeight.w600),
-                      ),
-                    ),
-                    8.pw,
-                    Text(
-                      Formatter.formatPrice(11500),
-                      style: AppTextStyles.bodyBlack14.copyWith(
-                          color: AppColors.primaryColor,
-                          fontWeight: FontWeight.w600),
-                    )
-                  ],
-                ),
-              ],
-            ),
-          ).animate().slide(
-                duration: 500.ms,
-                begin: const Offset(1, 0),
-                // end: Offset(dx, dy),
-              ),
-          12.ph,
-          Text(
-            "Estimate Distance 10 km",
-            style: AppTextStyles.bodyBlack14,
-          ).animate().slide(
-                duration: 500.ms,
-                begin: const Offset(1, 0),
-                // end: Offset(dx, dy),
-              ),
-          12.ph,
-          // address
-          Text(
-            AppStrings.shipAddressTxt,
-            style:
-                AppTextStyles.bodyBlack14.copyWith(fontWeight: FontWeight.w700),
-          ).animate().slide(
-                duration: 500.ms,
-                begin: const Offset(-1, 0),
-                // end: Offset(dx, dy),
-              ),
-          5.ph,
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-            decoration: const BoxDecoration(
-              color: AppColors.profileLabelBg,
-            ),
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        "Deliver To:",
-                        style: AppTextStyles.bodyBlack14
-                            .copyWith(fontWeight: FontWeight.w700),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 30,
-                      child: OutlinedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const SelectAddressPage(),
+      body: SmartRefresher(
+        controller: _refreshController,
+        onRefresh: () {
+          callApi();
+        },
+        child: Consumer<CartApiProvider>(
+          builder: (BuildContext context, CartApiProvider cartProvider,
+              Widget? child) {
+            var cartListModel = cartProvider.cartListModel;
+            var cartData = cartProvider.cartListModel?.cartData;
+            var addressData = cartProvider.cartListModel?.addressData;
+            var productImgPath = cartProvider.cartListModel?.productImagePath;
+
+            return SingleChildScrollView(
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                child: cartProvider.cartListLoading
+                    ? const CartLoadingShimmer()
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          12.ph,
+                          Text(
+                            AppStrings.cartItemsTxt,
+                            style: AppTextStyles.bodyBlack14
+                                .copyWith(fontWeight: FontWeight.w700),
+                          ).animate().slide(
+                                duration: 500.ms,
+                                begin: const Offset(-1, 0),
+                                // end: Offset(dx, dy),
+                              ),
+                          if (cartListModel != null &&
+                              cartData != null &&
+                              productImgPath != null)
+                            ListView.builder(
+                              itemCount: cartData.length,
+                              physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemBuilder: (ctx, index) {
+                                return CartItemViewCard(
+                                  index: index,
+                                  cartData: cartData[index],
+                                  imgPath: productImgPath,
+                                );
+                              },
+                            ).animate().slide(
+                                  duration: 500.ms,
+                                  begin: const Offset(-1, 0),
+                                ),
+                          5.ph,
+                          // total amount
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 16, horizontal: 12),
+                            decoration: const BoxDecoration(
+                              color: AppColors.profileLabelBg,
                             ),
-                          );
-                        },
-                        style: OutlinedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(2),
-                          ),
-                          side: const BorderSide(
-                            width: 1.0,
-                            color: AppColors.primaryColor,
-                            style: BorderStyle.solid,
-                          ),
-                        ),
-                        child: Text(
-                          "Change",
-                          style: AppTextStyles.bodyBlack14
-                              .copyWith(color: AppColors.primaryColor),
-                        ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Flexible(
+                                      child: Text(
+                                        "Total",
+                                        style: AppTextStyles.bodyBlack14
+                                            .copyWith(
+                                                color: AppColors.blackColor,
+                                                fontWeight: FontWeight.w600),
+                                      ),
+                                    ),
+                                    8.pw,
+                                    Text(
+                                      Formatter.formatPrice(12000),
+                                      style: AppTextStyles.bodyBlack14.copyWith(
+                                          color: AppColors.primaryColor,
+                                          fontWeight: FontWeight.w600),
+                                    )
+                                  ],
+                                ),
+                                5.ph,
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Flexible(
+                                      child: Text(
+                                        "Shipping Charge",
+                                        style: AppTextStyles.bodyBlack14
+                                            .copyWith(
+                                                color: AppColors.blackColor,
+                                                fontWeight: FontWeight.w600),
+                                      ),
+                                    ),
+                                    8.pw,
+                                    Text(
+                                      Formatter.formatPrice(500),
+                                      style: AppTextStyles.bodyBlack14.copyWith(
+                                          color: AppColors.primaryColor,
+                                          fontWeight: FontWeight.w600),
+                                    )
+                                  ],
+                                ),
+                                5.ph,
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Flexible(
+                                      child: Text(
+                                        "Grand Total",
+                                        style: AppTextStyles.bodyBlack14
+                                            .copyWith(
+                                                color: AppColors.blackColor,
+                                                fontWeight: FontWeight.w600),
+                                      ),
+                                    ),
+                                    8.pw,
+                                    Text(
+                                      Formatter.formatPrice(11500),
+                                      style: AppTextStyles.bodyBlack14.copyWith(
+                                          color: AppColors.primaryColor,
+                                          fontWeight: FontWeight.w600),
+                                    )
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ).animate().slide(
+                                duration: 500.ms,
+                                begin: const Offset(1, 0),
+                                // end: Offset(dx, dy),
+                              ),
+                          12.ph,
+                          if (addressData != null)
+                            Text(
+                              "Estimate Distance 10 km",
+                              style: AppTextStyles.bodyBlack14,
+                            ).animate().slide(
+                                  duration: 500.ms,
+                                  begin: const Offset(1, 0),
+                                  // end: Offset(dx, dy),
+                                ),
+                          12.ph,
+                          // address
+                          Text(
+                            AppStrings.shipAddressTxt,
+                            style: AppTextStyles.bodyBlack14
+                                .copyWith(fontWeight: FontWeight.w700),
+                          ).animate().slide(
+                                duration: 500.ms,
+                                begin: const Offset(-1, 0),
+                                // end: Offset(dx, dy),
+                              ),
+                          5.ph,
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 12, horizontal: 16),
+                            decoration: const BoxDecoration(
+                              color: AppColors.profileLabelBg,
+                            ),
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        "Deliver To:",
+                                        style: AppTextStyles.bodyBlack14
+                                            .copyWith(
+                                                fontWeight: FontWeight.w700),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 30,
+                                      child: OutlinedButton(
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const SelectAddressPage(),
+                                            ),
+                                          );
+                                        },
+                                        style: OutlinedButton.styleFrom(
+                                          backgroundColor: Colors.white,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(2),
+                                          ),
+                                          side: const BorderSide(
+                                            width: 1.0,
+                                            color: AppColors.primaryColor,
+                                            style: BorderStyle.solid,
+                                          ),
+                                        ),
+                                        child: Text(
+                                          "Change",
+                                          style: AppTextStyles.bodyBlack14
+                                              .copyWith(
+                                                  color:
+                                                      AppColors.primaryColor),
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                8.ph,
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Flexible(
+                                      child: Text(
+                                        addressData != null
+                                            ? "${addressData.address} ${addressData.landmark} ${addressData.districtData?.districtName} ${addressData.stateData?.stateName} (${addressData.zipCode})"
+                                            : "N/A",
+                                        style: AppTextStyles.bodyBlack14,
+                                      ),
+                                    ),
+                                    8.pw,
+                                    Image.asset(
+                                      AppImages.locationImg,
+                                      height: 40,
+                                      width: 40,
+                                    )
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ).animate().slide(
+                                duration: 500.ms,
+                                begin: const Offset(-1, 0),
+                                // end: Offset(dx, dy),
+                              ),
+                          12.ph,
+                          // receive now and pay now buttons
+                          CustomButton(
+                            height: 40,
+                            onPressed: () {
+                              showModalBottomSheet(
+                                backgroundColor: Colors.transparent,
+                                context: context,
+                                builder: (context) {
+                                  return const CheckoutDialog();
+                                },
+                              );
+                            },
+                            isGradient: false,
+                            backgroundColor: AppColors.redBtnColor,
+                            child: Text(
+                              AppStrings.checkoutTxt.toUpperCase(),
+                              style: AppTextStyles.bodyWhite14,
+                            ),
+                          ).animate().fadeIn(duration: 500.ms),
+                          16.ph,
+                        ],
                       ),
-                    )
-                  ],
-                ),
-                8.ph,
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Flexible(
-                      child: Text(
-                        "A-1, Narayanpuri,kalwad road,  jhotwara Jaipur",
-                        style: AppTextStyles.bodyBlack14,
-                      ),
-                    ),
-                    8.pw,
-                    Image.asset(
-                      AppImages.locationImg,
-                      height: 40,
-                      width: 40,
-                    )
-                  ],
-                ),
-              ],
-            ),
-          ).animate().slide(
-                duration: 500.ms,
-                begin: const Offset(-1, 0),
-                // end: Offset(dx, dy),
               ),
-          12.ph,
-          // receive now and pay now buttons
-          CustomButton(
-            height: 40,
-            onPressed: () {
-              showModalBottomSheet(
-                backgroundColor: Colors.transparent,
-                context: context,
-                builder: (context) {
-                  return const CheckoutDialog();
-                },
-              );
-            },
-            isGradient: false,
-            backgroundColor: AppColors.redBtnColor,
-            child: Text(
-              AppStrings.checkoutTxt.toUpperCase(),
-              style: AppTextStyles.bodyWhite14,
-            ),
-          ).animate().fadeIn(duration: 500.ms),
-          16.ph,
-        ],
+            );
+          },
+        ),
       ),
     );
   }

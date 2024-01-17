@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:samrathal_ecart/data/model/dashboard/profile/address/address_list_model.dart';
 import 'package:samrathal_ecart/presentation/dashboard/profile/address/edit_address_page.dart';
 import 'package:samrathal_ecart/utils/utils.dart';
-
 import '../../../../../core/app_colors.dart';
 import '../../../../../core/app_text_styles.dart';
 
 class AddressViewCard extends StatelessWidget {
   final int index;
+  final AddressData addressData;
 
-  const AddressViewCard({super.key, required this.index});
+  const AddressViewCard(
+      {super.key, required this.index, required this.addressData});
 
   @override
   Widget build(BuildContext context) {
+    var fullAddress =
+        "${addressData.address} ${addressData.landmark} ${addressData.districtData?.districtName} ${addressData.stateData?.stateName} (${addressData.zipCode})";
     return Stack(
       children: [
-        if (index == 0)
+        if (addressData.primaryStatus == 2)
           Container(
             decoration: const BoxDecoration(color: AppColors.primaryColor),
             padding:
@@ -38,7 +42,7 @@ class AddressViewCard extends StatelessWidget {
                 children: [
                   Flexible(
                     child: Text(
-                      "212-B Abc nagar def road ghk area 123456",
+                      fullAddress,
                       style: AppTextStyles.bodyBlack14,
                     ),
                   ),
@@ -48,7 +52,9 @@ class AddressViewCard extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const EditAddressPage(),
+                          builder: (context) => EditAddressPage(
+                            addressId: addressData.id!,
+                          ),
                         ),
                       );
                     },

@@ -40,15 +40,18 @@ class _CustomParagraphState extends State<CustomParagraph> {
         TextSpan(
           text: showMore
               ? widget.description
-              : "${widget.description.substring(0, 100)}...",
+              : widget.description.length < 100
+                  ? widget.description
+                  : "${widget.description.substring(0, 100)}...",
           style: AppTextStyles.bodyBlack14.copyWith(color: AppColors.descColor),
         ),
-        TextSpan(
-          recognizer: showMoreRecognizer,
-          text: showMore ? "Show Less" : "Read More",
-          style:
-              AppTextStyles.bodyBlack14.copyWith(color: AppColors.primaryColor),
-        ),
+        if (widget.description.length > 100)
+          TextSpan(
+            recognizer: showMoreRecognizer,
+            text: showMore ? "Show Less" : "Read More",
+            style: AppTextStyles.bodyBlack14
+                .copyWith(color: AppColors.primaryColor),
+          ),
       ]),
     );
   }

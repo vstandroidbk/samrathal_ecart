@@ -9,12 +9,11 @@ import '../core/api.dart';
 import '../core/app_images.dart';
 import '../logic/services/preferences.dart';
 import '../utils/utils.dart';
+import '../widgets/navigate_anim.dart';
 import 'dashboard/dashboard_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
-
-  // static const String routeName = "Splash Screen";
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -22,16 +21,17 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   void openScreen() async {
-    final token = await SharedPrefProvider.getString(SharedPrefProvider.token);
+    final userId =
+        await SharedPrefProvider.getString(SharedPrefProvider.userId);
     final isOnline = await Api.hasNetwork();
 
     if (isOnline) {
-      if (token != null && token.isNotEmpty) {
+      if (userId != null && userId.isNotEmpty) {
         Future.delayed(const Duration(milliseconds: 1500), () async {
           Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(
-              builder: (context) => const DashboardScreen(selectedTab: 0),
+            FadeAnimatingRoute(
+              route: const DashboardScreen(selectedTab: 0),
             ),
             (route) => false,
           );
@@ -40,8 +40,8 @@ class _SplashScreenState extends State<SplashScreen> {
         Future.delayed(const Duration(milliseconds: 1500), () async {
           Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(
-                builder: (context) => const MobileVerifyScreen(),
+              FadeAnimatingRoute(
+                route: const MobileVerifyScreen(),
               ),
               (route) => false);
         });

@@ -1,21 +1,29 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+import 'package:provider/provider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:samrathal_ecart/core/app_colors.dart';
-import 'package:samrathal_ecart/core/app_images.dart';
 import 'package:samrathal_ecart/core/app_strings.dart';
 import 'package:samrathal_ecart/core/app_text_styles.dart';
+import 'package:samrathal_ecart/logic/provider/dashboard/shop/add_cart_calculator_provider.dart';
 import 'package:samrathal_ecart/logic/services/formatter.dart';
+import 'package:samrathal_ecart/presentation/dashboard/shop/widget/add_to_cart_dialog.dart';
+import 'package:samrathal_ecart/presentation/dashboard/shop/widget/product_details_shimmer.dart';
 import 'package:samrathal_ecart/utils/utils.dart';
 import 'package:samrathal_ecart/widgets/custom_button.dart';
 import 'package:samrathal_ecart/widgets/custom_paragraph.dart';
-import '../../../widgets/custom_text_field.dart';
+
+import '../../../core/api_const.dart';
+import '../../../logic/provider/dashboard/shop/shop_api_provider.dart';
 import '../dashboard_screen.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
-  const ProductDetailsScreen({super.key});
+  final String productId;
 
-  // static const String routeName = "Product Details Screen";
+  const ProductDetailsScreen({super.key, required this.productId});
 
   @override
   State<ProductDetailsScreen> createState() => _ProductDetailsScreenState();
@@ -28,6 +36,22 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     SizeInfo(id: 3, size: '25 kg'),
     SizeInfo(id: 5, size: 'Random'),
   ];
+
+  final RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
+
+  @override
+  void initState() {
+    callApi();
+    super.initState();
+  }
+
+  Future<void> callApi() async {
+    var dataProvider = Provider.of<ShopApiProvider>(context, listen: false);
+    dataProvider.setProductDetailsDataNull();
+    await dataProvider.getProductDetailsApi(productId: widget.productId);
+    _refreshController.refreshCompleted();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,653 +83,246 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           16.pw,
         ],
       ),
-      body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        children: [
-          // const ProductSliderWidget(),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: Container(
-                // width: size.width,
-                decoration: BoxDecoration(
-                    color: Colors.grey.shade300,
-                    borderRadius: BorderRadius.circular(10)),
-                child: Center(
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.asset(
-                      AppImages.productImg1,
-                      width: double.infinity,
-                      height: 150,
-                      // imageUrl: i,
-                      /*Network.baseUrl + widget.sliderImgPath + i.image!,*/
-                      fit: BoxFit.fill,
-                      // placeholder: (context, url) => const SizedBox(),
-                      // errorWidget: (context, url, error) =>
-                      //     const Icon(Icons.error),
-                    ),
-                  ),
-                )),
-          ),
-          12.ph,
-          // product name and sku
-          Row(
-            children: [
-              Expanded(
-                  child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "18 SWG Mild Steel Binding Wire",
-                    style: AppTextStyles.bodyBlack14
-                        .copyWith(fontWeight: FontWeight.w600),
-                  ),
-                  3.ph,
-                  Text(
-                    "wssxd-wuih",
-                    style: AppTextStyles.bodyBlack14
-                        .copyWith(color: AppColors.primaryColor),
-                  ),
-                  3.ph,
-                  Text(
-                    "Price : ${Formatter.formatPrice(5000)}",
-                    style: AppTextStyles.bodyBlack14
-                        .copyWith(fontWeight: FontWeight.w600),
-                  ),
-                ],
-              )),
-              const Icon(CupertinoIcons.heart)
-            ],
-          ),
-          // packaging size
-          12.ph,
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  AppStrings.packingSizeTxt,
-                  style: AppTextStyles.bodyBlack14
-                      .copyWith(fontWeight: FontWeight.w600),
-                ),
-              ),
-              Expanded(
-                child: Text(
-                  "MOQ:1ton",
-                  textAlign: TextAlign.right,
-                  style: AppTextStyles.bodyBlack14
-                      .copyWith(fontWeight: FontWeight.w500),
-                ),
-              ),
-            ],
-          ),
-          8.ph,
-          Wrap(
-            spacing: 16.0,
-            runSpacing: 8.0,
-            children: sizes
-                .map((size) => Container(
-                      padding: const EdgeInsets.only(
-                          left: 8, right: 8, top: 5, bottom: 5),
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(5.0),
-                          border: Border.all(
-                              color: AppColors.primaryColor, width: 1)),
-                      child: Text(
-                        size.size,
-                        style: AppTextStyles.bodyBlack14,
-                      ),
-                    ))
-                .toList(),
-          ),
-          12.ph,
-          Text(
-            AppStrings.descriptionTxt,
-            style:
-                AppTextStyles.bodyBlack14.copyWith(fontWeight: FontWeight.w600),
-          ),
-          5.ph,
-          CustomParagraph(description: AppStrings.introDescTxt),
-          12.ph,
-          Text(
-            AppStrings.productDetailsTxt,
-            style:
-                AppTextStyles.bodyBlack14.copyWith(fontWeight: FontWeight.w600),
-          ),
-          5.ph,
-          const ProductDetailsLabel(
-            title: "Application Area",
-            value: " For Construction",
-          ),
-          3.ph,
-          const ProductDetailsLabel(
-            title: "Wire Material",
-            value: "Mild Steel",
-          ),
-          3.ph,
-          const ProductDetailsLabel(
-            title: "Conductor Type",
-            value: "Solid",
-          ),
-          3.ph,
-          const ProductDetailsLabel(
-            title: "Uses/Application",
-            value: "For Agriculture",
-          ),
-          20.ph,
-          CustomButton(
-            onPressed: () {
-              showModalBottomSheet(
-                backgroundColor: Colors.transparent,
-                context: context,
-                builder: (context) {
-                  return const ProductDetailSDialog();
-                },
-              );
+      body: Consumer<ShopApiProvider>(
+        builder: (BuildContext context, ShopApiProvider shopProvider,
+            Widget? child) {
+          var productDetailsModel = shopProvider.productDetailsModel;
+          var productDetailsData =
+              shopProvider.productDetailsModel?.productDetails;
+          var productImgPath =
+              shopProvider.productDetailsModel?.productImagePath;
+          return SmartRefresher(
+            controller: _refreshController,
+            onRefresh: () {
+              callApi();
             },
-            isGradient: false,
-            child: Text(
-              AppStrings.addToCartTxt.toUpperCase(),
-              style: AppTextStyles.bodyWhite14,
-            ),
-          )
-        ],
-      ).animate().slideY(
-        duration: 500.ms,
-      ),
-    );
-  }
-}
-
-class ProductDetailSDialog extends StatefulWidget {
-  const ProductDetailSDialog({super.key});
-
-  @override
-  State<ProductDetailSDialog> createState() => _ProductDetailSDialogState();
-}
-
-class _ProductDetailSDialogState extends State<ProductDetailSDialog> {
-  ValueNotifier<int?> selectedValue = ValueNotifier<int?>(null);
-  TextEditingController qtyController = TextEditingController();
-  String? dropdownValueFive = "0";
-  String? dropdownValueTen = "0";
-  String? dropdownValueTwenty = "0";
-  String? dropdownValueRandom = "0";
-
-  List<Map<String, dynamic>> dropDownWeightList = [
-    {"id": "0", "status": "Ton"},
-    {"id": "1", "status": "KG"},
-  ];
-
-  final _formKey = GlobalKey<FormState>();
-
-  final TextEditingController _textFieldController5 = TextEditingController();
-  final TextEditingController _textFieldController10 = TextEditingController();
-  final TextEditingController _textFieldController25 = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding:
-          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-      // height: 278,
-      // width: double.infinity,
-      child: SingleChildScrollView(
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(12),
-              topRight: Radius.circular(12),
-            ),
-          ),
-          child: Form(
-            // key: _formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: Text(
-                        "Size",
-                        textAlign: TextAlign.start,
-                        style: AppTextStyles.bodyBlack16
-                            .copyWith(fontWeight: FontWeight.w600),
-                      ),
-                    ),
-                    5.pw,
-                    Expanded(
-                      flex: 2,
-                      child: Text(
-                        "QTY",
-                        textAlign: TextAlign.center,
-                        style: AppTextStyles.bodyBlack16
-                            .copyWith(fontWeight: FontWeight.w600),
-                      ),
-                    ),
-                    8.pw,
-                    Expanded(
-                      flex: 2,
-                      child: Text(
-                        "Weight",
-                        textAlign: TextAlign.center,
-                        style: AppTextStyles.bodyBlack16
-                            .copyWith(fontWeight: FontWeight.w600),
-                      ),
-                    ),
-                  ],
-                ),
-                8.ph,
-                Row(
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: Text(
-                        "5 KG",
-                        textAlign: TextAlign.start,
-                        style: AppTextStyles.bodyBlack14,
-                      ),
-                    ),
-                    5.pw,
-                    Expanded(
-                      flex: 3,
-                      child: SizedBox(
-                        height: 40,
-                        child: buildTextFormField(
-                          'Enter multiple of 5',
-                          _textFieldController5,
-                          5,
-                        ),
-                      ),
-                    ),
-                    // 8.pw,
-                    Expanded(
-                      flex: 2,
-                      child: Container(
-                        height: 40,
-                        padding: const EdgeInsets.only(left: 5, right: 5),
-                        decoration: const BoxDecoration(
-                            color: AppColors.textFieldBgColor),
-                        child: DropdownButtonHideUnderline(
-                          child: ButtonTheme(
-                            alignedDropdown: true,
-                            child: DropdownButton<String>(
-                              value: dropdownValueFive,
-                              isExpanded: true,
-                              isDense: true,
-                              style: AppTextStyles.bodyBlack14,
-                              onChanged: (onChangedValue) async {
-                                setState(() {
-                                  dropdownValueFive = onChangedValue!;
-                                });
-                              },
-                              selectedItemBuilder: (BuildContext context) {
-                                return dropDownWeightList.map((value) {
-                                  return Center(
-                                    child: Text(
-                                      value["status"],
-                                      style: AppTextStyles.bodyBlack14,
+            child: shopProvider.productDetailsLoading
+                ? const ProductDetailsShimmer()
+                : SingleChildScrollView(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 12),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // const ProductSliderWidget(),
+                          if (productDetailsModel != null &&
+                              productDetailsData != null &&
+                              productImgPath != null)
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: Container(
+                                  // width: size.width,
+                                  decoration: BoxDecoration(
+                                      color: Colors.grey.shade300,
+                                      borderRadius: BorderRadius.circular(10)),
+                                  child: Center(
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(10),
+                                      child: CachedNetworkImage(
+                                        imageUrl: ApiEndPoints.baseUrl +
+                                            productImgPath +
+                                            productDetailsData.image!,
+                                        fit: BoxFit.cover,
+                                        width: double.infinity,
+                                        height: 150,
+                                        placeholder: (context, url) =>
+                                            const SizedBox(),
+                                        errorWidget: (context, url, error) =>
+                                            const Icon(Icons.error),
+                                      ),
                                     ),
-                                  );
-                                }).toList();
-                              },
-                              items: dropDownWeightList.map(
-                                (item) {
-                                  return DropdownMenuItem(
-                                    value: item["id"].toString(),
-                                    child: Text(
-                                      item["status"].toString(),
-                                      style: AppTextStyles.bodyBlack14,
-                                    ),
-                                  );
-                                },
-                              ).toList(),
+                                  )),
                             ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                8.ph,
-                Row(
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: Text(
-                        "10 KG",
-                        textAlign: TextAlign.start,
-                        style: AppTextStyles.bodyBlack14,
-                      ),
-                    ),
-                    5.pw,
-                    Expanded(
-                      flex: 3,
-                      child: SizedBox(
-                        height: 40,
-                        child: buildTextFormField(
-                          'Enter multiple of 10',
-                          _textFieldController10,
-                          10,
-                        ),
-                      ),
-                    ),
-                    // 8.pw,
-                    Expanded(
-                      flex: 2,
-                      child: Container(
-                        height: 40,
-                        padding: const EdgeInsets.only(left: 5, right: 5),
-                        decoration: const BoxDecoration(
-                            color: AppColors.textFieldBgColor),
-                        child: DropdownButtonHideUnderline(
-                          child: ButtonTheme(
-                            alignedDropdown: true,
-                            child: DropdownButton<String>(
-                              value: dropdownValueTen,
-                              isExpanded: true,
-                              isDense: true,
-                              style: AppTextStyles.bodyBlack14,
-                              onChanged: (onChangedValue) async {
-                                setState(() {
-                                  dropdownValueTen = onChangedValue!;
-                                });
-                              },
-                              selectedItemBuilder: (BuildContext context) {
-                                return dropDownWeightList.map((value) {
-                                  return Center(
-                                    child: Text(
-                                      value["status"],
-                                      style: AppTextStyles.bodyBlack14,
+                          12.ph,
+                          // product name and sku
+                          if (productDetailsModel != null &&
+                              productDetailsData != null)
+                            Row(
+                              children: [
+                                Expanded(
+                                    child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      productDetailsData.productName != null
+                                          ? productDetailsData.productName!
+                                          : "N/A",
+                                      style: AppTextStyles.bodyBlack14.copyWith(
+                                          fontWeight: FontWeight.w600),
                                     ),
-                                  );
-                                }).toList();
-                              },
-                              items: dropDownWeightList.map(
-                                (item) {
-                                  return DropdownMenuItem(
-                                    value: item["id"].toString(),
-                                    child: Text(
-                                      item["status"].toString(),
-                                      style: AppTextStyles.bodyBlack14,
+                                    3.ph,
+                                    Text(
+                                      productDetailsData.sku != null
+                                          ? productDetailsData.sku!
+                                          : "N/A",
+                                      style: AppTextStyles.bodyBlack14.copyWith(
+                                          color: AppColors.primaryColor),
                                     ),
-                                  );
-                                },
-                              ).toList(),
+                                    3.ph,
+                                    Text(
+                                      productDetailsData.retailTonAmount != null
+                                          ? "Price : ${Formatter.formatPrice(int.parse(productDetailsData.retailTonAmount!))} / Ton"
+                                          : "N/A",
+                                      style: AppTextStyles.bodyBlack14.copyWith(
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                    3.ph,
+                                    Text(
+                                      productDetailsData.wholeSaleTonAmount !=
+                                              null
+                                          ? "Whole Sale Price : ${Formatter.formatPrice(int.parse(productDetailsData.wholeSaleTonAmount!))} / Ton"
+                                          : "N/A",
+                                      style: AppTextStyles.bodyBlack14.copyWith(
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                  ],
+                                )),
+                                const Icon(CupertinoIcons.heart)
+                              ],
                             ),
+                          // packaging size
+                          12.ph,
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  AppStrings.packingSizeTxt,
+                                  style: AppTextStyles.bodyBlack14
+                                      .copyWith(fontWeight: FontWeight.w600),
+                                ),
+                              ),
+                              if (productDetailsModel != null &&
+                                  productDetailsData != null)
+                                Expanded(
+                                  child: Text(
+                                    productDetailsData.wholeSaleTonMinQty !=
+                                            null
+                                        ? "MOQ : ${productDetailsData.wholeSaleTonMinQty} Ton"
+                                        : "N/A",
+                                    textAlign: TextAlign.right,
+                                    style: AppTextStyles.bodyBlack14
+                                        .copyWith(fontWeight: FontWeight.w500),
+                                  ),
+                                ),
+                            ],
                           ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                8.ph,
-                Row(
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: Text(
-                        "20 KG",
-                        textAlign: TextAlign.start,
-                        style: AppTextStyles.bodyBlack14,
-                      ),
-                    ),
-                    5.pw,
-                    Expanded(
-                      flex: 3,
-                      child: SizedBox(
-                        height: 40,
-                        child: buildTextFormField(
-                          'Enter multiple of 25',
-                          _textFieldController25,
-                          25,
-                        ),
-                      ),
-                    ),
-                    // 8.pw,
-                    Expanded(
-                      flex: 2,
-                      child: Container(
-                        height: 40,
-                        padding: const EdgeInsets.only(left: 5, right: 5),
-                        decoration: const BoxDecoration(
-                            color: AppColors.textFieldBgColor),
-                        child: DropdownButtonHideUnderline(
-                          child: ButtonTheme(
-                            alignedDropdown: true,
-                            child: DropdownButton<String>(
-                              value: dropdownValueTwenty,
-                              isExpanded: true,
-                              isDense: true,
-                              style: AppTextStyles.bodyBlack14,
-                              onChanged: (onChangedValue) async {
-                                setState(() {
-                                  dropdownValueTwenty = onChangedValue!;
-                                });
-                              },
-                              selectedItemBuilder: (BuildContext context) {
-                                return dropDownWeightList.map((value) {
-                                  return Center(
-                                    child: Text(
-                                      value["status"],
-                                      style: AppTextStyles.bodyBlack14,
-                                    ),
-                                  );
-                                }).toList();
-                              },
-                              items: dropDownWeightList.map(
-                                (item) {
-                                  return DropdownMenuItem(
-                                    value: item["id"].toString(),
-                                    child: Text(
-                                      item["status"].toString(),
-                                      style: AppTextStyles.bodyBlack14,
-                                    ),
-                                  );
-                                },
-                              ).toList(),
+                          8.ph,
+                          Wrap(
+                            spacing: 16.0,
+                            runSpacing: 8.0,
+                            children: sizes
+                                .map((size) => Container(
+                                      padding: const EdgeInsets.only(
+                                          left: 8, right: 8, top: 5, bottom: 5),
+                                      decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(5.0),
+                                          border: Border.all(
+                                              color: AppColors.primaryColor,
+                                              width: 1)),
+                                      child: Text(
+                                        size.size,
+                                        style: AppTextStyles.bodyBlack14,
+                                      ),
+                                    ))
+                                .toList(),
+                          ),
+                          12.ph,
+                          Text(
+                            AppStrings.descriptionTxt,
+                            style: AppTextStyles.bodyBlack14
+                                .copyWith(fontWeight: FontWeight.w600),
+                          ),
+                          5.ph,
+                          if (productDetailsModel != null &&
+                              productDetailsData != null)
+                            CustomParagraph(
+                                description:
+                                    productDetailsData.shortDescription != null
+                                        ? productDetailsData.shortDescription!
+                                        : "N/A"),
+                          12.ph,
+                          Text(
+                            AppStrings.productDetailsTxt,
+                            style: AppTextStyles.bodyBlack14
+                                .copyWith(fontWeight: FontWeight.w600),
+                          ),
+                          5.ph,
+                          if (productDetailsModel != null &&
+                              productDetailsData != null)
+                            HtmlWidget(
+                              productDetailsData.longDescription != null
+                                  ? productDetailsData.longDescription!
+                                  : "N/A",
+                              textStyle: AppTextStyles.bodyBlack14
+                                  .copyWith(color: AppColors.descColor),
+                              // onTapUrl: (url) => openUrl(url),
                             ),
+                          /*const ProductDetailsLabel(
+                            title: "Application Area",
+                            value: " For Construction",
                           ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                8.ph,
-                Row(
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: Text(
-                        "Random",
-                        textAlign: TextAlign.start,
-                        style: AppTextStyles.bodyBlack14,
-                      ),
-                    ),
-                    5.pw,
-                    Expanded(
-                      flex: 3,
-                      child: SizedBox(
-                        height: 40,
-                        child: CustomTextField(
-                          textController: qtyController,
-                          hintText: AppStrings.quantityTxt,
-                          digitOnly: true,
-                          textInputAction: TextInputAction.done,
-                          keyboardType: TextInputType.number,
-                          onChanged: (val) {
-                            setState(() {});
-                          },
-                        ),
-                      ),
-                    ),
-                    // 8.pw,
-                    Expanded(
-                      flex: 2,
-                      child: Container(
-                        height: 40,
-                        padding: const EdgeInsets.only(left: 5, right: 5),
-                        decoration: const BoxDecoration(
-                            color: AppColors.textFieldBgColor),
-                        child: DropdownButtonHideUnderline(
-                          child: ButtonTheme(
-                            alignedDropdown: true,
-                            child: DropdownButton<String>(
-                              value: dropdownValueRandom,
-                              isExpanded: true,
-                              isDense: true,
-                              style: AppTextStyles.bodyBlack14,
-                              onChanged: (onChangedValue) async {
-                                setState(() {
-                                  dropdownValueRandom = onChangedValue!;
-                                });
-                              },
-                              selectedItemBuilder: (BuildContext context) {
-                                return dropDownWeightList.map((value) {
-                                  return Center(
-                                    child: Text(
-                                      value["status"],
-                                      style: AppTextStyles.bodyBlack14,
-                                    ),
-                                  );
-                                }).toList();
-                              },
-                              items: dropDownWeightList.map(
-                                (item) {
-                                  return DropdownMenuItem(
-                                    value: item["id"].toString(),
-                                    child: Text(
-                                      item["status"].toString(),
-                                      style: AppTextStyles.bodyBlack14,
-                                    ),
-                                  );
-                                },
-                              ).toList(),
-                            ),
+                          3.ph,
+                          const ProductDetailsLabel(
+                            title: "Wire Material",
+                            value: "Mild Steel",
                           ),
-                        ),
-                      ),
+                          3.ph,
+                          const ProductDetailsLabel(
+                            title: "Conductor Type",
+                            value: "Solid",
+                          ),
+                          3.ph,
+                          const ProductDetailsLabel(
+                            title: "Uses/Application",
+                            value: "For Agriculture",
+                          ),*/
+                          20.ph,
+                          if (productDetailsModel != null &&
+                              productDetailsData != null)
+                            CustomButton(
+                              onPressed: () {
+                                Provider.of<AddCartCalculatorProvider>(context,
+                                        listen: false)
+                                    .setDataNull();
+                                showModalBottomSheet(
+                                  backgroundColor: Colors.transparent,
+                                  context: context,
+                                  builder: (dialogContext) {
+                                    return ProductDetailSDialog(
+                                      productDetails: productDetailsData,
+                                      buildContext: context,
+                                    );
+                                  },
+                                );
+                              },
+                              isGradient: false,
+                              child: Text(
+                                AppStrings.addToCartTxt.toUpperCase(),
+                                style: AppTextStyles.bodyWhite14,
+                              ),
+                            )
+                        ],
+                      ).animate().slideY(
+                            duration: 500.ms,
+                          ),
                     ),
-                  ],
-                ),
-                12.ph,
-                Row(
-                  children: [
-                    Flexible(
-                      child: Text(
-                        "Total Order Qty",
-                        style: AppTextStyles.bodyBlack14,
-                      ),
-                    ),
-                    5.pw,
-                    const Text(":"),
-                    5.pw,
-                    Flexible(
-                      child: Text(
-                        qtyController.text.trim().isEmpty
-                            ? "N/A"
-                            : qtyController.text,
-                        style: AppTextStyles.bodyBlack14,
-                      ),
-                    ),
-                    5.pw,
-                    Flexible(
-                      child: Text(
-                        selectedValue.value == null ||
-                                qtyController.text.trim().isEmpty
-                            ? " "
-                            : selectedValue.value == 1
-                                ? "Ton"
-                                : "Kg",
-                        style: AppTextStyles.bodyBlack14,
-                      ),
-                    ),
-                  ],
-                ),
-                8.ph,
-                Row(
-                  children: [
-                    Flexible(
-                      child: Text(
-                        "Total Price",
-                        style: AppTextStyles.bodyBlack14,
-                      ),
-                    ),
-                    5.pw,
-                    const Text(":"),
-                    5.pw,
-                    Flexible(
-                      child: Text(
-                        qtyController.text.trim().isEmpty
-                            ? "N/A"
-                            : qtyController.text,
-                        style: AppTextStyles.bodyBlack14,
-                      ),
-                    ),
-                    5.pw,
-                    Flexible(
-                      child: Text(
-                        selectedValue.value == null ||
-                                qtyController.text.trim().isEmpty
-                            ? " "
-                            : selectedValue.value == 1
-                                ? "Ton"
-                                : "Kg",
-                        style: AppTextStyles.bodyBlack14,
-                      ),
-                    ),
-                  ],
-                ),
-                12.ph,
-                Text(
-                  "If you will add 50 kg more then you will get it at 5000/kg",
-                  style: AppTextStyles.bodyBlack14
-                      .copyWith(color: AppColors.primaryColor),
-                ),
-                20.ph,
-                CustomButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  isGradient: false,
-                  child: Text(
-                    "Place order".toUpperCase(),
-                    style: AppTextStyles.bodyWhite14,
                   ),
-                )
-              ],
-            ),
-          ),
-        ),
+          );
+        },
       ),
-    );
-  }
-
-  Widget buildTextFormField(
-      String hintText, TextEditingController controller, int multiple) {
-    return CustomTextField(
-      textController: controller,
-      maxLine: 1,
-      keyboardType: TextInputType.number,
-      hintText: hintText,
-      // validator: (value) {
-      //   if (value == null || value.isEmpty) {
-      //     return 'Please enter a value';
-      //   }
-      //   int? inputValue = int.tryParse(value);
-      //   if (inputValue != null && inputValue % multiple == 0) {
-      //     return null;
-      //   }
-      //   return 'Please enter a valid multiple of $multiple';
-      // },
-      onChanged: (value) {
-        _formKey.currentState!.validate();
-      },
+      /* bottomNavigationBar: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: const BoxDecoration(color: Colors.red),
+        child: Text(
+          "If you will add 50 kg more then you will get it at 5000/kg",
+          textAlign: TextAlign.center,
+          style:
+              AppTextStyles.bodyBlack14.copyWith(color: AppColors.whiteColor),
+        ),
+      ),*/
     );
   }
 }

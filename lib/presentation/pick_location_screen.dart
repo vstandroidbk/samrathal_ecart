@@ -10,8 +10,8 @@ import 'package:samrathal_ecart/core/app_images.dart';
 import 'package:samrathal_ecart/core/app_text_styles.dart';
 import 'package:samrathal_ecart/utils/utils.dart';
 import 'package:samrathal_ecart/widgets/custom_button.dart';
-import '../data/model/dashboard/profile/location_data_model.dart';
-import '../logic/provider/dashboard/profile/location_data_provider.dart';
+import '../data/model/dashboard/profile/address/location_data_model.dart';
+import '../logic/provider/dashboard/profile/address/location_data_provider.dart';
 
 class PickLocationScreen extends StatefulWidget {
   const PickLocationScreen({super.key});
@@ -30,6 +30,7 @@ class _PickLocationScreenState extends State<PickLocationScreen> {
   String _city = "";
   String _state = "";
   String _zipCode = "";
+  String _landmark = "";
   Map<String, dynamic> addressMap = {};
 
   late LocationProvider _locationProvider;
@@ -170,13 +171,13 @@ class _PickLocationScreenState extends State<PickLocationScreen> {
         child: CustomButton(
           onPressed: () {
             _locationProvider.setLocationData(LocationData(
-              latitude: _draggedLatLng.latitude,
-              longitude: _draggedLatLng.longitude,
-              address: _draggedAddress,
-              city: _city,
-              state: _state,
-              zipCode: _zipCode,
-            ));
+                latitude: _draggedLatLng.latitude,
+                longitude: _draggedLatLng.longitude,
+                address: _draggedAddress,
+                city: _city,
+                state: _state,
+                zipCode: _zipCode,
+                landmark: _landmark));
             Navigator.pop(context, addressMap);
           },
           isGradient: false,
@@ -214,28 +215,36 @@ class _PickLocationScreenState extends State<PickLocationScreen> {
   //get address from dragged pin
   Future _getAddress(LatLng position) async {
     //this will list down all address around the position
-    if(position.latitude ==0 || position.longitude==0){
+    if (position.latitude == 0 || position.longitude == 0) {
       return;
     }
     List<Placemark> placeMarks =
         await placemarkFromCoordinates(position.latitude, position.longitude);
     Placemark address = placeMarks[0]; // get only first and closest address
 
-    // "Name: ${address.name}, AdministrativeArea: ${address.administrativeArea}, Country: ${address.country}, IsoCountryCode: ${address.isoCountryCode}, Locality: ${address.locality}, PostalCode: ${address.postalCode}, Street: ${address.street},SubAdministrativeArea:  ${address.subAdministrativeArea}, SubLocality: ${address.subLocality} , SubThoroughfare: ${address.subThoroughfare}, Thoroughfare: ${address.thoroughfare}";
+    String fullAddress =
+        "Name: ${address.name}, AdministrativeArea: ${address.administrativeArea}, Country: ${address.country}, IsoCountryCode: ${address.isoCountryCode}, Locality: ${address.locality}, PostalCode: ${address.postalCode}, Street: ${address.street},SubAdministrativeArea:  ${address.subAdministrativeArea}, SubLocality: ${address.subLocality} , SubThoroughfare: ${address.subThoroughfare}, Thoroughfare: ${address.thoroughfare}";
+
+    log("full address :$fullAddress");
+    // ${address.locality}, ${address.administrativeArea}, ${address.country} (${address.postalCode})
     String addressStr =
-        "${address.name}, ${address.street}, ${address.subLocality}, ${address.locality}, ${address.administrativeArea}, ${address.country}, (${address.postalCode})";
-    setState(() {
-      _draggedAddress = addressStr;
-      _city = address.locality!;
-      _state = address.administrativeArea!;
-      _zipCode = address.postalCode!;
-      addressMap.addAll({
-        "address": addressStr,
-        "state": _state,
-        "city": _city,
-        "zipCode": _zipCode,
+        "${address.name} ${address.street} ${address.subLocality}";
+    if (mounted) {
+      setState(() {
+        _draggedAddress = addressStr;
+        _city = address.locality!;
+        _state = address.administrativeArea!;
+        _zipCode = address.postalCode!;
+        _landmark = address.name!;
+        addressMap.addAll({
+          "address": addressStr,
+          "state": _state,
+          "city": _city,
+          "zipCode": _zipCode,
+          "landMark": _landmark,
+        });
       });
-    });
+    }
   }
 
   //get user's current location and set the map's camera to that location

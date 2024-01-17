@@ -3,7 +3,6 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:samrathal_ecart/core/app_strings.dart';
 import 'package:samrathal_ecart/presentation/dashboard/profile/address/add_address_page.dart';
 import 'package:samrathal_ecart/utils/utils.dart';
-
 import '../../../../core/app_text_styles.dart';
 import '../../../../widgets/custom_button.dart';
 import '../../../core/app_colors.dart';
@@ -46,8 +45,8 @@ class _SelectAddressPageState extends State<SelectAddressPage> {
           );
         },
       ).animate().slideY(
-        duration: 500.ms,
-      ),
+            duration: 500.ms,
+          ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.only(left: 16, right: 16, bottom: 20),
         child: Column(
@@ -66,8 +65,8 @@ class _SelectAddressPageState extends State<SelectAddressPage> {
                   style: AppTextStyles.bodyWhite14,
                 ),
               ).animate().fadeIn(
-                duration: 500.ms,
-              ),
+                    duration: 500.ms,
+                  ),
             ),
             12.ph,
             SizedBox(
@@ -98,8 +97,8 @@ class _SelectAddressPageState extends State<SelectAddressPage> {
                       .copyWith(color: AppColors.primaryColor),
                 ),
               ).animate().fadeIn(
-                duration: 500.ms,
-              ),
+                    duration: 500.ms,
+                  ),
             )
           ],
         ),
@@ -166,7 +165,9 @@ class SelectAddressViewCard extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const EditAddressPage(),
+                          builder: (context) => const EditAddressPage(
+                            addressId: "",
+                          ),
                         ),
                       );
                     },

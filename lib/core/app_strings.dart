@@ -84,9 +84,11 @@ class AppStrings {
   static String shipAddressTxt = "Shipping Address";
 
   static String fromLoginScreen = "From Login Screen";
+  static String fromVerifyMobileScreen = "From Verify Mobile";
   static String fromRegisterScreen = "From Register Screen";
   static String fromForgetScreen = "From Forget Screen";
   static String fromOrderScreen = "From Order Screen";
+  static String fromOtpScreen = "From otp Screen";
 
   static String paymentListTxt = "Payment List";
   static String paymentDetailsTxt = "Payment Details";

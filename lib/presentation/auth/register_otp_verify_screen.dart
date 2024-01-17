@@ -1,24 +1,30 @@
 import 'dart:async';
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-import 'package:samrathal_ecart/presentation/auth/register_screen.dart';
+import 'package:provider/provider.dart';
 import 'package:samrathal_ecart/utils/utils.dart';
-
 import '../../core/app_colors.dart';
 import '../../core/app_images.dart';
 import '../../core/app_strings.dart';
 import '../../core/app_text_styles.dart';
+import '../../logic/provider/auth/auth_api_provider.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/label_widget.dart';
+import '../../widgets/loader_widget.dart';
 
 class RegisterOtpVerifyScreen extends StatefulWidget {
-  const RegisterOtpVerifyScreen({super.key});
+  final String fromScreen;
+  final String mobile;
+  final int userType;
 
-  // static const String routeName = "Register Otp Screen";
+  const RegisterOtpVerifyScreen(
+      {super.key,
+      required this.userType,
+      required this.fromScreen,
+      required this.mobile});
 
   @override
   State<RegisterOtpVerifyScreen> createState() =>
@@ -75,7 +81,7 @@ class _RegisterOtpVerifyScreenState extends State<RegisterOtpVerifyScreen> {
                 style: AppTextStyles.headingBlack24,
               ).animate().slideX(duration: 500.ms),
               Text(
-                "${AppStrings.verifyOtpDesc} ${"9876543210".replaceRange(0, 7, "*******")}",
+                "${AppStrings.verifyOtpDesc} ${widget.mobile.replaceRange(0, 7, "*******")}",
                 style: AppTextStyles.bodyBlack16,
               ).animate().slideX(duration: 500.ms),
               SizedBox(
@@ -105,14 +111,14 @@ class _RegisterOtpVerifyScreenState extends State<RegisterOtpVerifyScreen> {
               ),
               8.ph,
               PinCodeTextField(
-                length: 4,
+                length: 6,
                 obscureText: false,
                 animationType: AnimationType.fade,
                 pinTheme: PinTheme(
                   shape: PinCodeFieldShape.box,
                   borderRadius: BorderRadius.circular(5),
-                  fieldHeight: 50,
-                  fieldWidth: 50,
+                  fieldHeight: 45,
+                  fieldWidth: 45,
                   activeFillColor: AppColors.textFieldBgColor,
                   inactiveFillColor: AppColors.textFieldBgColor,
                   selectedFillColor: AppColors.textFieldBgColor,
@@ -134,19 +140,17 @@ class _RegisterOtpVerifyScreenState extends State<RegisterOtpVerifyScreen> {
                 cursorColor: AppColors.textBlackColor,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 onCompleted: (value) async {
-                  // Map<String, dynamic> otpBody = {
-                  //   "mobileNumber": widget.mobileNumber,
-                  //   "otp": value,
-                  //   "login_verify": true,
-                  //   "type": 2
-                  // };
-                  // var provider = Provider.of<LoginController>(
-                  //   context,
-                  //   listen: false,
-                  // );
-                  // await provider.verifyLoginOtp(
-                  //     context, otpBody, widget.from);
-                  // otpController.clear();
+                  var provider = Provider.of<AuthApiProvider>(
+                    context,
+                    listen: false,
+                  );
+                  await provider.verifyOtp(
+                      mobile: widget.mobile,
+                      context: context,
+                      fromScreen: widget.fromScreen,
+                      userType: widget.userType,
+                      otp: otpController.text);
+                  otpController.clear();
                 },
                 hintCharacter: "-",
                 keyboardType: TextInputType.number,
@@ -160,58 +164,30 @@ class _RegisterOtpVerifyScreenState extends State<RegisterOtpVerifyScreen> {
                 appContext: context,
               ),
               16.ph,
-              CustomButton(
-                onPressed: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const RegisterScreen(),
-                    ),
-                  );
+              Consumer<AuthApiProvider>(
+                builder:
+                    (BuildContext context, checkUserProvider, Widget? child) {
+                  return checkUserProvider.verifyOtpLoading
+                      ? const CustomButtonLoader()
+                      : CustomButton(
+                          onPressed: () {
+                            if (otpController.text.trim().isEmpty) {
+                              Utils.showToast("Please enter OTP");
+                            }
+                          },
+                          isGradient: false,
+                          child: Text(
+                            AppStrings.verifyTxt.toUpperCase(),
+                            style: AppTextStyles.bodyWhite16,
+                          ),
+                        ).animate().fadeIn(duration: 500.ms);
                 },
-                isGradient: false,
-                child: Text(
-                  AppStrings.verifyTxt.toUpperCase(),
-                  style: AppTextStyles.bodyWhite16,
-                ),
-              ).animate().fadeIn(duration: 500.ms),
+              ),
               12.ph,
               ValueListenableBuilder(
                 valueListenable: _timerNotifier,
                 builder: (BuildContext context, int value, Widget? child) {
-                  return value == 0
-                      ? Align(
-                          alignment: AlignmentDirectional.center,
-                          child: InkWell(
-                            onTap: () async {
-                              // var jsonData = {
-                              //   "mobileNumber": widget.mobileNumber,
-                              //   "type": 2
-                              // };
-                              // await resendData.resendLoginOtp(
-                              //   context,
-                              //   jsonData,
-                              // );
-                              // log("resend data before ${resendData.resend}");
-                              // if (resendData.resend) {
-                              //   log("resend data after ${resendData.resend}");
-                              //   startTimer();
-                              // }
-                            },
-                            child: Text(
-                              AppStrings.resendOtpTxt.toUpperCase(),
-                              textAlign: TextAlign.end,
-                              style: AppTextStyles.bodyBlack16,
-                            ),
-                          ),
-                        )
-                      : Align(
-                          alignment: AlignmentDirectional.center,
-                          child: Text(
-                            'Resend OTP in $value seconds',
-                            style: AppTextStyles.bodyBlack16,
-                          ),
-                        );
+                  return timerWidget(value);
                 },
               ),
               SizedBox(
@@ -222,5 +198,39 @@ class _RegisterOtpVerifyScreenState extends State<RegisterOtpVerifyScreen> {
         ),
       ),
     );
+  }
+
+  Widget timerWidget(int value) {
+    return value == 0
+        ? Align(
+            alignment: AlignmentDirectional.center,
+            child: InkWell(
+              onTap: () async {
+                bool otpResp = await Provider.of<AuthApiProvider>(
+                  context,
+                  listen: false,
+                ).resendOtp(
+                    mobile: widget.mobile,
+                    from: AppStrings.fromOtpScreen,
+                    context: context);
+                if (otpResp) {
+                  log("resend data after $otpResp");
+                  startTimer();
+                }
+              },
+              child: Text(
+                AppStrings.resendOtpTxt.toUpperCase(),
+                textAlign: TextAlign.end,
+                style: AppTextStyles.bodyBlack16,
+              ),
+            ),
+          )
+        : Align(
+            alignment: AlignmentDirectional.center,
+            child: Text(
+              'Resend OTP in $value seconds',
+              style: AppTextStyles.bodyBlack16,
+            ),
+          );
   }
 }

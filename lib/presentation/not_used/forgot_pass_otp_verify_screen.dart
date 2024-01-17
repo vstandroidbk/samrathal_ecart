@@ -161,12 +161,12 @@ class _ForgotPassOtpVerifyScreenState extends State<ForgotPassOtpVerifyScreen> {
               CustomButton(
                 onPressed: () {
                   removeFocus(context);
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const NewPasswordScreen(),
-                    ),
-                  );
+                  // Navigator.pushReplacement(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) => const NewPasswordScreen(),
+                  //   ),
+                  // );
                 },
                 isGradient: false,
                 child: Text(

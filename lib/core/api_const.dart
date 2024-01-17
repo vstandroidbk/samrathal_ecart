@@ -3,13 +3,50 @@ class ApiEndPoints {
     "Content-Type": "application/json",
   };
   static const String envType = "production";
-  static const String baseUrl = "https://crm.volansoft.in/"; // development
+  static const String baseUrl = "http://65.0.74.30/"; // development
   // static const String baseUrl = "https://crm.volansoft.in/"; // production
 
-  static const String loginUser = "/login-with-password";
-  static const String getDashboardData = "/get-home-userdata";
-  static const String getDataManageList = "/batch-list";
-  static const String getStatus = "/get-status";
-  static const String updateStatus = "/get-status-update";
-  static const String createManageData = "/create-by-app";
+  static const String checkUserType = "check-user-type";
+  static const String verifyOtp = "verify-otp";
+  static const String verifyPassword = "login-by-password";
+  static const String resendOtpOtp = "resend-otp";
+  static const String registerUser = "register-user";
+  static const String forgotPassword = "forgot-password";
+  static const String changePassword = "change-password";
+  static const String addAddress = "add-address-details";
+  static const String updateAddress = "update-address-data";
+  static const String getCity = "get-district-list";
+  static const String getState = "get-state-list";
+  static const String getAddressList = "get-address-list";
+  static const String getEditAddressData = "get-edit-address-data";
+  static const String getProfileData = "get-profile-data";
+  static const String getDashboardData = "get-dashboard-data";
+  static const String getProductListData = "get-product-list";
+  static const String getProductDetailsData = "get-product-details";
+  static const String getOfferListData = "get-offer-list";
+  static const String getOfferDetailsData = "get-offer-details";
+
+  static const String addProductToCart = "add-to-cart";
+  static const String listCartItem = "list-cart-item";
+  static const String getCartItemDetails = "get-item-details";
+  static const String updateCartItem = "update-cart-item";
+  static const String removeCartItem = "remove-cart-item";
+}
+
+class BadRequestException implements Exception {
+  final String message;
+
+  BadRequestException(this.message);
+}
+
+class UnauthorizedException implements Exception {
+  final String message;
+
+  UnauthorizedException(this.message);
+}
+
+class NetworkException implements Exception {
+  final String message;
+
+  NetworkException(this.message);
 }

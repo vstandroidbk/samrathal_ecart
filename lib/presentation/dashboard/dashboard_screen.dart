@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:samrathal_ecart/core/app_colors.dart';
@@ -8,6 +9,7 @@ import 'package:samrathal_ecart/presentation/dashboard/profile/profile_tab_page.
 import 'package:samrathal_ecart/presentation/dashboard/shop/shop_tab_page.dart';
 import 'package:samrathal_ecart/presentation/dashboard/wishlist/wishlist_tab_page.dart';
 import 'package:samrathal_ecart/utils/utils.dart';
+import '../../logic/services/preferences.dart';
 
 class DashboardScreen extends StatefulWidget {
   final int selectedTab;
@@ -57,7 +59,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     _selectedIndex = widget.selectedTab;
+    getUserId();
     super.initState();
+  }
+
+  getUserId() async {
+    var userId = await SharedPrefProvider.getString(SharedPrefProvider.userId);
+    log("user id : $userId");
   }
 
   @override

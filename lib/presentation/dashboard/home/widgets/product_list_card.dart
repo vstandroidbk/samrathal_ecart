@@ -1,29 +1,19 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:samrathal_ecart/core/app_colors.dart';
-import 'package:samrathal_ecart/core/app_strings.dart';
 import 'package:samrathal_ecart/core/app_text_styles.dart';
 import 'package:samrathal_ecart/presentation/dashboard/shop/product_details_screen.dart';
 
-class ProductListWidget extends StatelessWidget {
-  const ProductListWidget({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: productList.length,
-      scrollDirection: Axis.horizontal,
-      itemBuilder: (BuildContext context, int index) {
-        return ProductListCard(index: index);
-      },
-    );
-  }
-}
+import '../../../../core/api_const.dart';
+import '../../../../data/model/dashboard/dashboard_data_model.dart';
 
 class ProductListCard extends StatelessWidget {
-  final int index;
+  final ProductData productData;
+  final String productImgPath;
 
-  const ProductListCard({super.key, required this.index});
+  const ProductListCard(
+      {super.key, required this.productImgPath, required this.productData});
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +22,9 @@ class ProductListCard extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const ProductDetailsScreen(),
+            builder: (context) => ProductDetailsScreen(
+              productId: productData.id!,
+            ),
           ),
         );
       },
@@ -52,18 +44,29 @@ class ProductListCard extends StatelessWidget {
                       child: Stack(
                         clipBehavior: Clip.none,
                         children: [
-                          Image.asset(
-                            productList[index]["img"]!,
+                          // Image.asset(
+                          //   productData!.image!,
+                          //   fit: BoxFit.fill,
+                          //   width: double.infinity,
+                          //   height: double.infinity,
+                          // ),
+                          CachedNetworkImage(
+                            imageUrl: ApiEndPoints.baseUrl +
+                                productImgPath +
+                                productData.image!,
                             fit: BoxFit.fill,
-                            width: double.infinity,
                             height: double.infinity,
+                            width: double.infinity,
+                            placeholder: (context, url) => const SizedBox(),
+                            errorWidget: (context, url, error) =>
+                                const Icon(Icons.error),
                           ),
                           Positioned(
                             bottom: -8,
                             right: 1,
                             child: FloatingActionButton(
                               mini: true,
-                              heroTag: index.toString(),
+                              heroTag: productData.image!,
                               shape: const CircleBorder(),
                               backgroundColor: Colors.white,
                               child: const Icon(CupertinoIcons.heart),
@@ -79,14 +82,14 @@ class ProductListCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          productList[index]["name"]!,
+                          productData.productName!,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: AppTextStyles.bodyBlack14
                               .copyWith(fontWeight: FontWeight.w700),
                         ),
                         Text(
-                          productList[index]["sku"]!,
+                          productData.sku!,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: AppTextStyles.bodyBlack14
