@@ -11,18 +11,18 @@ import '../../../../data/model/dashboard/shop/product_details_model.dart';
 import '../../../../widgets/custom_button.dart';
 import '../../../../widgets/custom_text_field.dart';
 
-class ProductDetailSDialog extends StatefulWidget {
+class AddToCartDialog extends StatefulWidget {
   final ProductDetails productDetails;
   final BuildContext buildContext;
 
-  const ProductDetailSDialog(
+  const AddToCartDialog(
       {super.key, required this.productDetails, required this.buildContext});
 
   @override
-  State<ProductDetailSDialog> createState() => _ProductDetailSDialogState();
+  State<AddToCartDialog> createState() => _AddToCartDialogState();
 }
 
-class _ProductDetailSDialogState extends State<ProductDetailSDialog> {
+class _AddToCartDialogState extends State<AddToCartDialog> {
 /*
   TextEditingController randomQtyController = TextEditingController();
   TextEditingController textFieldController5 = TextEditingController();
@@ -587,6 +587,7 @@ class _ProductDetailSDialogState extends State<ProductDetailSDialog> {
     return CustomTextField(
       textController: controller,
       maxLine: 1,
+      digitOnly: true,
       keyboardType: TextInputType.number,
       hintText: hintText,
       textInputAction: TextInputAction.done,

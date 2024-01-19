@@ -2,9 +2,9 @@ class AppImages {
   static String loginLogo = "assets/icons/app_logo.png";
   static String otpLogo = "assets/icons/otp_logo.png";
 
-  static String sliderImg1 = "assets/images/slider_img1.png";
-  static String sliderImg2 = "assets/images/slider_img2.png";
-  static String sliderImg3 = "assets/images/slider_img3.png";
+  // static String sliderImg1 = "assets/images/slider_img1.png";
+  // static String sliderImg2 = "assets/images/slider_img2.png";
+  // static String sliderImg3 = "assets/images/slider_img3.png";
 
   static String product1 = "assets/images/product1.png";
   static String product2 = "assets/images/product2.png";

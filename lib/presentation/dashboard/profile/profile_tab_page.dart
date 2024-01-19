@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:samrathal_ecart/core/app_text_styles.dart';
 import 'package:samrathal_ecart/logic/provider/dashboard/dashboard_api_provider.dart';
 import 'package:samrathal_ecart/presentation/dashboard/profile/address/address_page.dart';
+import 'package:samrathal_ecart/presentation/dashboard/profile/change_pass/change_password.dart';
 import 'package:samrathal_ecart/presentation/dashboard/profile/order/order_screen.dart';
 import 'package:samrathal_ecart/presentation/dashboard/profile/payment/payment_list_screen.dart';
 import 'package:samrathal_ecart/presentation/dashboard/profile/widget/logout_dialog.dart';
@@ -157,6 +158,18 @@ class _ProfileTabPageState extends State<ProfileTabPage> {
                     );
                   },
                   child: ProfileLabelWidget(labelName: AppStrings.paymentTxt)),
+              12.ph,
+              InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ChangePassword(),
+                      ),
+                    );
+                  },
+                  child:
+                      ProfileLabelWidget(labelName: AppStrings.changePassTxt)),
               12.ph,
               ProfileLabelWidget(labelName: AppStrings.helpTxt),
               12.ph,

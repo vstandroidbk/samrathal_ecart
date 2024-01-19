@@ -2,6 +2,11 @@ import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:samrathal_ecart/logic/provider/dashboard/cart/cart_api_provider.dart';
+import 'package:samrathal_ecart/logic/provider/dashboard/cart/update_cart_calculator_provider.dart';
+import 'package:samrathal_ecart/presentation/dashboard/cart/widget/remove_cart_dialog.dart';
+import 'package:samrathal_ecart/presentation/dashboard/cart/widget/update_cart_dialog.dart';
 import 'package:samrathal_ecart/utils/utils.dart';
 
 import '../../../../core/api_const.dart';
@@ -68,7 +73,17 @@ class CartItemViewCard extends StatelessWidget {
                             Expanded(
                               child: InkWell(
                                 onTap: () {
-                                  showAlertDialog(context);
+                                  showDialog<String>(
+                                    context: context,
+                                    builder: (BuildContext dialogContext) {
+                                      return RemoveCartDialog(
+                                        cartData: cartData,
+                                        dialogContext: dialogContext,
+                                        index: index,
+                                      );
+                                    },
+                                  );
+                                  // showAlertDialog(context, cartData, index);
                                 },
                                 child: Text(
                                   "Remove",
@@ -81,13 +96,20 @@ class CartItemViewCard extends StatelessWidget {
                             Expanded(
                               child: InkWell(
                                 onTap: () {
-                                  // showModalBottomSheet(
-                                  //   backgroundColor: Colors.transparent,
-                                  //   context: context,
-                                  //   builder: (context) {
-                                  //     return const ProductDetailSDialog();
-                                  //   },
-                                  // );
+                                  Provider.of<UpdateCartCalculatorProvider>(
+                                          context,
+                                          listen: false)
+                                      .setDataNull();
+                                  showModalBottomSheet(
+                                    backgroundColor: Colors.transparent,
+                                    context: context,
+                                    builder: (dialogContext) {
+                                      return UpdateCartDialog(
+                                        cartData: cartData,
+                                        buildContext: context,
+                                      );
+                                    },
+                                  );
                                 },
                                 child: Text(
                                   "Edit",
@@ -192,22 +214,30 @@ class CartItemPcView extends StatelessWidget {
   }
 }
 
-showAlertDialog(BuildContext context) {
-  // set up the buttons
+showAlertDialog(BuildContext dialogContext, CartData cartData, int index) {
+// set up the buttons
   Widget cancelButton = TextButton(
     child: const Text("Cancel"),
     onPressed: () {
-      Navigator.pop(context);
+      Navigator.pop(dialogContext);
     },
   );
   Widget continueButton = TextButton(
     child: const Text("Continue"),
     onPressed: () {
-      Navigator.pop(context);
+      Provider.of<CartApiProvider>(dialogContext, listen: false)
+          .removeFromCart(
+              productId: cartData.productId!, context: dialogContext)
+          .then((value) {
+        if (value) {
+          Navigator.pop(dialogContext);
+        }
+      });
+      Navigator.pop(dialogContext);
     },
   );
 
-  // set up the AlertDialog
+// set up the AlertDialog
   AlertDialog alert = AlertDialog(
     title: const Text("AlertDialog"),
     content: const Text("Would you like to remove this item from cart?"),
@@ -217,9 +247,9 @@ showAlertDialog(BuildContext context) {
     ],
   );
 
-  // show the dialog
+// show the dialog
   showDialog(
-    context: context,
+    context: dialogContext,
     builder: (BuildContext context) {
       return alert;
     },

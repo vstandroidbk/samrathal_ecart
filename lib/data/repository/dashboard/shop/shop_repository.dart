@@ -64,7 +64,9 @@ class ShopRepository {
 
   Future<ProductDetailsModel?> getProductDetailsData(
       {required String productId}) async {
-    var jsonBody = {"productId": productId};
+    final userId =
+        await SharedPrefProvider.getString(SharedPrefProvider.userId);
+    var jsonBody = {"user_id": userId, "productId": productId};
     try {
       Response response = await _api.sendRequest.post(
           ApiEndPoints.getProductDetailsData,

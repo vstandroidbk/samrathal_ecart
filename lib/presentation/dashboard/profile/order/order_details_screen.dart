@@ -4,6 +4,7 @@ import 'package:samrathal_ecart/core/app_images.dart';
 import 'package:samrathal_ecart/logic/services/formatter.dart';
 import 'package:samrathal_ecart/presentation/dashboard/profile/order/order_items_screen.dart';
 import 'package:samrathal_ecart/presentation/dashboard/profile/order/widget/order_status_widget.dart';
+import 'package:samrathal_ecart/presentation/dashboard/profile/payment/payment_details_screen.dart';
 import 'package:samrathal_ecart/presentation/verify_otp_screen.dart';
 import 'package:samrathal_ecart/utils/utils.dart';
 import 'package:samrathal_ecart/widgets/custom_button.dart';
@@ -269,7 +270,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const PaymentListScreen(),
+                        builder: (context) => const PaymentDetailsScreen(),
                       ),
                     );
                   },

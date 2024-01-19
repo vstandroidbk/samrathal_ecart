@@ -1,9 +1,8 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:samrathal_ecart/core/app_colors.dart';
-
+import '../data/model/dashboard/cart/cart_item_list_model.dart';
 import '../data/model/dashboard/profile/address/city_model.dart';
 import '../data/model/dashboard/profile/address/state_model.dart';
 
@@ -79,8 +78,8 @@ String? findCityIdByName(List<DistrictData>? stateData, String stateName) {
   }
 }
 
-List<List<int>> getSplitList(String inputStr) {
-  String inputString = '1-5-1,2-10-2,3-25-1,4-268-2';
+List<List<int>> getSplitList(String inputString) {
+  // String inputString = '1-5-1,2-10-2,3-25-1,4-268-2';
   var splitVal = inputString.split(",");
   log("split comma val$splitVal");
   List<List<int>> resultList = [];
@@ -139,3 +138,43 @@ String getPcsFromTonKg(List<int> size) {
   }
   return "";
 }
+
+num getCartTotalAmount(List<CartData> cartData) {
+  num cartTotalAmount = 0;
+  for (var cartData in cartData) {
+    var splitList = getSplitList(cartData.itemData!);
+    var getTotal = getTotalAmount(splitList, cartData.productData!);
+    cartTotalAmount += getTotal;
+  }
+  print("total price all cart $cartTotalAmount");
+  return cartTotalAmount;
+}
+
+num getTotalAmount(List<List<int>> resultList, ProductData productData) {
+  var retailPrice = num.parse(productData.retailTonAmount!);
+  var wholePrice = num.parse(productData.wholeSaleTonAmount!);
+  var minWholeSaleTon = productData.wholeSaleTonMinQty!;
+  num totalQty = 0;
+  num totalPrice = 0;
+  for (var size in resultList) {
+    if (size[2] == 1) {
+      totalQty = totalQty += (size[1] * 1000);
+    } else {
+      totalQty = totalQty += size[1];
+    }
+  }
+  num qtyInTon = totalQty / 1000;
+  if (qtyInTon >= minWholeSaleTon) {
+    totalPrice = wholePrice * qtyInTon;
+  } else {
+    totalPrice = retailPrice * qtyInTon;
+  }
+  print("total quantity ${totalQty / 1000}");
+  print("total price ${totalQty / 1000}");
+  return totalPrice;
+}
+
+// num getGrandTotalAmt(List<List<int>> resultList, num shippingCharge) {
+//   var grandTotal = getTotalAmount(resultList) + shippingCharge;
+//   return grandTotal;
+// }

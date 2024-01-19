@@ -1,12 +1,19 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:provider/provider.dart';
 import 'package:samrathal_ecart/core/app_strings.dart';
 import 'package:samrathal_ecart/presentation/dashboard/profile/address/add_address_page.dart';
 import 'package:samrathal_ecart/utils/utils.dart';
+import 'package:samrathal_ecart/widgets/loader_widget.dart';
 import '../../../../core/app_text_styles.dart';
 import '../../../../widgets/custom_button.dart';
 import '../../../core/app_colors.dart';
+import '../../../data/model/dashboard/profile/address/address_list_model.dart';
+import '../../../logic/provider/dashboard/profile/address/address_api_provider.dart';
+import '../../../widgets/no_data_found.dart';
 import '../profile/address/edit_address_page.dart';
+import '../profile/address/widget/address_shimmer_view.dart';
 
 class SelectAddressPage extends StatefulWidget {
   const SelectAddressPage({super.key});
@@ -21,6 +28,30 @@ class _SelectAddressPageState extends State<SelectAddressPage> {
   int selectedIndex = -1; // Track the selected index, -1 for no selection
 
   @override
+  void initState() {
+    callApi();
+    super.initState();
+  }
+
+  Future<void> callApi() async {
+    var addressProvider =
+        Provider.of<AddressApiProvider>(context, listen: false);
+    addressProvider.setLoaderFalseDataNull();
+    await addressProvider.getAddressList();
+    var data = addressProvider.addressListModel;
+    if (data != null &&
+        data.addressData != null &&
+        data.addressData!.isNotEmpty) {
+      for (int i = 0; i < data.addressData!.length; i++) {
+        if (data.addressData![i].primaryStatus == 2) {
+          selectedIndex = i;
+          log("selected index is $selectedIndex");
+        }
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -28,45 +59,83 @@ class _SelectAddressPageState extends State<SelectAddressPage> {
         centerTitle: true,
         title: Text(AppStrings.addressTxt),
       ),
-      body: ListView.builder(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        itemCount: 4,
-        itemBuilder: (ctx, index) {
-          return InkWell(
-            onTap: () {
-              setState(() {
-                selectedIndex = index;
-              });
-            },
-            child: SelectAddressViewCard(
-              index: index,
-              selectedIndex: selectedIndex,
-            ),
-          );
+      body: Consumer<AddressApiProvider>(
+        builder: (BuildContext context, AddressApiProvider addressApiProvider,
+            Widget? child) {
+          var data = addressApiProvider.addressListModel;
+          return addressApiProvider.getAddressLoading
+              ? const AddressShimmerView()
+              : data != null && data.addressData != null
+                  ? data.addressData!.isNotEmpty
+                      ? ListView.builder(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 8),
+                          itemCount: data.addressData!.length,
+                          itemBuilder: (ctx, index) {
+                            return InkWell(
+                              onTap: () {
+                                setState(() {
+                                  selectedIndex = index;
+                                });
+                                log("selected index is $selectedIndex");
+                              },
+                              child: SelectAddressViewCard(
+                                index: index,
+                                selectedIndex: selectedIndex,
+                                addressData: data.addressData![index],
+                              ),
+                            );
+                          },
+                        ).animate().slideY(
+                            duration: 500.ms,
+                          )
+                      : const NoDataFound()
+                  : const SizedBox();
         },
-      ).animate().slideY(
-            duration: 500.ms,
-          ),
+      ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.only(left: 16, right: 16, bottom: 20),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            SizedBox(
-              height: 40,
-              child: CustomButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                isGradient: false,
-                child: Text(
-                  "Deliver Here".toUpperCase(),
-                  style: AppTextStyles.bodyWhite14,
-                ),
-              ).animate().fadeIn(
-                    duration: 500.ms,
-                  ),
+            Consumer<AddressApiProvider>(
+              builder: (BuildContext context,
+                  AddressApiProvider addressProvider, Widget? child) {
+                var data = addressProvider.addressListModel;
+                return addressProvider.updatePrimaryAddressLoading
+                    ? const SizedBox(height: 40, child: CustomButtonLoader())
+                    : data != null &&
+                            data.addressData != null &&
+                            data.addressData!.isNotEmpty
+                        ? SizedBox(
+                            height: 40,
+                            child: CustomButton(
+                              onPressed: () {
+                                if (selectedIndex == -1) {
+                                  Utils.showToast("Please select an address");
+                                }
+                                addressProvider
+                                    .updatePrimaryAddress(
+                                        addressId: data
+                                            .addressData![selectedIndex].id!)
+                                    .then((value) {
+                                  if (mounted && value != null && value) {
+                                    Navigator.pop(context);
+                                  }
+                                });
+                              },
+                              isGradient: false,
+                              child: Text(
+                                "Deliver Here".toUpperCase(),
+                                style: AppTextStyles.bodyWhite14,
+                              ),
+                            ).animate().fadeIn(
+                                  duration: 500.ms,
+                                ),
+                          )
+                        : const SizedBox();
+              },
             ),
             12.ph,
             SizedBox(
@@ -78,7 +147,9 @@ class _SelectAddressPageState extends State<SelectAddressPage> {
                     MaterialPageRoute(
                       builder: (context) => const AddAddressPage(),
                     ),
-                  );
+                  ).then((value) {
+                    callApi();
+                  });
                 },
                 style: OutlinedButton.styleFrom(
                   backgroundColor: Colors.white,
@@ -108,26 +179,32 @@ class _SelectAddressPageState extends State<SelectAddressPage> {
 }
 
 class SelectAddressViewCard extends StatelessWidget {
-  final int index;
   final int selectedIndex;
+  final int index;
+  final AddressData addressData;
 
   const SelectAddressViewCard(
-      {super.key, required this.index, required this.selectedIndex});
+      {super.key,
+      required this.index,
+      required this.selectedIndex,
+      required this.addressData});
 
   @override
   Widget build(BuildContext context) {
+    var fullAddress =
+        "${addressData.address} ${addressData.landmark} ${addressData.districtData?.districtName} ${addressData.stateData?.stateName} (${addressData.zipCode})";
     return Stack(
       children: [
-        /* if (index == 0)
-          Container(
-            decoration: const BoxDecoration(color: AppColors.primaryColor),
-            padding:
-            const EdgeInsets.only(left: 4, right: 4, top: 2, bottom: 2),
-            child: Text(
-              "Primary",
-              style: AppTextStyles.bodyWhite12,
-            ),
-          ),*/
+        // if (index == selectedIndex)
+        //   Container(
+        //     decoration: const BoxDecoration(color: AppColors.primaryColor),
+        //     padding:
+        //         const EdgeInsets.only(left: 4, right: 4, top: 2, bottom: 2),
+        //     child: Text(
+        //       "Primary",
+        //       style: AppTextStyles.bodyWhite12,
+        //     ),
+        //   ),
         Container(
           padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
           margin: const EdgeInsets.only(bottom: 12),
@@ -155,7 +232,7 @@ class SelectAddressViewCard extends StatelessWidget {
                   8.pw,
                   Expanded(
                     child: Text(
-                      "212-B Abc nagar def road ghk area, vggfddgu dgvdjhcgvg khdhvjvd (123456)",
+                      fullAddress,
                       style: AppTextStyles.bodyBlack14,
                     ),
                   ),
@@ -165,8 +242,8 @@ class SelectAddressViewCard extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const EditAddressPage(
-                            addressId: "",
+                          builder: (context) => EditAddressPage(
+                            addressId: addressData.id!,
                           ),
                         ),
                       );
@@ -184,46 +261,6 @@ class SelectAddressViewCard extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class AddressListScreen extends StatefulWidget {
-  const AddressListScreen({super.key});
-
-  @override
-  State<AddressListScreen> createState() => _AddressListScreenState();
-}
-
-class _AddressListScreenState extends State<AddressListScreen> {
-  int selectedIndex = -1; // Track the selected index, -1 for no selection
-  List<String> addresses = [
-    '123 Main St',
-    '456 Elm St',
-    '789 Oak St',
-    '101 Pine St',
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Selectable Address List'),
-      ),
-      body: ListView.builder(
-        itemCount: addresses.length,
-        itemBuilder: (BuildContext context, int index) {
-          return ListTile(
-            title: Text(addresses[index]),
-            selected: index == selectedIndex,
-            onTap: () {
-              setState(() {
-                selectedIndex = index; // Update the selected index
-              });
-            },
-          );
-        },
-      ),
     );
   }
 }

@@ -192,19 +192,19 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                       .copyWith(fontWeight: FontWeight.w600),
                                 ),
                               ),
-                              if (productDetailsModel != null &&
-                                  productDetailsData != null)
-                                Expanded(
-                                  child: Text(
-                                    productDetailsData.wholeSaleTonMinQty !=
-                                            null
-                                        ? "MOQ : ${productDetailsData.wholeSaleTonMinQty} Ton"
-                                        : "N/A",
-                                    textAlign: TextAlign.right,
-                                    style: AppTextStyles.bodyBlack14
-                                        .copyWith(fontWeight: FontWeight.w500),
-                                  ),
-                                ),
+                              // if (productDetailsModel != null &&
+                              //     productDetailsData != null)
+                              //   Expanded(
+                              //     child: Text(
+                              //       productDetailsData.wholeSaleTonMinQty !=
+                              //               null
+                              //           ? "MOQ : ${productDetailsData.wholeSaleTonMinQty} Ton"
+                              //           : "N/A",
+                              //       textAlign: TextAlign.right,
+                              //       style: AppTextStyles.bodyBlack14
+                              //           .copyWith(fontWeight: FontWeight.w500),
+                              //     ),
+                              //   ),
                             ],
                           ),
                           8.ph,
@@ -282,28 +282,40 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           20.ph,
                           if (productDetailsModel != null &&
                               productDetailsData != null)
-                            CustomButton(
-                              onPressed: () {
-                                Provider.of<AddCartCalculatorProvider>(context,
-                                        listen: false)
-                                    .setDataNull();
-                                showModalBottomSheet(
-                                  backgroundColor: Colors.transparent,
-                                  context: context,
-                                  builder: (dialogContext) {
-                                    return ProductDetailSDialog(
-                                      productDetails: productDetailsData,
-                                      buildContext: context,
-                                    );
-                                  },
-                                );
-                              },
-                              isGradient: false,
-                              child: Text(
-                                AppStrings.addToCartTxt.toUpperCase(),
-                                style: AppTextStyles.bodyWhite14,
-                              ),
-                            )
+                            productDetailsModel.cartStatus == 0
+                                ? CustomButton(
+                                    onPressed: () {
+                                      Provider.of<AddCartCalculatorProvider>(
+                                              context,
+                                              listen: false)
+                                          .setDataNull();
+                                      showModalBottomSheet(
+                                        backgroundColor: Colors.transparent,
+                                        context: context,
+                                        builder: (dialogContext) {
+                                          return AddToCartDialog(
+                                            productDetails: productDetailsData,
+                                            buildContext: context,
+                                          );
+                                        },
+                                      );
+                                    },
+                                    isGradient: false,
+                                    child: Text(
+                                      AppStrings.addToCartTxt.toUpperCase(),
+                                      style: AppTextStyles.bodyWhite14,
+                                    ),
+                                  )
+                                : CustomButton(
+                                    onPressed: () {},
+                                    backgroundColor: AppColors.grey300,
+                                    isGradient: false,
+                                    child: Text(
+                                      AppStrings.addedToCartTxt.toUpperCase(),
+                                      style: AppTextStyles.bodyWhite14
+                                          .copyWith(color: Colors.grey),
+                                    ),
+                                  )
                         ],
                       ).animate().slideY(
                             duration: 500.ms,

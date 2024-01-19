@@ -14,6 +14,7 @@ class HomeOfferListViewCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var mq = MediaQuery.sizeOf(context);
     return InkWell(
       onTap: () {
         Navigator.push(
@@ -30,6 +31,7 @@ class HomeOfferListViewCard extends StatelessWidget {
         child: CachedNetworkImage(
           imageUrl: ApiEndPoints.baseUrl + offerImgPath + offerData.offerImage!,
           fit: BoxFit.fill,
+          width: mq.width * 0.8,
           placeholder: (context, url) => const SizedBox(),
           errorWidget: (context, url, error) => const Icon(Icons.error),
         ),

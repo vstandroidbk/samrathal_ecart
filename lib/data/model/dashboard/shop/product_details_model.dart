@@ -1,14 +1,17 @@
 class ProductDetailsModel {
   ProductDetails? productDetails;
   String? productImagePath;
+  int? cartStatus;
 
-  ProductDetailsModel({this.productDetails, this.productImagePath});
+  ProductDetailsModel(
+      {this.productDetails, this.productImagePath, this.cartStatus});
 
   ProductDetailsModel.fromJson(Map<String, dynamic> json) {
     productDetails = json['productDetails'] != null
         ? ProductDetails.fromJson(json['productDetails'])
         : null;
     productImagePath = json['productImagePath'];
+    cartStatus = json['cart_status'];
   }
 
   Map<String, dynamic> toJson() {
@@ -17,6 +20,7 @@ class ProductDetailsModel {
       data['productDetails'] = productDetails!.toJson();
     }
     data['productImagePath'] = productImagePath;
+    data['cart_status'] = cartStatus;
     return data;
   }
 }

@@ -15,6 +15,7 @@ class ApiEndPoints {
   static const String changePassword = "change-password";
   static const String addAddress = "add-address-details";
   static const String updateAddress = "update-address-data";
+  static const String updatePrimaryAddress = "update-primary-status";
   static const String getCity = "get-district-list";
   static const String getState = "get-state-list";
   static const String getAddressList = "get-address-list";

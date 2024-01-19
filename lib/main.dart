@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:samrathal_ecart/core/app_colors.dart';
 import 'package:samrathal_ecart/logic/provider/auth/auth_api_provider.dart';
 import 'package:samrathal_ecart/logic/provider/dashboard/cart/cart_api_provider.dart';
+import 'package:samrathal_ecart/logic/provider/dashboard/cart/update_cart_calculator_provider.dart';
 import 'package:samrathal_ecart/logic/provider/dashboard/home/home_api_provider.dart';
 import 'package:samrathal_ecart/logic/provider/dashboard/profile/address/address_api_provider.dart';
 import 'package:samrathal_ecart/logic/provider/dashboard/profile/address/location_data_provider.dart';
@@ -43,6 +44,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ShopApiProvider()),
         ChangeNotifierProvider(create: (_) => HomeApiProvider()),
         ChangeNotifierProvider(create: (_) => AddCartCalculatorProvider()),
+        ChangeNotifierProvider(create: (_) => UpdateCartCalculatorProvider()),
         ChangeNotifierProvider(create: (_) => CartApiProvider()),
       ],
       child: MaterialApp(

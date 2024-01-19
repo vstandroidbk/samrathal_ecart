@@ -41,6 +41,7 @@ class _HomeTabPageState extends State<HomeTabPage> {
 
   @override
   Widget build(BuildContext context) {
+    var mq = MediaQuery.sizeOf(context);
     return Scaffold(
       appBar: AppBar(
         // backgroundColor: Colors.white,
@@ -53,7 +54,7 @@ class _HomeTabPageState extends State<HomeTabPage> {
         ),
         actions: [
           Text(
-            "total orders 10",
+            "total orders __",
             style: AppTextStyles.bodyWhite14,
           ).animate().fadeIn(duration: 500.ms),
           8.pw,
@@ -68,7 +69,7 @@ class _HomeTabPageState extends State<HomeTabPage> {
             },
             child: Badge(
               label: Text(
-                "12",
+                "__",
                 style: AppTextStyles.bodyBlack12,
               ),
               backgroundColor: Colors.white,
@@ -126,7 +127,7 @@ class _HomeTabPageState extends State<HomeTabPage> {
                               dashboardModel.offerImagePath != null)
                             SizedBox(
                               height: 150,
-                              width: double.infinity,
+                              width: mq.width * 0.8,
                               child: ListView.builder(
                                 itemCount: offerData.length,
                                 scrollDirection: Axis.horizontal,

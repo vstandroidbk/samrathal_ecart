@@ -3,16 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:samrathal_ecart/utils/utils.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../core/app_colors.dart';
-import '../../../../core/app_images.dart';
 import '../../../../core/app_strings.dart';
 import '../../../../core/app_text_styles.dart';
-import 'home_label_widget.dart';
 
 class DashboardLoadingShimmer extends StatelessWidget {
   const DashboardLoadingShimmer({super.key});
 
   @override
   Widget build(BuildContext context) {
+    var mq = MediaQuery.sizeOf(context);
     return Shimmer.fromColors(
       baseColor: AppColors.grey100,
       highlightColor: AppColors.grey300,
@@ -55,7 +54,7 @@ class DashboardLoadingShimmer extends StatelessWidget {
           5.ph,
           SizedBox(
             height: 150,
-            width: double.infinity,
+            width: mq.width * 0.8,
             child: ListView.builder(
               itemCount: 5,
               scrollDirection: Axis.horizontal,
@@ -68,10 +67,9 @@ class DashboardLoadingShimmer extends StatelessWidget {
                       color: Colors.grey),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: Image.asset(
-                      AppImages.sliderImg1,
-                      fit: BoxFit.fill,
+                    child: SizedBox(
                       height: 150,
+                      width: mq.width * 0.8,
                     ),
                   ),
                 );

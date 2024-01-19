@@ -16,6 +16,7 @@ class AppStrings {
   static String passwordLabel = "Enter Password";
   static String otpLabel = "Enter OTP";
   static String newPasswordLabel = "New Password";
+  static String oldPasswordLabel = "Old Password";
   static String cnfPasswordLabel = "Confirm Password";
   static String nameLabel = "Enter Name";
   static String stateLabel = "Select State";
@@ -31,6 +32,7 @@ class AppStrings {
   static String mobileHint = "Enter your Mobile Number";
   static String passwordHint = "Enter your Password";
   static String newPasswordHint = "Enter New Password";
+  static String oldPasswordHint = "Enter Old Password";
   static String cnfPasswordHint = "Enter Confirm Password";
   static String nameHint = "Enter your Name";
   static String addressHint = "Enter your address";
@@ -71,6 +73,7 @@ class AppStrings {
   static String supportTxt = "Support";
   static String logoutTxt = "Log Out";
 
+  static String changePassTxt = "Change Password";
   static String addAddressTxt = "Add Address";
   static String editAddressTxt = "Edit Address";
   static String picLocationTxt = "Pick Location";
@@ -119,6 +122,7 @@ class AppStrings {
   static String packingSizeTxt = "Packing Size";
   static String descriptionTxt = "Description";
   static String addToCartTxt = "Add To Cart";
+  static String addedToCartTxt = "Added To Cart";
   static String quantityTxt = "Enter random qty";
   static String totalQuantityTxt = "Total Quantity";
   static String checkoutTxt = "Checkout";
@@ -175,21 +179,6 @@ final List<Map<String, String>> productList = [
     "name": "Wire Packs",
     "sku": "wssxd-wiug",
   },
-];
-
-final List<String> sliderList = [
-  AppImages.sliderImg3,
-  AppImages.sliderImg2,
-];
-
-final List<String> offerList = [
-  AppImages.sliderImg1,
-  AppImages.sliderImg1,
-  AppImages.sliderImg1,
-  AppImages.sliderImg1,
-  AppImages.sliderImg1,
-  AppImages.sliderImg1,
-  AppImages.sliderImg1,
 ];
 
 List<Map<String, dynamic>> dropDownList = [

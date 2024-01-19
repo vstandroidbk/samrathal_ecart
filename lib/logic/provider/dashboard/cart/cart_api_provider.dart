@@ -173,8 +173,7 @@ class CartApiProvider with ChangeNotifier {
           productId: productId, addCartData: addCartData);
       log("api update cart success $addCartStatus");
       if (context.mounted) {
-        Provider.of<ShopApiProvider>(context, listen: false)
-            .getProductDetailsApi(productId: productId);
+        Provider.of<CartApiProvider>(context, listen: false).getCartListApi();
       }
       return true;
     } catch (ex) {
@@ -215,10 +214,9 @@ class CartApiProvider with ChangeNotifier {
       var addCartStatus =
           await _cartRepository.removeCartItem(productId: productId);
       log("api remove cart data $addCartStatus");
-      // if (context.mounted) {
-      //   Provider.of<ShopApiProvider>(context, listen: false)
-      //       .getProductDetailsApi(productId: productId);
-      // }
+      if (context.mounted) {
+        Provider.of<CartApiProvider>(context, listen: false).getCartListApi();
+      }
       return true;
     } catch (ex) {
       log("api remove cart error $ex");

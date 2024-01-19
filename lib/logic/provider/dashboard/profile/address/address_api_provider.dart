@@ -303,7 +303,7 @@ class AddressApiProvider with ChangeNotifier {
       log("api update address success $addAddress");
       return true;
     } catch (ex) {
-      log("api login error $ex");
+      log("api update address error $ex");
       Utils.showToast(ex.toString());
       return false;
     } finally {
@@ -314,6 +314,52 @@ class AddressApiProvider with ChangeNotifier {
 
   setUpdateAddressLoaderFalse() {
     _updateAddressLoading = false;
+  }
+
+  // update primary address api----------->>
+  bool _updatePrimaryAddressLoading = false;
+
+  bool get updatePrimaryAddressLoading => _updatePrimaryAddressLoading;
+
+  setUpdatePrimaryAddressLoading(bool value) {
+    _updatePrimaryAddressLoading = value;
+    notifyListeners();
+  }
+
+  Future<bool?> updatePrimaryAddress({
+    required String addressId,
+  }) async {
+    // set isLoading to true to show the loader
+    bool isOnline = await Api.hasNetwork();
+    if (!isOnline) {
+      Utils.showToast(AppStrings.noInternet);
+      return false;
+    }
+    setUpdatePrimaryAddressLoading(true);
+    // Make the API call
+    try {
+      var addAddress =
+          await _addressRepository.updatePrimaryStatus(addressId: addressId);
+      getAddressList();
+      // if (addAddress != null && addAddress) {
+      //   Future.delayed(const Duration(milliseconds: 0), () {
+      //     Navigator.pop(context);
+      //   });
+      // }
+      log("api update primary address success $addAddress");
+      return true;
+    } catch (ex) {
+      log("api update primary address error $ex");
+      Utils.showToast(ex.toString());
+      return false;
+    } finally {
+      // After completion (success/failure), set isLoading to false
+      setUpdatePrimaryAddressLoading(false);
+    }
+  }
+
+  setPrimaryAddressLoaderFalse() {
+    _updatePrimaryAddressLoading = false;
   }
 
   setLoaderFalseDataNull() {

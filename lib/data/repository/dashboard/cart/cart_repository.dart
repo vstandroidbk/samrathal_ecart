@@ -121,7 +121,7 @@ class CartRepository {
     };
     try {
       Response response = await _api.sendRequest.post(
-          ApiEndPoints.addProductToCart,
+          ApiEndPoints.getCartItemDetails,
           data: jsonEncode(DataEncryption.getEncryptedData(jsonBody)));
       log("api response get cart item details response ${jsonEncode(response.data)}");
       ApiResponse apiResponse =

@@ -1,6 +1,6 @@
 class CartItemListModel {
   List<CartData>? cartData;
-  AddressData? addressData;
+  CartAddressData? addressData;
   String? productImagePath;
 
   CartItemListModel({this.cartData, this.addressData, this.productImagePath});
@@ -13,7 +13,7 @@ class CartItemListModel {
       });
     }
     addressData = json['addressData'] != null
-        ? AddressData.fromJson(json['addressData'])
+        ? CartAddressData.fromJson(json['addressData'])
         : null;
     productImagePath = json['productImagePath'];
   }
@@ -90,16 +90,16 @@ class ProductData {
   }
 }
 
-class AddressData {
+class CartAddressData {
   String? id;
   String? address;
   int? zipCode;
   String? landmark;
   int? primaryStatus;
-  StateData? stateData;
-  DistrictData? districtData;
+  CartStateData? stateData;
+  CartDistrictData? districtData;
 
-  AddressData(
+  CartAddressData(
       {this.id,
       this.address,
       this.zipCode,
@@ -108,17 +108,17 @@ class AddressData {
       this.stateData,
       this.districtData});
 
-  AddressData.fromJson(Map<String, dynamic> json) {
+  CartAddressData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     address = json['address'];
     zipCode = json['zip_code'];
     landmark = json['landmark'];
     primaryStatus = json['primary_status'];
     stateData = json['stateData'] != null
-        ? StateData.fromJson(json['stateData'])
+        ? CartStateData.fromJson(json['stateData'])
         : null;
     districtData = json['districtData'] != null
-        ? DistrictData.fromJson(json['districtData'])
+        ? CartDistrictData.fromJson(json['districtData'])
         : null;
   }
 
@@ -139,12 +139,12 @@ class AddressData {
   }
 }
 
-class StateData {
+class CartStateData {
   String? stateName;
 
-  StateData({this.stateName});
+  CartStateData({this.stateName});
 
-  StateData.fromJson(Map<String, dynamic> json) {
+  CartStateData.fromJson(Map<String, dynamic> json) {
     stateName = json['state_name'];
   }
 
@@ -155,12 +155,12 @@ class StateData {
   }
 }
 
-class DistrictData {
+class CartDistrictData {
   String? districtName;
 
-  DistrictData({this.districtName});
+  CartDistrictData({this.districtName});
 
-  DistrictData.fromJson(Map<String, dynamic> json) {
+  CartDistrictData.fromJson(Map<String, dynamic> json) {
     districtName = json['district_name'];
   }
 
