@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:samrathal_ecart/utils/utils.dart';
+import 'package:samrathal_ecart/utils/app_utils.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../core/app_colors.dart';
 import '../../../../core/app_strings.dart';
@@ -104,7 +104,7 @@ class DashboardLoadingShimmer extends StatelessWidget {
               height: 220,
               width: double.infinity,
               child: ListView.builder(
-                itemCount: productList.length,
+                itemCount: 10,
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (BuildContext context, int index) {
                   return Stack(

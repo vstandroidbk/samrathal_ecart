@@ -2,29 +2,32 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
-import 'package:samrathal_ecart/core/app_strings.dart';
-import 'package:samrathal_ecart/presentation/dashboard/profile/address/add_address_page.dart';
-import 'package:samrathal_ecart/utils/utils.dart';
-import 'package:samrathal_ecart/widgets/loader_widget.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../../../core/app_text_styles.dart';
 import '../../../../widgets/custom_button.dart';
 import '../../../core/app_colors.dart';
+import '../../../core/app_strings.dart';
 import '../../../data/model/dashboard/profile/address/address_list_model.dart';
 import '../../../logic/provider/dashboard/profile/address/address_api_provider.dart';
+import '../../../utils/app_utils.dart';
+import '../../../widgets/loader_widget.dart';
+import '../../../widgets/navigate_anim.dart';
 import '../../../widgets/no_data_found.dart';
+import '../profile/address/add_address_page.dart';
 import '../profile/address/edit_address_page.dart';
 import '../profile/address/widget/address_shimmer_view.dart';
 
 class SelectAddressPage extends StatefulWidget {
   const SelectAddressPage({super.key});
 
-  // static const String routeName = "Select Address page";
-
   @override
   State<SelectAddressPage> createState() => _SelectAddressPageState();
 }
 
 class _SelectAddressPageState extends State<SelectAddressPage> {
+  final RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
+
   int selectedIndex = -1; // Track the selected index, -1 for no selection
 
   @override
@@ -38,6 +41,7 @@ class _SelectAddressPageState extends State<SelectAddressPage> {
         Provider.of<AddressApiProvider>(context, listen: false);
     addressProvider.setLoaderFalseDataNull();
     await addressProvider.getAddressList();
+    _refreshController.refreshCompleted();
     var data = addressProvider.addressListModel;
     if (data != null &&
         data.addressData != null &&
@@ -59,39 +63,47 @@ class _SelectAddressPageState extends State<SelectAddressPage> {
         centerTitle: true,
         title: Text(AppStrings.addressTxt),
       ),
-      body: Consumer<AddressApiProvider>(
-        builder: (BuildContext context, AddressApiProvider addressApiProvider,
-            Widget? child) {
-          var data = addressApiProvider.addressListModel;
-          return addressApiProvider.getAddressLoading
-              ? const AddressShimmerView()
-              : data != null && data.addressData != null
-                  ? data.addressData!.isNotEmpty
-                      ? ListView.builder(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 8),
-                          itemCount: data.addressData!.length,
-                          itemBuilder: (ctx, index) {
-                            return InkWell(
-                              onTap: () {
-                                setState(() {
-                                  selectedIndex = index;
-                                });
-                                log("selected index is $selectedIndex");
-                              },
-                              child: SelectAddressViewCard(
-                                index: index,
-                                selectedIndex: selectedIndex,
-                                addressData: data.addressData![index],
-                              ),
-                            );
-                          },
-                        ).animate().slideY(
-                            duration: 500.ms,
-                          )
-                      : const NoDataFound()
-                  : const SizedBox();
+      body: SmartRefresher(
+        controller: _refreshController,
+        onRefresh: () {
+          callApi();
         },
+        child: Consumer<AddressApiProvider>(
+          builder: (BuildContext context, AddressApiProvider addressApiProvider,
+              Widget? child) {
+            var data = addressApiProvider.addressListModel;
+            return addressApiProvider.getAddressLoading
+                ? const AddressShimmerView()
+                : data != null && data.addressData != null
+                    ? data.addressData!.isNotEmpty
+                        ? ListView.builder(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 8),
+                            itemCount: data.addressData!.length,
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemBuilder: (ctx, index) {
+                              return InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    selectedIndex = index;
+                                  });
+                                  log("selected index is $selectedIndex");
+                                },
+                                child: SelectAddressViewCard(
+                                  index: index,
+                                  selectedIndex: selectedIndex,
+                                  addressData: data.addressData![index],
+                                ),
+                              );
+                            },
+                          ).animate().slideY(
+                              duration: 500.ms,
+                            )
+                        : const NoDataFound()
+                    : const SizedBox();
+          },
+        ),
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.only(left: 16, right: 16, bottom: 20),
@@ -144,8 +156,8 @@ class _SelectAddressPageState extends State<SelectAddressPage> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => const AddAddressPage(),
+                    FadeAnimatingRoute(
+                      route: const AddAddressPage(),
                     ),
                   ).then((value) {
                     callApi();
@@ -241,8 +253,8 @@ class SelectAddressViewCard extends StatelessWidget {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => EditAddressPage(
+                        FadeAnimatingRoute(
+                          route: EditAddressPage(
                             addressId: addressData.id!,
                           ),
                         ),

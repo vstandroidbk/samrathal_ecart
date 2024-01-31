@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:samrathal_ecart/utils/utils.dart';
+import 'package:samrathal_ecart/utils/app_utils.dart';
+import 'package:samrathal_ecart/widgets/navigate_anim.dart';
 import '../../core/app_colors.dart';
 import '../../core/app_strings.dart';
 import '../../core/app_text_styles.dart';
@@ -249,9 +250,8 @@ class _RegisterCompanyScreenState extends State<RegisterCompanyScreen> {
                   removeFocus(context);
                   Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          const DashboardScreen(selectedTab: 0),
+                    FadeAnimatingRoute(
+                      route: const DashboardScreen(selectedTab: 0),
                     ),
                     (route) => false,
                   );

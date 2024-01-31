@@ -3,16 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:samrathal_ecart/core/app_strings.dart';
-import 'package:samrathal_ecart/core/app_text_styles.dart';
-import 'package:samrathal_ecart/presentation/dashboard/dashboard_screen.dart';
-import 'package:samrathal_ecart/presentation/dashboard/home/widgets/dashboard_loading_shimmer.dart';
-import 'package:samrathal_ecart/presentation/dashboard/home/widgets/home_label_widget.dart';
-import 'package:samrathal_ecart/presentation/dashboard/home/widgets/home_offers_list_view_card.dart';
-import 'package:samrathal_ecart/presentation/dashboard/home/widgets/product_list_card.dart';
-import 'package:samrathal_ecart/presentation/dashboard/home/widgets/slider_widget.dart';
-import 'package:samrathal_ecart/utils/utils.dart';
+import 'package:samrathal_ecart/utils/app_utils.dart';
+import '../../../core/app_strings.dart';
+import '../../../core/app_text_styles.dart';
 import '../../../logic/provider/dashboard/dashboard_api_provider.dart';
+import '../../../widgets/navigate_anim.dart';
+import '../dashboard_screen.dart';
+import 'widgets/dashboard_loading_shimmer.dart';
+import 'widgets/home_label_widget.dart';
+import 'widgets/home_offers_list_view_card.dart';
+import 'widgets/product_list_card.dart';
+import 'widgets/slider_widget.dart';
 
 class HomeTabPage extends StatefulWidget {
   const HomeTabPage({super.key});
@@ -62,8 +63,8 @@ class _HomeTabPageState extends State<HomeTabPage> {
             onTap: () {
               Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => const DashboardScreen(selectedTab: 2),
+                  FadeAnimatingRoute(
+                    route: const DashboardScreen(selectedTab: 2),
                   ),
                   (route) => false);
             },

@@ -1,7 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:samrathal_ecart/core/app_colors.dart';
-import 'package:samrathal_ecart/core/app_text_styles.dart';
+
+import '../core/app_colors.dart';
+import '../core/app_text_styles.dart';
 
 class CustomParagraph extends StatefulWidget {
   final String description;

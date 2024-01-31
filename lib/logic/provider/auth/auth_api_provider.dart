@@ -1,18 +1,18 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:samrathal_ecart/data/model/user/user_data_model.dart';
 import '../../../core/api.dart';
 import '../../../core/app_strings.dart';
 import '../../../data/model/user/check_user_type_model.dart';
 import '../../../data/model/user/forgot_pass_model.dart';
+import '../../../data/model/user/user_data_model.dart';
 import '../../../data/repository/auth/auth_repository.dart';
 import '../../../presentation/auth/new_password_screen.dart';
 import '../../../presentation/auth/password_verify_screen.dart';
-import '../../../presentation/auth/register_otp_verify_screen.dart';
+import '../../../presentation/auth/auth_otp_verify_screen.dart';
 import '../../../presentation/auth/register_screen.dart';
 import '../../../presentation/auth/submit_user_details.dart';
 import '../../../presentation/dashboard/dashboard_screen.dart';
-import '../../../utils/utils.dart';
+import '../../../utils/app_utils.dart';
 import '../../../widgets/navigate_anim.dart';
 import '../../services/preferences.dart';
 
@@ -72,7 +72,7 @@ class AuthApiProvider with ChangeNotifier {
             Navigator.push(
               context,
               FadeAnimatingRoute(
-                route: RegisterOtpVerifyScreen(
+                route: AuthOtpVerifyScreen(
                   fromScreen: AppStrings.fromVerifyMobileScreen,
                   userType: userModel.userData!.userType!,
                   mobile: mobile,
@@ -157,8 +157,8 @@ class AuthApiProvider with ChangeNotifier {
         Future.delayed(const Duration(milliseconds: 0), () {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(
-              builder: (context) => NewPasswordScreen(
+            FadeAnimatingRoute(
+              route: NewPasswordScreen(
                 userType: userType,
                 mobile: mobile,
                 fromScreen: fromScreen,
@@ -214,7 +214,7 @@ class AuthApiProvider with ChangeNotifier {
             Navigator.push(
               context,
               FadeAnimatingRoute(
-                route: RegisterOtpVerifyScreen(
+                route: AuthOtpVerifyScreen(
                     userType: userType!,
                     fromScreen: AppStrings.fromLoginScreen,
                     mobile: mobile),
@@ -396,7 +396,7 @@ class AuthApiProvider with ChangeNotifier {
           Navigator.push(
             context,
             FadeAnimatingRoute(
-              route: RegisterOtpVerifyScreen(
+              route: AuthOtpVerifyScreen(
                 fromScreen: fromScreen,
                 userType: 2,
                 mobile: mobile,
@@ -447,8 +447,8 @@ class AuthApiProvider with ChangeNotifier {
         Future.delayed(const Duration(milliseconds: 0), () {
           Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(
-                builder: (context) => PasswordVerifyScreen(mobile: mobile),
+              FadeAnimatingRoute(
+                route: PasswordVerifyScreen(mobile: mobile),
               ),
               (route) => false);
         });

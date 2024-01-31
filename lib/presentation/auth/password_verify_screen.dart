@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
-import 'package:samrathal_ecart/core/app_colors.dart';
-import 'package:samrathal_ecart/presentation/auth/forgot_password_screen.dart';
-import 'package:samrathal_ecart/utils/utils.dart';
+import 'package:samrathal_ecart/utils/app_utils.dart';
+import '../../core/app_colors.dart';
 import '../../core/app_images.dart';
 import '../../core/app_strings.dart';
 import '../../core/app_text_styles.dart';
@@ -12,6 +11,8 @@ import '../../widgets/custom_button.dart';
 import '../../widgets/custom_text_field.dart';
 import '../../widgets/label_widget.dart';
 import '../../widgets/loader_widget.dart';
+import '../../widgets/navigate_anim.dart';
+import 'forgot_password_screen.dart';
 
 class PasswordVerifyScreen extends StatefulWidget {
   final String mobile;
@@ -98,8 +99,8 @@ class _PasswordVerifyScreenState extends State<PasswordVerifyScreen> {
                         removeFocus(context);
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                            builder: (context) => ForgotPasswordScreen(
+                          FadeAnimatingRoute(
+                            route: ForgotPasswordScreen(
                               mobile: widget.mobile,
                             ),
                           ),
@@ -122,7 +123,7 @@ class _PasswordVerifyScreenState extends State<PasswordVerifyScreen> {
                   textInputAction: TextInputAction.done,
                   showPasswordVisibilityIcon: true,
                   validator: (value) {
-                    if (value!.isEmpty) {
+                    if (value!.trim().isEmpty) {
                       return 'Please enter password';
                     }
                     return null;
@@ -158,7 +159,7 @@ class _PasswordVerifyScreenState extends State<PasswordVerifyScreen> {
                   builder:
                       (BuildContext context, passwordProvider, Widget? child) {
                     return passwordProvider.resendOtpLoading
-                        ? const CustomLoader()
+                        ? const CustomButtonLoader()
                         : Align(
                             alignment: AlignmentDirectional.center,
                             child: TextButton(

@@ -1,12 +1,13 @@
 import 'dart:async';
 import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-import 'package:samrathal_ecart/core/app_colors.dart';
-import 'package:samrathal_ecart/presentation/auth/new_password_screen.dart';
-import 'package:samrathal_ecart/utils/utils.dart';
+import 'package:samrathal_ecart/utils/app_utils.dart';
+
+import '../../core/app_colors.dart';
 import '../../core/app_images.dart';
 import '../../core/app_strings.dart';
 import '../../core/app_text_styles.dart';

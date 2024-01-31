@@ -2,9 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:samrathal_ecart/core/app_strings.dart';
-import 'package:samrathal_ecart/core/app_text_styles.dart';
+import 'package:samrathal_ecart/widgets/navigate_anim.dart';
 import '../../../core/app_colors.dart';
+import '../../../core/app_strings.dart';
+import '../../../core/app_text_styles.dart';
 import '../shop/product_details_screen.dart';
 
 class WishlistTabPage extends StatefulWidget {
@@ -66,8 +67,8 @@ class WishlistProductListCard extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (context) => const ProductDetailsScreen(
+          FadeAnimatingRoute(
+            route: const ProductDetailsScreen(
               productId: '',
             ),
           ),
@@ -140,22 +141,22 @@ class WishlistProductListCard extends StatelessWidget {
               ),
             ),
           ),
-          if (index % 2 != 0)
-            Positioned(
-              top: 5,
-              left: 3,
-              child: Container(
-                decoration: const BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.all(Radius.circular(16))),
-                padding:
-                    const EdgeInsets.only(left: 8, right: 8, top: 3, bottom: 5),
-                child: Text(
-                  "Most Selling",
-                  style: AppTextStyles.bodyWhite10,
-                ),
-              ),
-            )
+          // if (index % 2 != 0)
+          //   Positioned(
+          //     top: 5,
+          //     left: 3,
+          //     child: Container(
+          //       decoration: const BoxDecoration(
+          //           color: Colors.black,
+          //           borderRadius: BorderRadius.all(Radius.circular(16))),
+          //       padding:
+          //           const EdgeInsets.only(left: 8, right: 8, top: 3, bottom: 5),
+          //       child: Text(
+          //         "Most Selling",
+          //         style: AppTextStyles.bodyWhite10,
+          //       ),
+          //     ),
+          //   )
         ],
       ),
     );

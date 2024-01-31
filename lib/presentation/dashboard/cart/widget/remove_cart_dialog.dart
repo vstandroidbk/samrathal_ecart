@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
-import 'package:samrathal_ecart/utils/utils.dart';
+import 'package:samrathal_ecart/utils/app_utils.dart';
 import '../../../../core/app_colors.dart';
 import '../../../../core/app_text_styles.dart';
 import '../../../../data/model/dashboard/cart/cart_item_list_model.dart';

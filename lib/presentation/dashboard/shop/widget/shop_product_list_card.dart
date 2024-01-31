@@ -5,6 +5,7 @@ import '../../../../core/api_const.dart';
 import '../../../../core/app_colors.dart';
 import '../../../../core/app_text_styles.dart';
 import '../../../../data/model/dashboard/shop/product_list_model.dart';
+import '../../../../widgets/navigate_anim.dart';
 import '../product_details_screen.dart';
 
 class ShopProductListCard extends StatelessWidget {
@@ -20,8 +21,8 @@ class ShopProductListCard extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (context) => ProductDetailsScreen(
+          FadeAnimatingRoute(
+            route: ProductDetailsScreen(
               productId: productListData.id!,
             ),
           ),

@@ -3,16 +3,17 @@ import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:samrathal_ecart/logic/provider/dashboard/cart/cart_api_provider.dart';
-import 'package:samrathal_ecart/logic/provider/dashboard/cart/update_cart_calculator_provider.dart';
-import 'package:samrathal_ecart/presentation/dashboard/cart/widget/remove_cart_dialog.dart';
-import 'package:samrathal_ecart/presentation/dashboard/cart/widget/update_cart_dialog.dart';
-import 'package:samrathal_ecart/utils/utils.dart';
+
+import 'package:samrathal_ecart/utils/app_utils.dart';
 
 import '../../../../core/api_const.dart';
 import '../../../../core/app_colors.dart';
 import '../../../../core/app_text_styles.dart';
 import '../../../../data/model/dashboard/cart/cart_item_list_model.dart';
+import '../../../../logic/provider/dashboard/cart/cart_api_provider.dart';
+import '../../../../logic/provider/dashboard/cart/update_cart_calculator_provider.dart';
+import 'remove_cart_dialog.dart';
+import 'update_cart_dialog.dart';
 
 class CartItemViewCard extends StatelessWidget {
   final CartData cartData;
@@ -63,7 +64,7 @@ class CartItemViewCard extends StatelessWidget {
                       children: [
                         Text(
                           cartData.productData!.productName!,
-                          textAlign: TextAlign.center,
+                          textAlign: TextAlign.start,
                           style: AppTextStyles.bodyBlack14
                               .copyWith(fontWeight: FontWeight.w700),
                         ),
@@ -127,7 +128,8 @@ class CartItemViewCard extends StatelessWidget {
                   Expanded(
                       child: CartItemPcView(
                     listSplitData: splitList,
-                  ) /*Column(
+                  )
+                    /*Column(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [

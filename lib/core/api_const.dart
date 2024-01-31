@@ -1,4 +1,6 @@
 class ApiEndPoints {
+  ApiEndPoints._();
+
   static const Map<String, dynamic> headerContent = {
     "Content-Type": "application/json",
   };
@@ -32,6 +34,17 @@ class ApiEndPoints {
   static const String getCartItemDetails = "get-item-details";
   static const String updateCartItem = "update-cart-item";
   static const String removeCartItem = "remove-cart-item";
+  static const String paymentMethodLIst = "payment-list";
+  static const String uploadScreenshot = "app-image-upload";
+  static const String orderPlaced = "order-placed";
+
+  static const String orderListData = "order-list";
+  static const String orderDetails = "order-details";
+  static const String orderItemDetails = "order-item-details";
+
+  static const String orderPaymentList = "order-payment-list";
+  static const String orderPaymentDetails = "order-payment-details";
+  static const String orderReceiveVerify = "order-receive-verify";
 }
 
 class BadRequestException implements Exception {

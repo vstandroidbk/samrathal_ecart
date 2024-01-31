@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
-import 'package:samrathal_ecart/core/app_colors.dart';
-import 'package:samrathal_ecart/core/app_images.dart';
-import 'package:samrathal_ecart/core/app_strings.dart';
-import 'package:samrathal_ecart/core/app_text_styles.dart';
-import 'package:samrathal_ecart/logic/provider/auth/auth_api_provider.dart';
-import 'package:samrathal_ecart/utils/utils.dart';
-import 'package:samrathal_ecart/widgets/custom_button.dart';
-import 'package:samrathal_ecart/widgets/custom_text_field.dart';
-import 'package:samrathal_ecart/widgets/loader_widget.dart';
+import 'package:samrathal_ecart/utils/app_utils.dart';
+import '../../core/app_colors.dart';
+import '../../core/app_images.dart';
+import '../../core/app_strings.dart';
+import '../../core/app_text_styles.dart';
+import '../../logic/provider/auth/auth_api_provider.dart';
+import '../../widgets/custom_button.dart';
+import '../../widgets/custom_text_field.dart';
 import '../../widgets/label_widget.dart';
+import '../../widgets/loader_widget.dart';
 
 class MobileVerifyScreen extends StatefulWidget {
   const MobileVerifyScreen({super.key});
@@ -99,7 +99,7 @@ class _MobileVerifyScreenState extends State<MobileVerifyScreen> {
                   textInputAction: TextInputAction.done,
                   keyboardType: TextInputType.number,
                   validator: (value) {
-                    if (value!.isEmpty) {
+                    if (value!.trim().isEmpty) {
                       return 'Please enter mobile no.';
                     }
                     if (value.length < 10) {

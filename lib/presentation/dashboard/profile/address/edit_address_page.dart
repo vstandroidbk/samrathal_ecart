@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
-import 'package:samrathal_ecart/utils/utils.dart';
+import 'package:samrathal_ecart/utils/app_utils.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../core/app_colors.dart';
 import '../../../../core/app_strings.dart';
@@ -13,7 +13,8 @@ import '../../../../widgets/custom_button.dart';
 import '../../../../widgets/custom_text_field.dart';
 import '../../../../widgets/label_widget.dart';
 import '../../../../widgets/loader_widget.dart';
-import '../../../pick_location_screen.dart';
+import '../../../../widgets/navigate_anim.dart';
+import 'pick_location_screen.dart';
 
 class EditAddressPage extends StatefulWidget {
   final String addressId;
@@ -106,8 +107,8 @@ class _EditAddressPageState extends State<EditAddressPage> {
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(
-                              builder: (context) => const PickLocationScreen(),
+                            FadeAnimatingRoute(
+                              route: const PickLocationScreen(),
                             ),
                           ).then((value) async {
                             var locationProvider =
@@ -318,7 +319,7 @@ class _EditAddressPageState extends State<EditAddressPage> {
                     // maxLength: 6,
                     textInputAction: TextInputAction.next,
                     validator: (value) {
-                      if (value!.isEmpty) {
+                      if (value!.trim().isEmpty) {
                         return 'Please enter ZIP code.';
                       }
                       /* if (value.length < 10) {
@@ -352,7 +353,7 @@ class _EditAddressPageState extends State<EditAddressPage> {
                     textInputAction: TextInputAction.done,
                     maxLine: 3,
                     validator: (value) {
-                      if (value!.isEmpty) {
+                      if (value!.trim().isEmpty) {
                         return 'Please enter address.';
                       }
                       return null;

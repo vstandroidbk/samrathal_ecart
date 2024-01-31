@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:samrathal_ecart/core/app_colors.dart';
-import 'package:samrathal_ecart/core/app_images.dart';
-import 'package:samrathal_ecart/core/app_text_styles.dart';
-import 'package:samrathal_ecart/presentation/dashboard/dashboard_screen.dart';
+
+import '../../../../../core/app_colors.dart';
+import '../../../../../core/app_images.dart';
 import '../../../../../core/app_strings.dart';
+import '../../../../../core/app_text_styles.dart';
 import '../../../../../widgets/custom_button.dart';
+import '../../../../../widgets/navigate_anim.dart';
+import '../../../dashboard_screen.dart';
 
 class OrderSuccessScreen extends StatefulWidget {
-  // static const String routeName = "Success Screen";
-
   const OrderSuccessScreen({super.key});
 
   @override
@@ -45,8 +45,8 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen> {
             onPressed: () {
               Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => const DashboardScreen(selectedTab: 0),
+                  FadeAnimatingRoute(
+                    route: const DashboardScreen(selectedTab: 0),
                   ),
                   (route) => false);
             },
@@ -64,8 +64,8 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen> {
   bool onBackPressed() {
     Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(
-          builder: (context) => const DashboardScreen(selectedTab: 0),
+        FadeAnimatingRoute(
+          route: const DashboardScreen(selectedTab: 0),
         ),
         (route) => false);
     return true;

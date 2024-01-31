@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
-import 'package:samrathal_ecart/core/app_colors.dart';
-import 'package:samrathal_ecart/logic/provider/dashboard/profile/address/address_api_provider.dart';
 import 'package:shimmer/shimmer.dart';
-
+import '../../core/app_colors.dart';
 import '../../core/app_strings.dart';
 import '../../core/app_text_styles.dart';
-import '../../utils/utils.dart';
+import '../../logic/provider/dashboard/profile/address/address_api_provider.dart';
+import '../../utils/app_utils.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/custom_text_field.dart';
 import '../../widgets/label_widget.dart';
@@ -222,7 +221,7 @@ class _SubmitUserDetailsScreenState extends State<SubmitUserDetailsScreen> {
                   digitOnly: true,
                   textInputAction: TextInputAction.next,
                   validator: (value) {
-                    if (value!.isEmpty) {
+                    if (value!.trim().isEmpty) {
                       return 'Please enter ZIP code.';
                     }
                     /* if (value.length < 10) {
@@ -256,7 +255,7 @@ class _SubmitUserDetailsScreenState extends State<SubmitUserDetailsScreen> {
                   textInputAction: TextInputAction.done,
                   maxLine: 3,
                   validator: (value) {
-                    if (value!.isEmpty) {
+                    if (value!.trim().isEmpty) {
                       return 'Please enter address.';
                     }
                     return null;

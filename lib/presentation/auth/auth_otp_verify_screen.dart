@@ -4,27 +4,33 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-import 'package:samrathal_ecart/core/app_colors.dart';
-import 'package:samrathal_ecart/presentation/dashboard/profile/order/widget/order_success_screen.dart';
-import 'package:samrathal_ecart/utils/utils.dart';
+import 'package:provider/provider.dart';
+import 'package:samrathal_ecart/utils/app_utils.dart';
+import '../../core/app_colors.dart';
 import '../../core/app_images.dart';
 import '../../core/app_strings.dart';
 import '../../core/app_text_styles.dart';
+import '../../logic/provider/auth/auth_api_provider.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/label_widget.dart';
+import '../../widgets/loader_widget.dart';
 
-class VerifyOtpScreen extends StatefulWidget {
+class AuthOtpVerifyScreen extends StatefulWidget {
   final String fromScreen;
+  final String mobile;
+  final int userType;
 
-  const VerifyOtpScreen({super.key, required this.fromScreen});
-
-  // static const String routeName = "Verify Otp Screen";
+  const AuthOtpVerifyScreen(
+      {super.key,
+      required this.userType,
+      required this.fromScreen,
+      required this.mobile});
 
   @override
-  State<VerifyOtpScreen> createState() => _VerifyOtpScreenState();
+  State<AuthOtpVerifyScreen> createState() => _AuthOtpVerifyScreenState();
 }
 
-class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
+class _AuthOtpVerifyScreenState extends State<AuthOtpVerifyScreen> {
   TextEditingController otpController = TextEditingController();
 
   final ValueNotifier<int> _timerNotifier = ValueNotifier<int>(30);
@@ -47,28 +53,6 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
     super.initState();
   }
 
-  navigateScreen() {
-    log("from screen ${widget.fromScreen}");
-    if (widget.fromScreen == AppStrings.fromLoginScreen) {
-      return;
-    }
-    if (widget.fromScreen == AppStrings.fromRegisterScreen) {
-      return;
-    }
-    if (widget.fromScreen == AppStrings.fromForgetScreen) {
-      return;
-    }
-    if (widget.fromScreen == AppStrings.fromOrderScreen) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const OrderSuccessScreen(),
-        ),
-      );
-      return;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     var mq = MediaQuery.sizeOf(context);
@@ -85,6 +69,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
@@ -95,7 +80,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                 style: AppTextStyles.headingBlack24,
               ).animate().slideX(duration: 500.ms),
               Text(
-                "${AppStrings.verifyOtpDesc} ${"9876543210".replaceRange(0, 7, "*******")}",
+                "${AppStrings.verifyOtpDesc} ${widget.mobile.replaceRange(0, 7, "*******")}",
                 style: AppTextStyles.bodyBlack16,
               ).animate().slideX(duration: 500.ms),
               SizedBox(
@@ -105,15 +90,15 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                 child: Image.asset(
                   AppImages.otpLogo,
                   fit: BoxFit.fill,
-                  height: 100,
-                  width: 100,
+                  height: 80,
+                  width: 80,
                 ),
               ).animate().fadeIn(duration: 500.ms),
-              12.ph,
+              8.ph,
               Center(
                 child: Text(
                   AppStrings.appName,
-                  style: AppTextStyles.bodyBlack24,
+                  style: AppTextStyles.bodyBlack20,
                 ),
               ).animate().fadeIn(duration: 500.ms),
               SizedBox(
@@ -123,16 +108,16 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                 labelText: AppStrings.otpLabel,
                 mandatory: true,
               ),
-              5.ph,
+              8.ph,
               PinCodeTextField(
-                length: 4,
+                length: 6,
                 obscureText: false,
                 animationType: AnimationType.fade,
                 pinTheme: PinTheme(
                   shape: PinCodeFieldShape.box,
                   borderRadius: BorderRadius.circular(5),
-                  fieldHeight: 55,
-                  fieldWidth: 55,
+                  fieldHeight: 45,
+                  fieldWidth: 45,
                   activeFillColor: AppColors.textFieldBgColor,
                   inactiveFillColor: AppColors.textFieldBgColor,
                   selectedFillColor: AppColors.textFieldBgColor,
@@ -154,19 +139,17 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                 cursorColor: AppColors.textBlackColor,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 onCompleted: (value) async {
-                  // Map<String, dynamic> otpBody = {
-                  //   "mobileNumber": widget.mobileNumber,
-                  //   "otp": value,
-                  //   "login_verify": true,
-                  //   "type": 2
-                  // };
-                  // var provider = Provider.of<LoginController>(
-                  //   context,
-                  //   listen: false,
-                  // );
-                  // await provider.verifyLoginOtp(
-                  //     context, otpBody, widget.from);
-                  // otpController.clear();
+                  var provider = Provider.of<AuthApiProvider>(
+                    context,
+                    listen: false,
+                  );
+                  await provider.verifyOtp(
+                      mobile: widget.mobile,
+                      context: context,
+                      fromScreen: widget.fromScreen,
+                      userType: widget.userType,
+                      otp: otpController.text);
+                  otpController.clear();
                 },
                 hintCharacter: "-",
                 keyboardType: TextInputType.number,
@@ -180,58 +163,30 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                 appContext: context,
               ),
               16.ph,
-              CustomButton(
-                onPressed: () {
-                  removeFocus(context);
-                  navigateScreen();
-                  // Navigator.pushNamedAndRemoveUntil(context,
-                  //     DashboardScreen.routeName, (route) => false,
-                  //     arguments: 0);
+              Consumer<AuthApiProvider>(
+                builder:
+                    (BuildContext context, checkUserProvider, Widget? child) {
+                  return checkUserProvider.verifyOtpLoading
+                      ? const CustomButtonLoader()
+                      : CustomButton(
+                          onPressed: () {
+                            if (otpController.text.trim().isEmpty) {
+                              Utils.showToast("Please enter OTP");
+                            }
+                          },
+                          isGradient: false,
+                          child: Text(
+                            AppStrings.verifyTxt.toUpperCase(),
+                            style: AppTextStyles.bodyWhite16,
+                          ),
+                        ).animate().fadeIn(duration: 500.ms);
                 },
-                isGradient: false,
-                child: Text(
-                  AppStrings.verifyTxt.toUpperCase(),
-                  style: AppTextStyles.bodyWhite16,
-                ),
-              ).animate().fadeIn(duration: 500.ms),
+              ),
               12.ph,
               ValueListenableBuilder(
                 valueListenable: _timerNotifier,
                 builder: (BuildContext context, int value, Widget? child) {
-                  return value == 0
-                      ? Align(
-                          alignment: AlignmentDirectional.center,
-                          child: InkWell(
-                            onTap: () async {
-                              removeFocus(context);
-                              // var jsonData = {
-                              //   "mobileNumber": widget.mobileNumber,
-                              //   "type": 2
-                              // };
-                              // await resendData.resendLoginOtp(
-                              //   context,
-                              //   jsonData,
-                              // );
-                              // log("resend data before ${resendData.resend}");
-                              // if (resendData.resend) {
-                              //   log("resend data after ${resendData.resend}");
-                              //   startTimer();
-                              // }
-                            },
-                            child: Text(
-                              AppStrings.resendOtpTxt.toUpperCase(),
-                              textAlign: TextAlign.end,
-                              style: AppTextStyles.bodyBlack16,
-                            ),
-                          ),
-                        )
-                      : Align(
-                          alignment: AlignmentDirectional.center,
-                          child: Text(
-                            'Resend OTP in $value seconds',
-                            style: AppTextStyles.bodyBlack16,
-                          ),
-                        );
+                  return timerWidget(value);
                 },
               ),
               SizedBox(
@@ -242,5 +197,39 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
         ),
       ),
     );
+  }
+
+  Widget timerWidget(int value) {
+    return value == 0
+        ? Align(
+            alignment: AlignmentDirectional.center,
+            child: InkWell(
+              onTap: () async {
+                bool otpResp = await Provider.of<AuthApiProvider>(
+                  context,
+                  listen: false,
+                ).resendOtp(
+                    mobile: widget.mobile,
+                    from: AppStrings.fromOtpScreen,
+                    context: context);
+                if (otpResp) {
+                  log("resend data after $otpResp");
+                  startTimer();
+                }
+              },
+              child: Text(
+                AppStrings.resendOtpTxt.toUpperCase(),
+                textAlign: TextAlign.end,
+                style: AppTextStyles.bodyBlack16,
+              ),
+            ),
+          )
+        : Align(
+            alignment: AlignmentDirectional.center,
+            child: Text(
+              'Resend OTP in $value seconds',
+              style: AppTextStyles.bodyBlack16,
+            ),
+          );
   }
 }

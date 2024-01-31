@@ -1,21 +1,26 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:samrathal_ecart/core/app_colors.dart';
-import 'package:samrathal_ecart/core/app_strings.dart';
-import 'package:samrathal_ecart/core/app_text_styles.dart';
-import 'package:samrathal_ecart/logic/services/formatter.dart';
-import 'package:samrathal_ecart/utils/utils.dart';
+import 'package:samrathal_ecart/presentation/dashboard/profile/payment/payment_details_screen.dart';
+import 'package:samrathal_ecart/utils/app_utils.dart';
+import '../../../../../core/app_colors.dart';
+import '../../../../../core/app_strings.dart';
+import '../../../../../core/app_text_styles.dart';
+import '../../../../../data/model/dashboard/profile/order_payment_list_model.dart';
+import '../../../../../logic/services/formatter.dart';
 import '../../../../../widgets/custom_button.dart';
-import '../payment_details_screen.dart';
+import '../../../../../widgets/navigate_anim.dart';
+import '../payment_method_screen.dart';
 
 class PaymentListCard extends StatelessWidget {
   final int index;
+  final PaymentList paymentList;
 
-  const PaymentListCard({super.key, required this.index});
+  const PaymentListCard(
+      {super.key, required this.index, required this.paymentList});
 
   @override
   Widget build(BuildContext context) {
-    var paymentData = paymentList[index];
+    // var paymentData = paymentList[index];
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       child: Card(
@@ -35,10 +40,10 @@ class PaymentListCard extends StatelessWidget {
                           .copyWith(fontWeight: FontWeight.w500),
                     ),
                   ),
-                  const Text(":"),
+                  // const Text(":"),
                   Expanded(
                     child: Text(
-                      paymentData["orderId"]!,
+                      "#${paymentList.orderNumber!}",
                       textAlign: TextAlign.right,
                       style: AppTextStyles.bodyBlack14
                           .copyWith(fontWeight: FontWeight.w500),
@@ -56,10 +61,10 @@ class PaymentListCard extends StatelessWidget {
                           .copyWith(fontWeight: FontWeight.w500),
                     ),
                   ),
-                  const Text(":"),
+                  // const Text(":"),
                   Expanded(
                     child: Text(
-                      paymentData["paymentId"]!,
+                      getPaymentTypeText(paymentList.paymentType!, paymentList),
                       textAlign: TextAlign.right,
                       style: AppTextStyles.bodyBlack14
                           .copyWith(fontWeight: FontWeight.w500),
@@ -77,10 +82,11 @@ class PaymentListCard extends StatelessWidget {
                           .copyWith(fontWeight: FontWeight.w500),
                     ),
                   ),
-                  const Text(":"),
+                  // const Text(":"),
                   Expanded(
                     child: Text(
-                      paymentData["paymentDate"]!,
+                      Formatter.formatDateWithTime(
+                          DateTime.parse(paymentList.paymentDate!)),
                       textAlign: TextAlign.right,
                       style: AppTextStyles.bodyBlack14
                           .copyWith(fontWeight: FontWeight.w500),
@@ -98,13 +104,14 @@ class PaymentListCard extends StatelessWidget {
                           .copyWith(fontWeight: FontWeight.w500),
                     ),
                   ),
-                  const Text(":"),
+                  // const Text(":"),
                   Expanded(
                     child: Text(
-                      paymentData["status"]!,
+                      getStatus(paymentList.orderStatus!),
                       textAlign: TextAlign.right,
-                      style: AppTextStyles.bodyBlack14
-                          .copyWith(color: AppColors.pendingStatusColor),
+                      style: AppTextStyles.bodyBlack14.copyWith(
+                        color: getStatusColor(paymentList.orderStatus!),
+                      ),
                     ),
                   ),
                 ],
@@ -118,11 +125,13 @@ class PaymentListCard extends StatelessWidget {
                     style: AppTextStyles.bodyBlack14
                         .copyWith(fontWeight: FontWeight.w500),
                   )),
-                  const Text(":"),
+                  // const Text(":"),
                   Expanded(
                       child: Text(
                     Formatter.formatPrice(
-                      int.parse(paymentData["amount"]!),
+                      int.parse(
+                        paymentList.payAmount!,
+                      ),
                     ),
                     textAlign: TextAlign.right,
                     style: AppTextStyles.bodyBlack14
@@ -134,27 +143,46 @@ class PaymentListCard extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  CustomButton(
-                    width: 100,
-                    height: 35,
-                    onPressed: () {
+                  paymentList.paymentStatus != null &&
+                          paymentList.paymentStatus! == false
+                      ? CustomButton(
+                          width: 100,
+                          height: 35,
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              FadeAnimatingRoute(
+                                route: PaymentMethodScreen(
+                                  screenType: AppStrings.fromPaymentList,
+                                  orderId: paymentList.orderId,
+                                  orderToken: paymentList.orderToken,
+                                ),
+                              ),
+                            );
+                          },
+                          isGradient: false,
+                          backgroundColor: AppColors.greenBtnColor,
+                          child: Text(
+                            AppStrings.payNowTxt.toUpperCase(),
+                            style: AppTextStyles.bodyWhite12,
+                          ),
+                        )
+                      : const SizedBox(),
+                  InkWell(
+                    onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => const PaymentDetailsScreen(),
+                        FadeAnimatingRoute(
+                          route: PaymentDetailsScreen(
+                            orderPaymentId: paymentList.id!,
+                          ),
                         ),
                       );
                     },
-                    isGradient: false,
-                    backgroundColor: AppColors.greenBtnColor,
-                    child: Text(
-                      AppStrings.payNowTxt.toUpperCase(),
-                      style: AppTextStyles.bodyWhite12,
+                    child: const Icon(
+                      CupertinoIcons.eye_solid,
+                      color: AppColors.lightGrey,
                     ),
-                  ),
-                  const Icon(
-                    CupertinoIcons.eye_solid,
-                    color: AppColors.lightGrey,
                   )
                 ],
               ),

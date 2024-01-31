@@ -2,13 +2,13 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:dio/dio.dart';
-import 'package:samrathal_ecart/data/model/dashboard/shop/product_details_model.dart';
-import 'package:samrathal_ecart/data/model/dashboard/shop/product_list_model.dart';
 import '../../../../core/api.dart';
 import '../../../../core/api_const.dart';
 import '../../../../core/app_strings.dart';
 import '../../../../logic/services/DataEncryption.dart';
 import '../../../../logic/services/preferences.dart';
+import '../../../model/dashboard/shop/product_details_model.dart';
+import '../../../model/dashboard/shop/product_list_model.dart';
 
 class ShopRepository {
   final Api _api = Api();

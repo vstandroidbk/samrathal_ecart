@@ -1,42 +1,42 @@
 import 'dart:async';
 import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
-import 'package:samrathal_ecart/utils/utils.dart';
-import '../../core/app_colors.dart';
-import '../../core/app_images.dart';
-import '../../core/app_strings.dart';
-import '../../core/app_text_styles.dart';
-import '../../logic/provider/auth/auth_api_provider.dart';
-import '../../widgets/custom_button.dart';
-import '../../widgets/label_widget.dart';
-import '../../widgets/loader_widget.dart';
+import 'package:samrathal_ecart/logic/provider/auth/auth_api_provider.dart';
+import 'package:samrathal_ecart/logic/provider/dashboard/profile/order_api_provider.dart';
+import 'package:samrathal_ecart/utils/app_utils.dart';
 
-class RegisterOtpVerifyScreen extends StatefulWidget {
-  final String fromScreen;
-  final String mobile;
-  final int userType;
+import '../../../../../core/app_images.dart';
+import '../../../../../core/app_strings.dart';
+import '../../../../../core/app_text_styles.dart';
+import '../../../../../widgets/custom_button.dart';
+import '../../../../../widgets/label_widget.dart';
+import '../../../../core/app_colors.dart';
+import '../../../../widgets/loader_widget.dart';
 
-  const RegisterOtpVerifyScreen(
-      {super.key,
-      required this.userType,
-      required this.fromScreen,
-      required this.mobile});
+class ReceiveOrderVerifyOtp extends StatefulWidget {
+  final String orderId;
+  final String mobileNo;
+
+  const ReceiveOrderVerifyOtp(
+      {super.key, required this.orderId, required this.mobileNo});
 
   @override
-  State<RegisterOtpVerifyScreen> createState() =>
-      _RegisterOtpVerifyScreenState();
+  State<ReceiveOrderVerifyOtp> createState() => _ReceiveOrderVerifyOtpState();
 }
 
-class _RegisterOtpVerifyScreenState extends State<RegisterOtpVerifyScreen> {
+class _ReceiveOrderVerifyOtpState extends State<ReceiveOrderVerifyOtp> {
   TextEditingController otpController = TextEditingController();
 
   final ValueNotifier<int> _timerNotifier = ValueNotifier<int>(30);
 
   void startTimer() {
+    var provider = Provider.of<OrderApiProvider>(context, listen: false);
+    provider.setReceiveOrderFalse();
     _timerNotifier.value = 30;
     const oneSec = Duration(seconds: 1);
     Timer.periodic(oneSec, (Timer timer) {
@@ -81,7 +81,7 @@ class _RegisterOtpVerifyScreenState extends State<RegisterOtpVerifyScreen> {
                 style: AppTextStyles.headingBlack24,
               ).animate().slideX(duration: 500.ms),
               Text(
-                "${AppStrings.verifyOtpDesc} ${widget.mobile.replaceRange(0, 7, "*******")}",
+                "${AppStrings.verifyOtpDesc} ${widget.mobileNo.replaceRange(0, 7, "*******")}",
                 style: AppTextStyles.bodyBlack16,
               ).animate().slideX(duration: 500.ms),
               SizedBox(
@@ -140,16 +140,15 @@ class _RegisterOtpVerifyScreenState extends State<RegisterOtpVerifyScreen> {
                 cursorColor: AppColors.textBlackColor,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 onCompleted: (value) async {
-                  var provider = Provider.of<AuthApiProvider>(
+                  var provider = Provider.of<OrderApiProvider>(
                     context,
                     listen: false,
                   );
-                  await provider.verifyOtp(
-                      mobile: widget.mobile,
+                  await provider.receiveOrder(
+                      mobile: widget.mobileNo,
                       context: context,
-                      fromScreen: widget.fromScreen,
-                      userType: widget.userType,
-                      otp: otpController.text);
+                      otp: otpController.text,
+                      orderId: widget.orderId);
                   otpController.clear();
                 },
                 hintCharacter: "-",
@@ -157,17 +156,15 @@ class _RegisterOtpVerifyScreenState extends State<RegisterOtpVerifyScreen> {
                 onChanged: (value) {},
                 beforeTextPaste: (text) {
                   log("Allowing to paste $text");
-                  //if you return true then it will show the paste confirmation dialog. Otherwise if false, then nothing will happen.
-                  //but you can show anything you want here, like your pop up saying wrong paste format or etc
                   return true;
                 },
                 appContext: context,
               ),
               16.ph,
-              Consumer<AuthApiProvider>(
+              Consumer<OrderApiProvider>(
                 builder:
                     (BuildContext context, checkUserProvider, Widget? child) {
-                  return checkUserProvider.verifyOtpLoading
+                  return checkUserProvider.receiveOrderLoading
                       ? const CustomButtonLoader()
                       : CustomButton(
                           onPressed: () {
@@ -210,7 +207,7 @@ class _RegisterOtpVerifyScreenState extends State<RegisterOtpVerifyScreen> {
                   context,
                   listen: false,
                 ).resendOtp(
-                    mobile: widget.mobile,
+                    mobile: widget.mobileNo,
                     from: AppStrings.fromOtpScreen,
                     context: context);
                 if (otpResp) {

@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:samrathal_ecart/core/app_colors.dart';
-import 'package:samrathal_ecart/core/app_strings.dart';
-import 'package:samrathal_ecart/core/app_text_styles.dart';
-import 'package:samrathal_ecart/presentation/auth/mobile_verify_screen.dart';
 import '../core/api.dart';
+import '../core/app_colors.dart';
 import '../core/app_images.dart';
+import '../core/app_strings.dart';
+import '../core/app_text_styles.dart';
 import '../logic/services/preferences.dart';
-import '../utils/utils.dart';
+import '../utils/app_utils.dart';
 import '../widgets/navigate_anim.dart';
+import 'auth/mobile_verify_screen.dart';
 import 'dashboard/dashboard_screen.dart';
 
 class SplashScreen extends StatefulWidget {

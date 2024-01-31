@@ -5,7 +5,7 @@ import '../../../../../logic/services/formatter.dart';
 
 class GetAmountWidget extends StatelessWidget {
   final String title;
-  final int value;
+  final num value;
 
   const GetAmountWidget({super.key, required this.title, required this.value});
 

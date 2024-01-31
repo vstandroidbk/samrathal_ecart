@@ -1,13 +1,11 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:samrathal_ecart/data/model/dashboard/dashboard_data_model.dart';
-import 'package:samrathal_ecart/data/model/dashboard/profile/profile_data_model.dart';
-import 'package:samrathal_ecart/data/repository/dashboard/dashboard_repository.dart';
-
 import '../../../../core/api.dart';
 import '../../../../core/app_strings.dart';
-import '../../../../utils/utils.dart';
+import '../../../../utils/app_utils.dart';
+import '../../../data/model/dashboard/dashboard_data_model.dart';
+import '../../../data/model/dashboard/profile/profile_data_model.dart';
+import '../../../data/repository/dashboard/dashboard_repository.dart';
 
 class DashboardApiProvider with ChangeNotifier {
   final DashboardRepository _dashboardRepository = DashboardRepository();

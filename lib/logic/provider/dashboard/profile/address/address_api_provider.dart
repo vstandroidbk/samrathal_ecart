@@ -1,15 +1,15 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:samrathal_ecart/data/model/dashboard/profile/address/address_list_model.dart';
-import 'package:samrathal_ecart/data/model/dashboard/profile/address/city_model.dart';
-import 'package:samrathal_ecart/data/model/dashboard/profile/address/edit_address_data_model.dart';
-import 'package:samrathal_ecart/data/model/dashboard/profile/address/state_model.dart';
-import 'package:samrathal_ecart/data/repository/dashboard/profile/address_repository.dart';
-import 'package:samrathal_ecart/widgets/navigate_anim.dart';
 import '../../../../../core/api.dart';
 import '../../../../../core/app_strings.dart';
+import '../../../../../data/model/dashboard/profile/address/address_list_model.dart';
+import '../../../../../data/model/dashboard/profile/address/city_model.dart';
+import '../../../../../data/model/dashboard/profile/address/edit_address_data_model.dart';
+import '../../../../../data/model/dashboard/profile/address/state_model.dart';
+import '../../../../../data/repository/dashboard/profile/address_repository.dart';
 import '../../../../../presentation/dashboard/dashboard_screen.dart';
-import '../../../../../utils/utils.dart';
+import '../../../../../utils/app_utils.dart';
+import '../../../../../widgets/navigate_anim.dart';
 
 class AddressApiProvider with ChangeNotifier {
   final AddressRepository _addressRepository = AddressRepository();

@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:samrathal_ecart/logic/provider/dashboard/shop/shop_api_provider.dart';
-import 'package:samrathal_ecart/presentation/dashboard/shop/widget/product_list_shimmer.dart';
-import 'package:samrathal_ecart/presentation/dashboard/shop/widget/shop_product_list_card.dart';
-import 'package:samrathal_ecart/widgets/no_data_found.dart';
+
+import '../../../logic/provider/dashboard/shop/shop_api_provider.dart';
+import '../../../widgets/no_data_found.dart';
+import 'widget/product_list_shimmer.dart';
+import 'widget/shop_product_list_card.dart';
 
 class ShopTabPage extends StatefulWidget {
   const ShopTabPage({super.key});

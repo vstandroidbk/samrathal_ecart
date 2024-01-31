@@ -1,4 +1,5 @@
 class AppImages {
+  AppImages._();
   static String loginLogo = "assets/icons/app_logo.png";
   static String otpLogo = "assets/icons/otp_logo.png";
 

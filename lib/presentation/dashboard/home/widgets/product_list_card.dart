@@ -1,12 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:samrathal_ecart/core/app_colors.dart';
-import 'package:samrathal_ecart/core/app_text_styles.dart';
-import 'package:samrathal_ecart/presentation/dashboard/shop/product_details_screen.dart';
-
 import '../../../../core/api_const.dart';
+import '../../../../core/app_colors.dart';
+import '../../../../core/app_text_styles.dart';
 import '../../../../data/model/dashboard/dashboard_data_model.dart';
+import '../../../../widgets/navigate_anim.dart';
+import '../../shop/product_details_screen.dart';
 
 class ProductListCard extends StatelessWidget {
   final ProductData productData;
@@ -21,8 +21,8 @@ class ProductListCard extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (context) => ProductDetailsScreen(
+          FadeAnimatingRoute(
+            route: ProductDetailsScreen(
               productId: productData.id!,
             ),
           ),
@@ -112,7 +112,7 @@ class ProductListCard extends StatelessWidget {
               padding:
                   const EdgeInsets.only(left: 8, right: 8, top: 3, bottom: 5),
               child: Text(
-                "Most Selling",
+                "Featured",
                 style: AppTextStyles.bodyWhite10,
               ),
             ),

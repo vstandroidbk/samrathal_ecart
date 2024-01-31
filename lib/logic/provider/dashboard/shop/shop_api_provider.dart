@@ -1,11 +1,11 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:samrathal_ecart/data/model/dashboard/shop/product_details_model.dart';
-import 'package:samrathal_ecart/data/model/dashboard/shop/product_list_model.dart';
-import 'package:samrathal_ecart/data/repository/dashboard/shop/shop_repository.dart';
 import '../../../../core/api.dart';
 import '../../../../core/app_strings.dart';
-import '../../../../utils/utils.dart';
+import '../../../../data/model/dashboard/shop/product_details_model.dart';
+import '../../../../data/model/dashboard/shop/product_list_model.dart';
+import '../../../../data/repository/dashboard/shop/shop_repository.dart';
+import '../../../../utils/app_utils.dart';
 
 class ShopApiProvider with ChangeNotifier {
   final ShopRepository _shopRepository = ShopRepository();
@@ -90,7 +90,7 @@ class ShopApiProvider with ChangeNotifier {
         _productDetailsModel = productDetailsData;
       }
     } catch (ex) {
-      log("api login error $ex");
+      log("api get product details data error $ex");
       Utils.showToast(ex.toString());
     } finally {
       // After completion (success/failure), set isLoading to false

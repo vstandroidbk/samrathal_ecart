@@ -1,6 +1,8 @@
-import 'package:samrathal_ecart/core/app_images.dart';
+import 'app_images.dart';
 
 class AppStrings {
+  AppStrings._();
+
   static String appName = "Samrathal";
   static String noInternet =
       "Oops! It looks like you're not connected to the internet."
@@ -95,6 +97,7 @@ class AppStrings {
 
   static String paymentListTxt = "Payment List";
   static String paymentDetailsTxt = "Payment Details";
+  static String paymentMethodTxt = "Payment Method";
 
   static String paymentIdTxt = "Payment Id";
   static String orderIdTxt = "Order Id";
@@ -111,6 +114,7 @@ class AppStrings {
   static String micrCodeTxt = "MICR Code";
   static String bankNameTxt = "Bank Name";
   static String branchNameTxt = "Branch";
+  static String acHolderName = "Ac Holder Name";
   static String totalOrderAmtTxt = "Total Order Amount";
   static String outStandingAmtTxt = "Outstanding Amount";
   static String paidViaTxt = "Paid Via";
@@ -146,38 +150,39 @@ class AppStrings {
   static String newPasswordTitle = "New Password";
   static String newPasswordDesc = "Set your new password";
 
-  static String introDescTxt =
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nunc augue, tristique quis facilisis eget, lobortis ut augue. Sed nunc augue, tristique quis facilisis eget, lobortis ut augue. Sed nunc augue, tristique quis facilisis eget, lobortis ut augue.";
-
   static String areYouSureTxt = "Are you sure, do you want to logout?";
   static String successTxt = "SUCCESS";
+
+  static String fromCart = "From Cart";
+  static String fromPaymentList = "From Payment List";
+  static String fromOrderList = "From Payment List";
 }
 
 final List<Map<String, String>> productList = [
   {
     "img": AppImages.product2,
     "name": "Wire Packs",
-    "sku": "wssxd-wiug",
+    "sku": "ABC-123",
   },
   {
     "img": AppImages.product1,
     "name": "Black wire",
-    "sku": "wssxd-wiug",
+    "sku": "BCD-123",
   },
   {
     "img": AppImages.product2,
     "name": "Wire Packs",
-    "sku": "wssxd-wiug",
+    "sku": "DEF-123",
   },
   {
     "img": AppImages.product1,
     "name": "Black wire",
-    "sku": "wssxd-wiug",
+    "sku": "GHI-123",
   },
   {
     "img": AppImages.product1,
     "name": "Wire Packs",
-    "sku": "wssxd-wiug",
+    "sku": "KLM-123",
   },
 ];
 
@@ -196,73 +201,4 @@ List<Map<String, dynamic>> paymentStatusList = [
   {"id": "0", "status": "Pending"},
   {"id": "1", "status": "Approved"},
   {"id": "2", "status": "Rejected"},
-];
-
-final List<Map<String, String>> orderList = [
-  {
-    "productImg": AppImages.productImg1,
-    "productStatus": "Pending",
-    "productPrice": "1200",
-    "orderDate": "01 jan 2024",
-    "productCount": "2",
-  },
-  {
-    "productImg": AppImages.productImg2,
-    "productStatus": "Processing",
-    "productPrice": "2000",
-    "orderDate": "05 jan 2024",
-    "productCount": "5",
-  },
-  {
-    "productImg": AppImages.productImg3,
-    "productStatus": "Shipped",
-    "productPrice": "2000",
-    "orderDate": "15 jan 2024",
-    "productCount": "25",
-  },
-  {
-    "productImg": AppImages.productImg4,
-    "productStatus": "Delivered",
-    "productPrice": "5000",
-    "orderDate": "20 jan 2024",
-    "productCount": "500",
-  },
-  {
-    "productImg": AppImages.productImg5,
-    "productStatus": "Canceled",
-    "productPrice": "5000",
-    "orderDate": "25 jan 2024",
-    "productCount": "100",
-  },
-];
-
-final List<Map<String, String>> paymentList = [
-  {
-    "orderId": "32243532",
-    "paymentId": "abcd@ybl",
-    "paymentDate": "20 dec 2023",
-    "status": "Pending",
-    "amount": "15000",
-  },
-  {
-    "orderId": "32243532",
-    "paymentId": "defg@ybl",
-    "paymentDate": "25 jan 2024",
-    "status": "Pending",
-    "amount": "20000",
-  },
-  {
-    "orderId": "32243532",
-    "paymentId": "hijk@ybl",
-    "paymentDate": "20 dec 2023",
-    "status": "Pending",
-    "amount": "5000",
-  },
-  {
-    "orderId": "32243532",
-    "paymentId": "dlmno@ybl",
-    "paymentDate": "15 jan 2024",
-    "status": "Pending",
-    "amount": "25000",
-  },
 ];

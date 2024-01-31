@@ -1,17 +1,27 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:samrathal_ecart/core/app_colors.dart';
-import 'package:samrathal_ecart/utils/utils.dart';
-import '../../../../../core/app_strings.dart';
+import 'package:samrathal_ecart/utils/app_utils.dart';
+import '../../../../../core/api_const.dart';
+import '../../../../../core/app_colors.dart';
 import '../../../../../core/app_text_styles.dart';
+import '../../../../../data/model/dashboard/profile/order_item_details_model.dart';
 import '../../../../../logic/services/formatter.dart';
 
 class OrderItemsViewCard extends StatelessWidget {
   final int index;
+  final OrderItemData orderItemData;
+  final String imgPath;
 
-  const OrderItemsViewCard({super.key, required this.index});
+  const OrderItemsViewCard(
+      {super.key,
+      required this.index,
+      required this.orderItemData,
+      required this.imgPath});
 
   @override
   Widget build(BuildContext context) {
+    var splitList = getSplitList(orderItemData.itemData!);
+    var orderPrice = getTotalItemAmount(splitList, orderItemData);
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       child: Padding(
@@ -22,11 +32,13 @@ class OrderItemsViewCard extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: const BorderRadius.all(Radius.circular(10)),
-              child: Image.asset(
-                productList[index]["img"]!,
+              child: CachedNetworkImage(
+                imageUrl: ApiEndPoints.baseUrl + imgPath + orderItemData.image!,
                 height: 50,
                 fit: BoxFit.fill,
                 width: 50,
+                placeholder: (context, url) => const SizedBox(),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
               ),
             ),
             8.pw,
@@ -39,45 +51,17 @@ class OrderItemsViewCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Expanded(
-                        flex: 2,
                         child: Text(
-                          productList[index]["name"]!,
+                          orderItemData.productName!,
+                          textAlign: TextAlign.start,
                           style: AppTextStyles.bodyBlack14
                               .copyWith(fontWeight: FontWeight.w700),
                         ),
                       ),
                       Expanded(
-                        flex: 1,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text(
-                              "2",
-                              style: AppTextStyles.bodyBlack14.copyWith(
-                                  fontWeight: FontWeight.w500,
-                                  color: AppColors.textLight),
-                            ),
-                            Text(
-                              " * ",
-                              style: AppTextStyles.bodyBlack14.copyWith(
-                                  fontWeight: FontWeight.w700,
-                                  color: AppColors.textLight),
-                            ),
-                            Text(
-                              "5",
-                              style: AppTextStyles.bodyBlack14.copyWith(
-                                  fontWeight: FontWeight.w700,
-                                  color: AppColors.textLight),
-                            ),
-                            Text(
-                              "Kg",
-                              style: AppTextStyles.bodyBlack14.copyWith(
-                                  fontWeight: FontWeight.w700,
-                                  color: AppColors.textLight),
-                            ),
-                          ],
-                        ),
-                      ),
+                          child: OrderItemPcView(
+                        listSplitData: splitList,
+                      ))
                     ],
                   ),
                   5.ph,
@@ -86,7 +70,7 @@ class OrderItemsViewCard extends StatelessWidget {
                       Expanded(
                         flex: 1,
                         child: Text(
-                          Formatter.formatPrice(1200),
+                          Formatter.formatPrice(orderPrice),
                           textAlign: TextAlign.end,
                           style: AppTextStyles.bodyBlack14.copyWith(
                               fontWeight: FontWeight.w700,
@@ -101,6 +85,29 @@ class OrderItemsViewCard extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class OrderItemPcView extends StatelessWidget {
+  final List<List<int>> listSplitData;
+
+  const OrderItemPcView({super.key, required this.listSplitData});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: listSplitData.map((size) {
+        String kgVal = getKgVal(size);
+        String pcFromTonKg = getPcsFromTonKg(size);
+        return Text(
+          "$kgVal * $pcFromTonKg",
+          textAlign: TextAlign.start,
+          style: AppTextStyles.bodyBlack14.copyWith(
+              fontWeight: FontWeight.w500, color: AppColors.textLight),
+        );
+      }).toList(),
     );
   }
 }

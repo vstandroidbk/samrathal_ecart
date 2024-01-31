@@ -1,10 +1,14 @@
 import 'dart:developer';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:samrathal_ecart/core/app_colors.dart';
+
 import '../data/model/dashboard/cart/cart_item_list_model.dart';
 import '../data/model/dashboard/profile/address/city_model.dart';
 import '../data/model/dashboard/profile/address/state_model.dart';
+import '../data/model/dashboard/profile/order_item_details_model.dart';
+import '../data/model/dashboard/profile/order_payment_list_model.dart';
 
 double kHeight = 0;
 double kWidth = 0;
@@ -39,23 +43,49 @@ class Utils {
   }
 }
 
-Color getStatusColor(String status) {
-  if (status == "Pending") {
-    return AppColors.pendingStatusColor;
+// 1:Placed
+// 2:Approved
+// 3:Shipped
+// 4:Delivered
+// 5:Received
+// 6:Completed
+
+String getStatus(int status) {
+  switch (status) {
+    case 1:
+      return "Order Placed";
+    case 2:
+      return "Order Approved";
+    case 3:
+      return "Order Shipped";
+    case 4:
+      return "Order Delivered";
+    case 5:
+      return "Order Received";
+    case 6:
+      return "Order Completed";
+    default:
+      return "";
   }
-  if (status == "Canceled") {
-    return AppColors.canceledStatusColor;
+}
+
+Color getStatusColor(int status) {
+  switch (status) {
+    case 1:
+      return Colors.red;
+    case 2:
+      return Colors.deepOrange;
+    case 3:
+      return Colors.amber;
+    case 4:
+      return Colors.blue;
+    case 5:
+      return Colors.indigo;
+    case 6:
+      return Colors.green;
+    default:
+      return Colors.black;
   }
-  if (status == "Delivered") {
-    return AppColors.deliveredStatusColor;
-  }
-  if (status == "Shipped") {
-    return AppColors.shippedStatusColor;
-  }
-  if (status == "Processing") {
-    return AppColors.processingStatusColor;
-  }
-  return Colors.black;
 }
 
 String? findStateIdByName(List<StateData>? stateData, String stateName) {
@@ -146,7 +176,9 @@ num getCartTotalAmount(List<CartData> cartData) {
     var getTotal = getTotalAmount(splitList, cartData.productData!);
     cartTotalAmount += getTotal;
   }
-  print("total price all cart $cartTotalAmount");
+  if (kDebugMode) {
+    print("total price all cart $cartTotalAmount");
+  }
   return cartTotalAmount;
 }
 
@@ -169,11 +201,55 @@ num getTotalAmount(List<List<int>> resultList, ProductData productData) {
   } else {
     totalPrice = retailPrice * qtyInTon;
   }
-  print("total quantity ${totalQty / 1000}");
-  print("total price ${totalQty / 1000}");
+  if (kDebugMode) {
+    print("total quantity ${totalQty / 1000}");
+  }
+  if (kDebugMode) {
+    print("total price ${totalQty / 1000}");
+  }
   return totalPrice;
 }
 
+num getTotalItemAmount(List<List<int>> resultList, OrderItemData productData) {
+  var retailPrice = num.parse(productData.retailTonAmount!);
+  var wholePrice = num.parse(productData.wholeSaleTonAmount!);
+  var minWholeSaleTon = num.parse(productData.wholeSaleTonMinQty!);
+  num totalQty = 0;
+  num totalPrice = 0;
+  for (var size in resultList) {
+    if (size[2] == 1) {
+      totalQty = totalQty += (size[1] * 1000);
+    } else {
+      totalQty = totalQty += size[1];
+    }
+  }
+  num qtyInTon = totalQty / 1000;
+  if (qtyInTon >= minWholeSaleTon) {
+    totalPrice = wholePrice * qtyInTon;
+  } else {
+    totalPrice = retailPrice * qtyInTon;
+  }
+  if (kDebugMode) {
+    print("total quantity ${totalQty / 1000}");
+  }
+  if (kDebugMode) {
+    print("total price ${totalQty / 1000}");
+  }
+  return totalPrice;
+}
+
+String getPaymentTypeText(int paymentType, PaymentList paymentList) {
+  if (paymentType == 1) {
+    return "${paymentList.bankName} ( ${paymentList.accountNumber})";
+  }
+  if (paymentType == 2) {
+    return "${paymentList.upiId}";
+  }
+  if (paymentType == 3) {
+    return "Payment Via QR";
+  }
+  return "";
+}
 // num getGrandTotalAmt(List<List<int>> resultList, num shippingCharge) {
 //   var grandTotal = getTotalAmount(resultList) + shippingCharge;
 //   return grandTotal;

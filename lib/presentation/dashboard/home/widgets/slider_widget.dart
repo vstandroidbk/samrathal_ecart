@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:samrathal_ecart/core/app_colors.dart';
-import 'package:samrathal_ecart/data/model/dashboard/dashboard_data_model.dart';
 import '../../../../core/api_const.dart';
+import '../../../../core/app_colors.dart';
+import '../../../../data/model/dashboard/dashboard_data_model.dart';
 
 class SliderWidget extends StatefulWidget {
   final List<SliderData>? sliderData;

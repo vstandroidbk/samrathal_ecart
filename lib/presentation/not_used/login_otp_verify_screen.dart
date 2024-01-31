@@ -4,13 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-import 'package:samrathal_ecart/core/app_colors.dart';
-import 'package:samrathal_ecart/utils/utils.dart';
+import 'package:samrathal_ecart/utils/app_utils.dart';
+import '../../core/app_colors.dart';
 import '../../core/app_images.dart';
 import '../../core/app_strings.dart';
 import '../../core/app_text_styles.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/label_widget.dart';
+import '../../widgets/navigate_anim.dart';
 import '../dashboard/dashboard_screen.dart';
 
 class LoginOtpVerifyScreen extends StatefulWidget {
@@ -53,7 +54,9 @@ class _LoginOtpVerifyScreenState extends State<LoginOtpVerifyScreen> {
         // backgroundColor: Colors.white,
         elevation: 0.0,
         centerTitle: true,
-        title: Text(AppStrings.otpVerifyScreenTitle).animate().fadeIn(duration: 500.ms),
+        title: Text(AppStrings.otpVerifyScreenTitle)
+            .animate()
+            .fadeIn(duration: 500.ms),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -160,9 +163,8 @@ class _LoginOtpVerifyScreenState extends State<LoginOtpVerifyScreen> {
                   removeFocus(context);
                   Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          const DashboardScreen(selectedTab: 0),
+                    FadeAnimatingRoute(
+                      route: const DashboardScreen(selectedTab: 0),
                     ),
                     (route) => false,
                   );

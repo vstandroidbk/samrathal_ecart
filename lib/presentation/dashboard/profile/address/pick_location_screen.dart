@@ -6,12 +6,12 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
-import 'package:samrathal_ecart/core/app_images.dart';
-import 'package:samrathal_ecart/core/app_text_styles.dart';
-import 'package:samrathal_ecart/utils/utils.dart';
-import 'package:samrathal_ecart/widgets/custom_button.dart';
-import '../data/model/dashboard/profile/address/location_data_model.dart';
-import '../logic/provider/dashboard/profile/address/location_data_provider.dart';
+import 'package:samrathal_ecart/utils/app_utils.dart';
+import '../../../../core/app_images.dart';
+import '../../../../core/app_text_styles.dart';
+import '../../../../data/model/dashboard/profile/address/location_data_model.dart';
+import '../../../../logic/provider/dashboard/profile/address/location_data_provider.dart';
+import '../../../../widgets/custom_button.dart';
 
 class PickLocationScreen extends StatefulWidget {
   const PickLocationScreen({super.key});
@@ -263,33 +263,61 @@ class _PickLocationScreenState extends State<PickLocationScreen> {
     await _getAddress(position);
   }
 
+
   Future _determineUserCurrentPosition() async {
     LocationPermission locationPermission;
     bool isLocationServiceEnabled = await Geolocator.isLocationServiceEnabled();
     //check if user enable service for location permission
-    if (!isLocationServiceEnabled) {
-      await Geolocator.openLocationSettings();
+    if(!isLocationServiceEnabled) {
       log("user don't enable location permission");
     }
 
     locationPermission = await Geolocator.checkPermission();
 
     //check if user denied location and retry requesting for permission
-    if (locationPermission == LocationPermission.denied) {
+    if(locationPermission == LocationPermission.denied) {
       locationPermission = await Geolocator.requestPermission();
-      if (locationPermission == LocationPermission.denied) {
+      if(locationPermission == LocationPermission.denied) {
         log("user denied location permission");
       }
     }
 
     //check if user denied permission forever
-    if (locationPermission == LocationPermission.deniedForever) {
-      await Geolocator.openAppSettings();
-      // locationPermission = await Permission.location.request();
+    if(locationPermission == LocationPermission.deniedForever) {
       log("user denied permission forever");
     }
 
-    return await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.best);
+    return await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
   }
+
+  //
+  // Future _determineUserCurrentPosition() async {
+  //   LocationPermission locationPermission;
+  //   bool isLocationServiceEnabled = await Geolocator.isLocationServiceEnabled();
+  //   //check if user enable service for location permission
+  //   if (!isLocationServiceEnabled) {
+  //     await Geolocator.openLocationSettings();
+  //     log("user don't enable location permission");
+  //   }
+  //
+  //   locationPermission = await Geolocator.checkPermission();
+  //
+  //   //check if user denied location and retry requesting for permission
+  //   if (locationPermission == LocationPermission.denied) {
+  //     locationPermission = await Geolocator.requestPermission();
+  //     if (locationPermission == LocationPermission.denied) {
+  //       log("user denied location permission");
+  //     }
+  //   }
+  //
+  //   //check if user denied permission forever
+  //   if (locationPermission == LocationPermission.deniedForever) {
+  //     await Geolocator.openAppSettings();
+  //     // locationPermission = await Permission.location.request();
+  //     log("user denied permission forever");
+  //   }
+  //
+  //   return await Geolocator.getCurrentPosition(
+  //       desiredAccuracy: LocationAccuracy.best);
+  // }
 }

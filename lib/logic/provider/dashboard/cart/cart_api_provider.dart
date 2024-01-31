@@ -1,13 +1,13 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:samrathal_ecart/data/model/dashboard/cart/cart_item_details_model.dart';
-import 'package:samrathal_ecart/data/model/dashboard/cart/cart_item_list_model.dart';
-import 'package:samrathal_ecart/logic/provider/dashboard/shop/shop_api_provider.dart';
 import '../../../../core/api.dart';
 import '../../../../core/app_strings.dart';
+import '../../../../data/model/dashboard/cart/cart_item_details_model.dart';
+import '../../../../data/model/dashboard/cart/cart_item_list_model.dart';
 import '../../../../data/repository/dashboard/cart/cart_repository.dart';
-import '../../../../utils/utils.dart';
+import '../../../../utils/app_utils.dart';
+import '../shop/shop_api_provider.dart';
 
 class CartApiProvider with ChangeNotifier {
   final CartRepository _cartRepository = CartRepository();

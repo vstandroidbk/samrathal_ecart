@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:samrathal_ecart/core/app_colors.dart';
-import 'package:samrathal_ecart/utils/utils.dart';
+import 'package:samrathal_ecart/utils/app_utils.dart';
 import 'package:shimmer/shimmer.dart';
-
-import '../../../../core/app_images.dart';
+import '../../../../core/app_colors.dart';
 import '../../../../core/app_strings.dart';
 import '../../../../core/app_text_styles.dart';
 import '../../../../widgets/custom_button.dart';

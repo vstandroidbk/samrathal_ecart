@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:samrathal_ecart/presentation/dashboard/offers/widget/offer_list_card.dart';
-import 'package:samrathal_ecart/presentation/dashboard/offers/widget/offer_list_shimmer.dart';
-
 import '../../../logic/provider/dashboard/home/home_api_provider.dart';
 import '../../../widgets/no_data_found.dart';
+import 'widget/offer_list_card.dart';
+import 'widget/offer_list_shimmer.dart';
 
 class OfferListScreen extends StatefulWidget {
   const OfferListScreen({super.key});

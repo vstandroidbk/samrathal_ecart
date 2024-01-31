@@ -1,11 +1,10 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:samrathal_ecart/logic/provider/dashboard/cart/cart_api_provider.dart';
-import 'package:samrathal_ecart/logic/services/formatter.dart';
-import 'package:samrathal_ecart/utils/utils.dart';
-
 import '../../../../data/model/dashboard/shop/product_details_model.dart';
+import '../../../../utils/app_utils.dart';
+import '../../../services/formatter.dart';
+import '../cart/cart_api_provider.dart';
 
 class AddCartCalculatorProvider with ChangeNotifier {
   TextEditingController randomQtyController = TextEditingController();
@@ -79,7 +78,7 @@ class AddCartCalculatorProvider with ChangeNotifier {
       totalOrderPrice = Formatter.formatPrice(totalPrice);
       var remainingQty = minWholeSaleTon * 1000 - totalQty;
       addMoreMessage =
-          "If you will add ${remainingQty / 1000} more then you will get it at $wholePrice/Ton";
+          "If you will add ${remainingQty / 1000} Ton more then you will get it at $wholePrice/Ton";
     } else {
       num qtyInTon = totalQty / 1000;
       totalOrderQty = "$qtyInTon Ton";

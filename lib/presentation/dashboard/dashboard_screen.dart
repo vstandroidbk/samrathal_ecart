@@ -1,22 +1,18 @@
-import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:samrathal_ecart/core/app_colors.dart';
-import 'package:samrathal_ecart/core/app_strings.dart';
-import 'package:samrathal_ecart/presentation/dashboard/cart/cart_tab_page.dart';
-import 'package:samrathal_ecart/presentation/dashboard/home/home_tab_page.dart';
-import 'package:samrathal_ecart/presentation/dashboard/profile/profile_tab_page.dart';
-import 'package:samrathal_ecart/presentation/dashboard/shop/shop_tab_page.dart';
-import 'package:samrathal_ecart/presentation/dashboard/wishlist/wishlist_tab_page.dart';
-import 'package:samrathal_ecart/utils/utils.dart';
-import '../../logic/services/preferences.dart';
+import 'package:samrathal_ecart/utils/app_utils.dart';
+import '../../core/app_colors.dart';
+import '../../core/app_strings.dart';
+import 'cart/cart_tab_page.dart';
+import 'home/home_tab_page.dart';
+import 'profile/profile_tab_page.dart';
+import 'shop/shop_tab_page.dart';
+import 'wishlist/wishlist_tab_page.dart';
 
 class DashboardScreen extends StatefulWidget {
   final int selectedTab;
 
   const DashboardScreen({super.key, required this.selectedTab});
-
-  // static const String routeName = "Dashboard Screen";
 
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();
@@ -59,13 +55,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     _selectedIndex = widget.selectedTab;
-    getUserId();
     super.initState();
-  }
-
-  getUserId() async {
-    var userId = await SharedPrefProvider.getString(SharedPrefProvider.userId);
-    log("user id : $userId");
   }
 
   @override

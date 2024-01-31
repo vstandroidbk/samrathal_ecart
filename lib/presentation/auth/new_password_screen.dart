@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
-import 'package:samrathal_ecart/utils/utils.dart';
+import 'package:samrathal_ecart/utils/app_utils.dart';
 import '../../core/app_images.dart';
 import '../../core/app_strings.dart';
 import '../../core/app_text_styles.dart';
@@ -104,7 +104,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                   textInputAction: TextInputAction.next,
                   showPasswordVisibilityIcon: true,
                   validator: (value) {
-                    if (value!.isEmpty) {
+                    if (value!.trim().isEmpty) {
                       return 'Please enter a password';
                     }
                     return null;
@@ -124,7 +124,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                   textInputAction: TextInputAction.done,
                   showPasswordVisibilityIcon: true,
                   validator: (value) {
-                    if (value!.isEmpty) {
+                    if (value!.trim().isEmpty) {
                       return 'Please confirm your password';
                     }
                     if (value != passwordController.text) {

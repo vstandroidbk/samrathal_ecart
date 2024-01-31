@@ -1,24 +1,33 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:samrathal_ecart/core/app_strings.dart';
-import 'package:samrathal_ecart/core/app_text_styles.dart';
-import 'package:samrathal_ecart/logic/services/formatter.dart';
-import 'package:samrathal_ecart/presentation/dashboard/profile/order/order_details_screen.dart';
-import 'package:samrathal_ecart/utils/utils.dart';
+import 'package:samrathal_ecart/data/model/dashboard/profile/order_list_model.dart';
+import 'package:samrathal_ecart/utils/app_utils.dart';
+import '../../../../../core/api_const.dart';
+import '../../../../../core/app_text_styles.dart';
+import '../../../../../logic/services/formatter.dart';
+import '../../../../../widgets/navigate_anim.dart';
+import '../order_details_screen.dart';
 
 class OrderViewCard extends StatelessWidget {
+  final GetOrderData getOrderData;
   final int index;
+  final String imgPath;
 
-  const OrderViewCard({super.key, required this.index});
+  const OrderViewCard(
+      {super.key,
+      required this.index,
+      required this.getOrderData,
+      required this.imgPath});
 
   @override
   Widget build(BuildContext context) {
-    var orderData = orderList[index];
     return InkWell(
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (context) => const OrderDetailsScreen(orderNumber: 5242),
+          FadeAnimatingRoute(
+            route: OrderDetailsScreen(
+                orderId: getOrderData.id!, orderNumber: getOrderData.orderId!),
           ),
         );
       },
@@ -36,11 +45,16 @@ class OrderViewCard extends StatelessWidget {
               children: [
                 ClipRRect(
                   borderRadius: const BorderRadius.all(Radius.circular(10)),
-                  child: Image.asset(
-                    orderData["productImg"]!,
-                    height: 50,
+                  child: CachedNetworkImage(
+                    imageUrl: ApiEndPoints.baseUrl +
+                        imgPath +
+                        getOrderData.productImage!,
                     fit: BoxFit.fill,
-                    width: 50,
+                    height: 60,
+                    width: 60,
+                    placeholder: (context, url) => const SizedBox(),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
                   ),
                 ),
                 8.pw,
@@ -50,7 +64,7 @@ class OrderViewCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Order #76r365376",
+                        "Order #${getOrderData.orderId}",
                         style: AppTextStyles.bodyBlack14
                             .copyWith(fontWeight: FontWeight.w700),
                       ),
@@ -60,13 +74,13 @@ class OrderViewCard extends StatelessWidget {
                         children: [
                           Flexible(
                             child: Text(
-                              "${orderData["productCount"]!} Items",
+                              "${getOrderData.totalItem} Items",
                               style: AppTextStyles.bodyBlack14.copyWith(),
                             ),
                           ),
                           Flexible(
                             child: Text(
-                              orderData["orderDate"]!,
+                              getOrderData.orderDate!,
                               style: AppTextStyles.bodyBlack14.copyWith(),
                             ),
                           )
@@ -79,22 +93,20 @@ class OrderViewCard extends StatelessWidget {
                           Flexible(
                             child: Text(
                               Formatter.formatPrice(
-                                  int.parse(orderData["productPrice"]!)),
+                                  int.parse(getOrderData.finalOrderAmount!)),
                               style: AppTextStyles.bodyBlack14.copyWith(
                                   fontWeight: FontWeight.w700,
-                                  color: getStatusColor(
-                                      orderData["productStatus"]!)),
+                                  color: Colors.black),
                             ),
                           ),
                           Flexible(
-                            child: Text(
-                              orderData["productStatus"]!,
-                              style: AppTextStyles.bodyBlack14.copyWith(
-                                  fontWeight: FontWeight.w700,
-                                  color: getStatusColor(
-                                      orderData["productStatus"]!)),
+                              child: Text(
+                            getStatus(getOrderData.orderStatus!),
+                            style: AppTextStyles.bodyBlack14.copyWith(
+                              fontWeight: FontWeight.w700,
+                              color: getStatusColor(getOrderData.orderStatus!),
                             ),
-                          )
+                          ))
                         ],
                       ),
                     ],

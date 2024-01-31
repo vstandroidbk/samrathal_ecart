@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:samrathal_ecart/core/app_colors.dart';
-import 'package:samrathal_ecart/core/app_strings.dart';
-import 'package:samrathal_ecart/core/app_text_styles.dart';
-import 'package:samrathal_ecart/presentation/dashboard/offers/offer_list_screen.dart';
+import '../../../../core/app_colors.dart';
+import '../../../../core/app_strings.dart';
+import '../../../../core/app_text_styles.dart';
+import '../../../../widgets/navigate_anim.dart';
 import '../../dashboard_screen.dart';
+import '../../offers/offer_list_screen.dart';
 
 class HomeLabelWidget extends StatelessWidget {
   final String labelName;
@@ -25,15 +26,15 @@ class HomeLabelWidget extends StatelessWidget {
             if (labelName == AppStrings.offersTxt) {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => const OfferListScreen(),
+                FadeAnimatingRoute(
+            route: const OfferListScreen(),
                 ),
               );
             } else if (labelName == AppStrings.productsTxt) {
               Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => const DashboardScreen(selectedTab: 1),
+                  FadeAnimatingRoute(
+                    route: const DashboardScreen(selectedTab: 1),
                   ),
                   (route) => false);
             }

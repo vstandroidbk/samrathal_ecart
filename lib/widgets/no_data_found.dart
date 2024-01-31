@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:samrathal_ecart/utils/utils.dart';
+import 'package:samrathal_ecart/utils/app_utils.dart';
 
 import '../core/app_images.dart';
 import '../core/app_text_styles.dart';

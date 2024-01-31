@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
-import 'package:samrathal_ecart/utils/utils.dart';
+import 'package:samrathal_ecart/utils/app_utils.dart';
 import '../../core/app_strings.dart';
 import '../../core/app_text_styles.dart';
 import '../../logic/provider/auth/auth_api_provider.dart';
@@ -64,7 +64,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   textInputAction: TextInputAction.next,
                   textCaps: TextCapitalization.words,
                   validator: (value) {
-                    if (value!.isEmpty) {
+                    if (value!.trim().isEmpty) {
                       return 'Please enter your name';
                     }
                     return null;
@@ -84,7 +84,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   textInputAction: TextInputAction.next,
                   showPasswordVisibilityIcon: true,
                   validator: (value) {
-                    if (value!.isEmpty) {
+                    if (value!.trim().isEmpty) {
                       return 'Please enter a password';
                     }
                     return null;
@@ -109,7 +109,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           : TextInputAction.next,
                       showPasswordVisibilityIcon: true,
                       validator: (value) {
-                        if (value!.isEmpty) {
+                        if (value!.trim().isEmpty) {
                           return 'Please confirm your password';
                         }
                         if (value != passwordController.text) {
@@ -204,7 +204,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               textInputAction: TextInputAction.next,
                               validator: (value) {
                                 if (selectedValue.value == 2 &&
-                                    value!.isEmpty) {
+                                    value!.trim().isEmpty) {
                                   return 'Please enter your company name';
                                 }
                                 return null;
@@ -223,7 +223,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               textInputAction: TextInputAction.next,
                               validator: (value) {
                                 if (selectedValue.value == 2 &&
-                                    value!.isEmpty) {
+                                    value!.trim().isEmpty) {
                                   return 'Please enter your GST number';
                                 }
                                 return null;
@@ -243,7 +243,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               maxLine: 3,
                               validator: (value) {
                                 if (selectedValue.value == 2 &&
-                                    value!.isEmpty) {
+                                    value!.trim().isEmpty) {
                                   return 'Please enter your billing address';
                                 }
                                 return null;

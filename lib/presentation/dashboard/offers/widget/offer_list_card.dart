@@ -1,7 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:samrathal_ecart/data/model/dashboard/home/offer_list_model.dart';
 import '../../../../core/api_const.dart';
+import '../../../../data/model/dashboard/home/offer_list_model.dart';
+import '../../../../widgets/navigate_anim.dart';
 import '../offer_details_screen.dart';
 
 class OfferListCard extends StatelessWidget {
@@ -17,8 +18,8 @@ class OfferListCard extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (context) => OfferDetailsScreen(
+          FadeAnimatingRoute(
+            route: OfferDetailsScreen(
               offerId: offerData.id!,
             ),
           ),

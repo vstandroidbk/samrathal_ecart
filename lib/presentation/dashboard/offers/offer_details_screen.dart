@@ -2,16 +2,15 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:samrathal_ecart/core/app_colors.dart';
-import 'package:samrathal_ecart/logic/provider/dashboard/home/home_api_provider.dart';
-import 'package:samrathal_ecart/logic/services/formatter.dart';
-import 'package:samrathal_ecart/presentation/dashboard/offers/widget/offer_details_shimmer.dart';
-import 'package:samrathal_ecart/utils/utils.dart';
-import 'package:samrathal_ecart/widgets/custom_button.dart';
-
+import 'package:samrathal_ecart/utils/app_utils.dart';
 import '../../../core/api_const.dart';
+import '../../../core/app_colors.dart';
 import '../../../core/app_strings.dart';
 import '../../../core/app_text_styles.dart';
+import '../../../logic/provider/dashboard/home/home_api_provider.dart';
+import '../../../logic/services/formatter.dart';
+import '../../../widgets/custom_button.dart';
+import 'widget/offer_details_shimmer.dart';
 
 class OfferDetailsScreen extends StatefulWidget {
   final String offerId;

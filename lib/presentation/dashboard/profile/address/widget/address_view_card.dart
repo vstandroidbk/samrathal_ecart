@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:samrathal_ecart/data/model/dashboard/profile/address/address_list_model.dart';
-import 'package:samrathal_ecart/presentation/dashboard/profile/address/edit_address_page.dart';
-import 'package:samrathal_ecart/utils/utils.dart';
+import 'package:samrathal_ecart/utils/app_utils.dart';
 import '../../../../../core/app_colors.dart';
 import '../../../../../core/app_text_styles.dart';
+import '../../../../../data/model/dashboard/profile/address/address_list_model.dart';
+import '../../../../../widgets/navigate_anim.dart';
+import '../edit_address_page.dart';
 
 class AddressViewCard extends StatelessWidget {
   final int index;
@@ -51,8 +52,8 @@ class AddressViewCard extends StatelessWidget {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => EditAddressPage(
+                        FadeAnimatingRoute(
+                          route: EditAddressPage(
                             addressId: addressData.id!,
                           ),
                         ),

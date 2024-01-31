@@ -6,7 +6,7 @@ import '../../../core/api.dart';
 import '../../../core/api_const.dart';
 import '../../../core/app_strings.dart';
 import '../../../logic/services/DataEncryption.dart';
-import '../../../utils/utils.dart';
+import '../../../utils/app_utils.dart';
 import '../../model/user/check_user_type_model.dart';
 import '../../model/user/forgot_pass_model.dart';
 import '../../model/user/user_data_model.dart';
@@ -55,7 +55,6 @@ class AuthRepository {
       //   // log("exception error headers ${e.response!.headers}");
       //   // log("exception error request options ${e.response!.requestOptions}");
       // }
-      return null;
     } catch (ex) {
       rethrow;
     }
@@ -105,7 +104,6 @@ class AuthRepository {
       //   // log("exception error headers ${e.response!.headers}");
       //   // log("exception error request options ${e.response!.requestOptions}");
       // }
-      return null;
     } catch (ex) {
       rethrow;
     }
@@ -152,7 +150,6 @@ class AuthRepository {
       //   // log("exception error headers ${e.response!.headers}");
       //   // log("exception error request options ${e.response!.requestOptions}");
       // }
-      return false;
     } catch (ex) {
       rethrow;
     }
@@ -214,7 +211,6 @@ class AuthRepository {
       //   // log("exception error headers ${e.response!.headers}");
       //   // log("exception error request options ${e.response!.requestOptions}");
       // }
-      return null;
     } catch (ex) {
       rethrow;
     }
@@ -263,7 +259,6 @@ class AuthRepository {
       //   // log("exception error headers ${e.response!.headers}");
       //   // log("exception error request options ${e.response!.requestOptions}");
       // }
-      return null;
     } catch (ex) {
       rethrow;
     }
@@ -311,7 +306,6 @@ class AuthRepository {
       //   // log("exception error headers ${e.response!.headers}");
       //   // log("exception error request options ${e.response!.requestOptions}");
       // }
-      return null;
     } catch (ex) {
       rethrow;
     }
@@ -360,10 +354,8 @@ class AuthRepository {
       //   // log("exception error headers ${e.response!.headers}");
       //   // log("exception error request options ${e.response!.requestOptions}");
       // }
-      return false;
     } catch (ex) {
       rethrow;
     }
-    return null;
   }
 }

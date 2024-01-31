@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:samrathal_ecart/core/app_colors.dart';
-import 'package:samrathal_ecart/logic/provider/auth/auth_api_provider.dart';
-import 'package:samrathal_ecart/logic/provider/dashboard/cart/cart_api_provider.dart';
-import 'package:samrathal_ecart/logic/provider/dashboard/cart/update_cart_calculator_provider.dart';
-import 'package:samrathal_ecart/logic/provider/dashboard/home/home_api_provider.dart';
-import 'package:samrathal_ecart/logic/provider/dashboard/profile/address/address_api_provider.dart';
-import 'package:samrathal_ecart/logic/provider/dashboard/profile/address/location_data_provider.dart';
-import 'package:samrathal_ecart/logic/provider/dashboard/dashboard_api_provider.dart';
-import 'package:samrathal_ecart/logic/provider/dashboard/shop/add_cart_calculator_provider.dart';
-import 'package:samrathal_ecart/logic/provider/dashboard/shop/shop_api_provider.dart';
-import 'package:samrathal_ecart/presentation/splash_screen.dart';
+import 'package:samrathal_ecart/logic/provider/dashboard/profile/order_api_provider.dart';
+import 'package:samrathal_ecart/logic/provider/dashboard/profile/payment_api_provider.dart';
+import 'core/app_colors.dart';
 import 'core/app_theme.dart';
+import 'logic/provider/auth/auth_api_provider.dart';
+import 'logic/provider/dashboard/cart/cart_api_provider.dart';
+import 'logic/provider/dashboard/cart/update_cart_calculator_provider.dart';
+import 'logic/provider/dashboard/dashboard_api_provider.dart';
+import 'logic/provider/dashboard/home/home_api_provider.dart';
+import 'logic/provider/dashboard/profile/address/address_api_provider.dart';
+import 'logic/provider/dashboard/profile/address/location_data_provider.dart';
+import 'logic/provider/dashboard/shop/add_cart_calculator_provider.dart';
+import 'logic/provider/dashboard/shop/shop_api_provider.dart';
+import 'presentation/splash_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -46,6 +48,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AddCartCalculatorProvider()),
         ChangeNotifierProvider(create: (_) => UpdateCartCalculatorProvider()),
         ChangeNotifierProvider(create: (_) => CartApiProvider()),
+        ChangeNotifierProvider(create: (_) => PaymentApiProvider()),
+        ChangeNotifierProvider(create: (_) => OrderApiProvider()),
       ],
       child: MaterialApp(
         title: 'Samrathal E-cart',

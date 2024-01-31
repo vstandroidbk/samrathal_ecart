@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:samrathal_ecart/utils/utils.dart';
+import 'package:samrathal_ecart/utils/app_utils.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../core/app_colors.dart';
 import '../../../../core/app_images.dart';
@@ -65,7 +65,7 @@ class CartLoadingShimmer extends StatelessWidget {
                                     Container(
                                       color: Colors.grey,
                                       child: Text(
-                                        productList[index]["name"]!,
+                                        "Product Name",
                                         textAlign: TextAlign.center,
                                         style: AppTextStyles.bodyBlack14
                                             .copyWith(

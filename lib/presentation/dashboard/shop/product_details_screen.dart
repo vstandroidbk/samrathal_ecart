@@ -5,20 +5,21 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:samrathal_ecart/core/app_colors.dart';
-import 'package:samrathal_ecart/core/app_strings.dart';
-import 'package:samrathal_ecart/core/app_text_styles.dart';
-import 'package:samrathal_ecart/logic/provider/dashboard/shop/add_cart_calculator_provider.dart';
-import 'package:samrathal_ecart/logic/services/formatter.dart';
-import 'package:samrathal_ecart/presentation/dashboard/shop/widget/add_to_cart_dialog.dart';
-import 'package:samrathal_ecart/presentation/dashboard/shop/widget/product_details_shimmer.dart';
-import 'package:samrathal_ecart/utils/utils.dart';
-import 'package:samrathal_ecart/widgets/custom_button.dart';
-import 'package:samrathal_ecart/widgets/custom_paragraph.dart';
-
+import 'package:samrathal_ecart/utils/app_utils.dart';
 import '../../../core/api_const.dart';
+import '../../../core/app_colors.dart';
+import '../../../core/app_strings.dart';
+import '../../../core/app_text_styles.dart';
+import '../../../logic/provider/dashboard/shop/add_cart_calculator_provider.dart';
 import '../../../logic/provider/dashboard/shop/shop_api_provider.dart';
+import '../../../logic/services/formatter.dart';
+import '../../../widgets/custom_button.dart';
+import '../../../widgets/custom_paragraph.dart';
+import '../../../widgets/navigate_anim.dart';
+import '../../../widgets/photo_view_screen.dart';
 import '../dashboard_screen.dart';
+import 'widget/add_to_cart_dialog.dart';
+import 'widget/product_details_shimmer.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   final String productId;
@@ -63,14 +64,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             onTap: () {
               Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => const DashboardScreen(selectedTab: 2),
+                  FadeAnimatingRoute(
+                    route: const DashboardScreen(selectedTab: 2),
                   ),
                   (route) => false);
             },
             child: Badge(
               label: Text(
-                "12",
+                "__",
                 style: AppTextStyles.bodyBlack12,
               ),
               backgroundColor: Colors.white,
@@ -109,30 +110,45 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           if (productDetailsModel != null &&
                               productDetailsData != null &&
                               productImgPath != null)
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: Container(
-                                  // width: size.width,
-                                  decoration: BoxDecoration(
-                                      color: Colors.grey.shade300,
-                                      borderRadius: BorderRadius.circular(10)),
-                                  child: Center(
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(10),
-                                      child: CachedNetworkImage(
-                                        imageUrl: ApiEndPoints.baseUrl +
-                                            productImgPath +
-                                            productDetailsData.image!,
-                                        fit: BoxFit.cover,
-                                        width: double.infinity,
-                                        height: 150,
-                                        placeholder: (context, url) =>
-                                            const SizedBox(),
-                                        errorWidget: (context, url, error) =>
-                                            const Icon(Icons.error),
-                                      ),
+                            InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  FadeAnimatingRoute(
+                                    route: PhotoViewScreen(
+                                      imgUrl: ApiEndPoints.baseUrl +
+                                          productImgPath +
+                                          productDetailsData.image!,
                                     ),
-                                  )),
+                                  ),
+                                );
+                              },
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: Container(
+                                    // width: size.width,
+                                    decoration: BoxDecoration(
+                                        color: Colors.grey.shade300,
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    child: Center(
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(10),
+                                        child: CachedNetworkImage(
+                                          imageUrl: ApiEndPoints.baseUrl +
+                                              productImgPath +
+                                              productDetailsData.image!,
+                                          fit: BoxFit.fill,
+                                          width: double.infinity,
+                                          height: 150,
+                                          placeholder: (context, url) =>
+                                              const SizedBox(),
+                                          errorWidget: (context, url, error) =>
+                                              const Icon(Icons.error),
+                                        ),
+                                      ),
+                                    )),
+                              ),
                             ),
                           12.ph,
                           // product name and sku
@@ -183,58 +199,67 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             ),
                           // packaging size
                           12.ph,
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  AppStrings.packingSizeTxt,
-                                  style: AppTextStyles.bodyBlack14
-                                      .copyWith(fontWeight: FontWeight.w600),
+                          if (productDetailsModel != null &&
+                              productDetailsData != null)
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    AppStrings.packingSizeTxt,
+                                    style: AppTextStyles.bodyBlack14
+                                        .copyWith(fontWeight: FontWeight.w600),
+                                  ),
                                 ),
-                              ),
-                              // if (productDetailsModel != null &&
-                              //     productDetailsData != null)
-                              //   Expanded(
-                              //     child: Text(
-                              //       productDetailsData.wholeSaleTonMinQty !=
-                              //               null
-                              //           ? "MOQ : ${productDetailsData.wholeSaleTonMinQty} Ton"
-                              //           : "N/A",
-                              //       textAlign: TextAlign.right,
-                              //       style: AppTextStyles.bodyBlack14
-                              //           .copyWith(fontWeight: FontWeight.w500),
-                              //     ),
-                              //   ),
-                            ],
-                          ),
+                                // if (productDetailsModel != null &&
+                                //     productDetailsData != null)
+                                //   Expanded(
+                                //     child: Text(
+                                //       productDetailsData.wholeSaleTonMinQty !=
+                                //               null
+                                //           ? "MOQ : ${productDetailsData.wholeSaleTonMinQty} Ton"
+                                //           : "N/A",
+                                //       textAlign: TextAlign.right,
+                                //       style: AppTextStyles.bodyBlack14
+                                //           .copyWith(fontWeight: FontWeight.w500),
+                                //     ),
+                                //   ),
+                              ],
+                            ),
                           8.ph,
-                          Wrap(
-                            spacing: 16.0,
-                            runSpacing: 8.0,
-                            children: sizes
-                                .map((size) => Container(
-                                      padding: const EdgeInsets.only(
-                                          left: 8, right: 8, top: 5, bottom: 5),
-                                      decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(5.0),
-                                          border: Border.all(
-                                              color: AppColors.primaryColor,
-                                              width: 1)),
-                                      child: Text(
-                                        size.size,
-                                        style: AppTextStyles.bodyBlack14,
-                                      ),
-                                    ))
-                                .toList(),
-                          ),
+                          if (productDetailsModel != null &&
+                              productDetailsData != null)
+                            Wrap(
+                              spacing: 16.0,
+                              runSpacing: 8.0,
+                              children: sizes
+                                  .map((size) => Container(
+                                        padding: const EdgeInsets.only(
+                                            left: 8,
+                                            right: 8,
+                                            top: 5,
+                                            bottom: 5),
+                                        decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(5.0),
+                                            border: Border.all(
+                                                color: AppColors.primaryColor,
+                                                width: 1)),
+                                        child: Text(
+                                          size.size,
+                                          style: AppTextStyles.bodyBlack14,
+                                        ),
+                                      ))
+                                  .toList(),
+                            ),
                           12.ph,
-                          Text(
-                            AppStrings.descriptionTxt,
-                            style: AppTextStyles.bodyBlack14
-                                .copyWith(fontWeight: FontWeight.w600),
-                          ),
+                          if (productDetailsModel != null &&
+                              productDetailsData != null)
+                            Text(
+                              AppStrings.descriptionTxt,
+                              style: AppTextStyles.bodyBlack14
+                                  .copyWith(fontWeight: FontWeight.w600),
+                            ),
                           5.ph,
                           if (productDetailsModel != null &&
                               productDetailsData != null)
@@ -244,11 +269,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                         ? productDetailsData.shortDescription!
                                         : "N/A"),
                           12.ph,
-                          Text(
-                            AppStrings.productDetailsTxt,
-                            style: AppTextStyles.bodyBlack14
-                                .copyWith(fontWeight: FontWeight.w600),
-                          ),
+                          if (productDetailsModel != null &&
+                              productDetailsData != null)
+                            Text(
+                              AppStrings.productDetailsTxt,
+                              style: AppTextStyles.bodyBlack14
+                                  .copyWith(fontWeight: FontWeight.w600),
+                            ),
                           5.ph,
                           if (productDetailsModel != null &&
                               productDetailsData != null)
@@ -280,42 +307,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             value: "For Agriculture",
                           ),*/
                           20.ph,
-                          if (productDetailsModel != null &&
-                              productDetailsData != null)
-                            productDetailsModel.cartStatus == 0
-                                ? CustomButton(
-                                    onPressed: () {
-                                      Provider.of<AddCartCalculatorProvider>(
-                                              context,
-                                              listen: false)
-                                          .setDataNull();
-                                      showModalBottomSheet(
-                                        backgroundColor: Colors.transparent,
-                                        context: context,
-                                        builder: (dialogContext) {
-                                          return AddToCartDialog(
-                                            productDetails: productDetailsData,
-                                            buildContext: context,
-                                          );
-                                        },
-                                      );
-                                    },
-                                    isGradient: false,
-                                    child: Text(
-                                      AppStrings.addToCartTxt.toUpperCase(),
-                                      style: AppTextStyles.bodyWhite14,
-                                    ),
-                                  )
-                                : CustomButton(
-                                    onPressed: () {},
-                                    backgroundColor: AppColors.grey300,
-                                    isGradient: false,
-                                    child: Text(
-                                      AppStrings.addedToCartTxt.toUpperCase(),
-                                      style: AppTextStyles.bodyWhite14
-                                          .copyWith(color: Colors.grey),
-                                    ),
-                                  )
                         ],
                       ).animate().slideY(
                             duration: 500.ms,
@@ -325,16 +316,54 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           );
         },
       ),
-      /* bottomNavigationBar: Container(
-        padding: const EdgeInsets.all(12),
-        decoration: const BoxDecoration(color: Colors.red),
-        child: Text(
-          "If you will add 50 kg more then you will get it at 5000/kg",
-          textAlign: TextAlign.center,
-          style:
-              AppTextStyles.bodyBlack14.copyWith(color: AppColors.whiteColor),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        child: Consumer<ShopApiProvider>(
+          builder: (BuildContext context, ShopApiProvider shopProvider,
+              Widget? child) {
+            var productDetailsModel = shopProvider.productDetailsModel;
+            var productDetailsData =
+                shopProvider.productDetailsModel?.productDetails;
+            return shopProvider.productDetailsLoading
+                ? const SizedBox()
+                : productDetailsModel != null && productDetailsData != null
+                    ? productDetailsModel.cartStatus == 0
+                        ? CustomButton(
+                            onPressed: () {
+                              Provider.of<AddCartCalculatorProvider>(context,
+                                      listen: false)
+                                  .setDataNull();
+                              showModalBottomSheet(
+                                backgroundColor: Colors.transparent,
+                                context: context,
+                                builder: (dialogContext) {
+                                  return AddToCartDialog(
+                                    productDetails: productDetailsData,
+                                    buildContext: context,
+                                  );
+                                },
+                              );
+                            },
+                            isGradient: false,
+                            child: Text(
+                              AppStrings.addToCartTxt.toUpperCase(),
+                              style: AppTextStyles.bodyWhite14,
+                            ),
+                          )
+                        : CustomButton(
+                            onPressed: () {},
+                            backgroundColor: AppColors.grey300,
+                            isGradient: false,
+                            child: Text(
+                              AppStrings.addedToCartTxt.toUpperCase(),
+                              style: AppTextStyles.bodyWhite14
+                                  .copyWith(color: Colors.grey),
+                            ),
+                          )
+                    : const SizedBox();
+          },
         ),
-      ),*/
+      ),
     );
   }
 }

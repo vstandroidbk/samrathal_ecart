@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'app_colors.dart';
 
 class AppTextStyles {
+  AppTextStyles._();
   //
   static TextStyle headingBlack48 = GoogleFonts.roboto(
       textStyle: const TextStyle(

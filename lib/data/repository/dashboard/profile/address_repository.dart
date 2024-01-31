@@ -1,19 +1,17 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:dio/dio.dart';
-import 'package:samrathal_ecart/data/model/dashboard/profile/address/address_list_model.dart';
-import 'package:samrathal_ecart/data/model/dashboard/profile/address/city_model.dart';
-import 'package:samrathal_ecart/data/model/dashboard/profile/address/state_model.dart';
-import 'package:samrathal_ecart/logic/services/preferences.dart';
-
 import '../../../../core/api.dart';
 import '../../../../core/api_const.dart';
 import '../../../../core/app_strings.dart';
 import '../../../../logic/services/DataEncryption.dart';
-import '../../../../utils/utils.dart';
+import '../../../../logic/services/preferences.dart';
+import '../../../../utils/app_utils.dart';
+import '../../../model/dashboard/profile/address/address_list_model.dart';
+import '../../../model/dashboard/profile/address/city_model.dart';
 import '../../../model/dashboard/profile/address/edit_address_data_model.dart';
+import '../../../model/dashboard/profile/address/state_model.dart';
 
 class AddressRepository {
   final Api _api = Api();
@@ -58,7 +56,6 @@ class AddressRepository {
       //   // log("exception error headers ${e.response!.headers}");
       //   // log("exception error request options ${e.response!.requestOptions}");
       // }
-      return null;
     } catch (ex) {
       rethrow;
     }
@@ -105,7 +102,6 @@ class AddressRepository {
       //   // log("exception error headers ${e.response!.headers}");
       //   // log("exception error request options ${e.response!.requestOptions}");
       // }
-      return null;
     } catch (ex) {
       rethrow;
     }
@@ -172,7 +168,6 @@ class AddressRepository {
       //   // log("exception error headers ${e.response!.headers}");
       //   // log("exception error request options ${e.response!.requestOptions}");
       // }
-      return false;
     } catch (ex) {
       rethrow;
     }
@@ -221,7 +216,6 @@ class AddressRepository {
       //   // log("exception error headers ${e.response!.headers}");
       //   // log("exception error request options ${e.response!.requestOptions}");
       // }
-      return null;
     } catch (ex) {
       rethrow;
     }
@@ -269,7 +263,6 @@ class AddressRepository {
       //   // log("exception error headers ${e.response!.headers}");
       //   // log("exception error request options ${e.response!.requestOptions}");
       // }
-      return null;
     } catch (ex) {
       rethrow;
     }
@@ -336,7 +329,6 @@ class AddressRepository {
       //   // log("exception error headers ${e.response!.headers}");
       //   // log("exception error request options ${e.response!.requestOptions}");
       // }
-      return false;
     } catch (ex) {
       rethrow;
     }
@@ -390,7 +382,6 @@ class AddressRepository {
       //   // log("exception error headers ${e.response!.headers}");
       //   // log("exception error request options ${e.response!.requestOptions}");
       // }
-      return false;
     } catch (ex) {
       rethrow;
     }

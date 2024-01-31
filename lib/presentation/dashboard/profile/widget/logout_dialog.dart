@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:samrathal_ecart/utils/utils.dart';
+import 'package:samrathal_ecart/utils/app_utils.dart';
 import '../../../../core/app_colors.dart';
 import '../../../../core/app_strings.dart';
 import '../../../../core/app_text_styles.dart';
 import '../../../../logic/services/preferences.dart';
+import '../../../../widgets/navigate_anim.dart';
 import '../../../auth/mobile_verify_screen.dart';
 
 class LogoutDialog extends StatelessWidget {
@@ -194,8 +195,8 @@ class LogoutDialog extends StatelessWidget {
     SharedPrefProvider.clearPreference();
     Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(
-          builder: (context) => const MobileVerifyScreen(),
+        FadeAnimatingRoute(
+          route: const MobileVerifyScreen(),
         ),
         (route) => false);
   }

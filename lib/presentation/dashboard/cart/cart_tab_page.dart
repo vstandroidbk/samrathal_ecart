@@ -4,22 +4,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:samrathal_ecart/logic/provider/dashboard/cart/cart_api_provider.dart';
-import 'package:samrathal_ecart/presentation/dashboard/cart/select_address_page.dart';
-import 'package:samrathal_ecart/presentation/dashboard/cart/widget/cart_item_view_card.dart';
-import 'package:samrathal_ecart/presentation/dashboard/cart/widget/cart_loading_shimmer.dart';
-import 'package:samrathal_ecart/presentation/dashboard/profile/order/widget/order_success_screen.dart';
-import 'package:samrathal_ecart/presentation/dashboard/profile/payment/payment_details_screen.dart';
-import 'package:samrathal_ecart/utils/utils.dart';
-import 'package:samrathal_ecart/widgets/no_data_found.dart';
+import 'package:samrathal_ecart/utils/app_utils.dart';
 
 import '../../../core/app_colors.dart';
 import '../../../core/app_images.dart';
 import '../../../core/app_strings.dart';
 import '../../../core/app_text_styles.dart';
+import '../../../logic/provider/dashboard/cart/cart_api_provider.dart';
 import '../../../logic/services/formatter.dart';
 import '../../../widgets/custom_button.dart';
-import '../profile/address/add_address_page.dart';
+import '../../../widgets/navigate_anim.dart';
+import '../../../widgets/no_data_found.dart';
+import '../profile/order/widget/order_success_screen.dart';
+import '../profile/payment/payment_method_screen.dart';
+import 'select_address_page.dart';
+import 'widget/cart_item_view_card.dart';
+import 'widget/cart_loading_shimmer.dart';
 
 class CartTabPage extends StatefulWidget {
   const CartTabPage({super.key});
@@ -262,8 +262,8 @@ class _CartTabPageState extends State<CartTabPage> {
                                                   onPressed: () {
                                                     Navigator.push(
                                                       context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
+                                                      FadeAnimatingRoute(
+                                                        route:
                                                             const SelectAddressPage(),
                                                       ),
                                                     ).then((value) {
@@ -335,12 +335,12 @@ class _CartTabPageState extends State<CartTabPage> {
                                     onPressed: () {
                                       if (addressData == null) {
                                         Utils.showToast(
-                                            "Please add your shipping address");
+                                            "Please select your primary address");
                                         Navigator.push(
                                           context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                const AddAddressPage(),
+                                          FadeAnimatingRoute(
+                                            route:
+                                                const SelectAddressPage(),
                                           ),
                                         ).then((value) {
                                           callApi();
@@ -351,7 +351,9 @@ class _CartTabPageState extends State<CartTabPage> {
                                         backgroundColor: Colors.transparent,
                                         context: context,
                                         builder: (context) {
-                                          return const CheckoutDialog();
+                                          return CheckoutDialog(
+                                            addressId: addressData.id!,
+                                          );
                                         },
                                       );
                                     },
@@ -377,7 +379,9 @@ class _CartTabPageState extends State<CartTabPage> {
 }
 
 class CheckoutDialog extends StatefulWidget {
-  const CheckoutDialog({super.key});
+  final String addressId;
+
+  const CheckoutDialog({super.key, required this.addressId});
 
   @override
   State<CheckoutDialog> createState() => _CheckoutDialogState();
@@ -475,17 +479,22 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
                       return;
                     }
                     if (selectedIndex == 0) {
+                      Navigator.pop(context);
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => const OrderSuccessScreen(),
+                        FadeAnimatingRoute(
+                          route: const OrderSuccessScreen(),
                         ),
                       );
                     } else if (selectedIndex == 1) {
+                      Navigator.pop(context);
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => const PaymentDetailsScreen(),
+                        FadeAnimatingRoute(
+                          route: PaymentMethodScreen(
+                            screenType: AppStrings.fromCart,
+                            addressId: widget.addressId,
+                          ),
                         ),
                       );
                     }
