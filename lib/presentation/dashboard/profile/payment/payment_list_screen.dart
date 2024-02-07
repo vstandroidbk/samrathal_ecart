@@ -19,7 +19,7 @@ class PaymentListScreen extends StatefulWidget {
 }
 
 class _PaymentListScreenState extends State<PaymentListScreen> {
-  String dropdownValue = "all";
+  ValueNotifier<String?> paymentStatus = ValueNotifier("ALL");
 
   @override
   void initState() {
@@ -31,7 +31,7 @@ class _PaymentListScreenState extends State<PaymentListScreen> {
     var dataProvider = Provider.of<PaymentApiProvider>(context, listen: false);
     dataProvider.resetOrderPaymentListData();
     dataProvider.setOrderPaymentListNull();
-    await dataProvider.getOrderPaymentListData(isRefresh);
+    await dataProvider.getOrderPaymentListData(isRefresh, paymentStatus.value!);
   }
 
   @override
@@ -44,57 +44,61 @@ class _PaymentListScreenState extends State<PaymentListScreen> {
               .animate()
               .fadeIn(duration: 500.ms),
           actions: [
-            Container(
-              height: 35,
-              width: 110,
-              padding: const EdgeInsets.only(left: 5, right: 5),
-              child: DropdownButtonHideUnderline(
-                child: ButtonTheme(
-                  alignedDropdown: true,
-                  child: DropdownButton<String>(
-                    value: dropdownValue,
-                    isExpanded: true,
-                    isDense: true,
-                    style: AppTextStyles.bodyBlack14,
-                    icon: Padding(
-                      padding: const EdgeInsets.only(left: 2),
-                      child: Image.asset(
-                        AppImages.filterImg,
-                        height: 18,
-                        width: 18,
-                        color: Colors.white,
+            ValueListenableBuilder(
+              valueListenable: paymentStatus,
+              builder: (BuildContext context, value, Widget? child) {
+                return Container(
+                  height: 35,
+                  width: 110,
+                  padding: const EdgeInsets.only(left: 5, right: 5),
+                  child: DropdownButtonHideUnderline(
+                    child: ButtonTheme(
+                      alignedDropdown: true,
+                      child: DropdownButton<String>(
+                        value: paymentStatus.value,
+                        isExpanded: true,
+                        isDense: true,
+                        style: AppTextStyles.bodyBlack14,
+                        icon: Padding(
+                          padding: const EdgeInsets.only(left: 2),
+                          child: Image.asset(
+                            AppImages.filterImg,
+                            height: 18,
+                            width: 18,
+                            color: Colors.white,
+                          ),
+                        ),
+                        onChanged: (onChangedValue) async {
+                          paymentStatus.value = onChangedValue;
+                          await callApi(true);
+                        },
+                        selectedItemBuilder: (BuildContext context) {
+                          return paymentStatusList.map((value) {
+                            return Center(
+                              child: Text(
+                                value["status"],
+                                style: AppTextStyles.bodyWhite14,
+                              ),
+                            );
+                          }).toList();
+                        },
+                        items: paymentStatusList.map(
+                          (item) {
+                            return DropdownMenuItem(
+                              value: item["id"].toString(),
+                              child: Text(
+                                item["status"].toString(),
+                                style: AppTextStyles.bodyBlack14,
+                              ),
+                            );
+                          },
+                        ).toList(),
                       ),
                     ),
-                    onChanged: (onChangedValue) async {
-                      setState(() {
-                        dropdownValue = onChangedValue!;
-                      });
-                    },
-                    selectedItemBuilder: (BuildContext context) {
-                      return paymentStatusList.map((value) {
-                        return Center(
-                          child: Text(
-                            value["status"],
-                            style: AppTextStyles.bodyWhite14,
-                          ),
-                        );
-                      }).toList();
-                    },
-                    items: paymentStatusList.map(
-                      (item) {
-                        return DropdownMenuItem(
-                          value: item["id"].toString(),
-                          child: Text(
-                            item["status"].toString(),
-                            style: AppTextStyles.bodyBlack14,
-                          ),
-                        );
-                      },
-                    ).toList(),
                   ),
-                ),
-              ),
-            ).animate().fadeIn(duration: 500.ms),
+                ).animate().fadeIn(duration: 500.ms);
+              },
+            ),
             12.pw
           ],
         ),
@@ -106,13 +110,14 @@ class _PaymentListScreenState extends State<PaymentListScreen> {
               enablePullDown: true,
               enablePullUp: true,
               onRefresh: () async {
-                paymentProvider.resetOrderPaymentListData();
+                // paymentProvider.resetOrderPaymentListData();
                 await callApi(true);
               },
               onLoading: () async {
                 var dataProvider =
                     Provider.of<PaymentApiProvider>(context, listen: false);
-                await dataProvider.getOrderPaymentListData(false);
+                await dataProvider.getOrderPaymentListData(
+                    false, paymentStatus.value!);
               },
               child: paymentProvider.orderPaymentListLoading
                   ? const OrderPaymentListShimmer()
@@ -128,8 +133,8 @@ class _PaymentListScreenState extends State<PaymentListScreen> {
                             itemBuilder: (ctx, index) {
                               return PaymentListCard(
                                 index: index,
-                                paymentList: paymentProvider
-                                    .orderPaymentListObj[index],
+                                paymentList:
+                                    paymentProvider.orderPaymentListObj[index],
                               );
                             },
                           ).animate().slideY(

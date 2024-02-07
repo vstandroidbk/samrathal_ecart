@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../core/api.dart';
 import '../../../../core/app_strings.dart';
@@ -105,5 +106,47 @@ class HomeApiProvider with ChangeNotifier {
   setOfferDetailsDataNull() {
     setProductDetailsLoaderFalse();
     _offerDetailsModel = null;
+  }
+
+  // opt offer api call ---->>
+  bool _optOfferLoading = false;
+
+  bool get optOfferLoading => _optOfferLoading;
+
+  setOptOfferLoading(bool value) {
+    _optOfferLoading = value;
+    notifyListeners();
+  }
+
+  Future<void> optOfferApi(
+      {required String offerId, required BuildContext context}) async {
+    // set isLoading to true to show the loader
+    bool isOnline = await Api.hasNetwork();
+    if (!isOnline) {
+      Utils.showToast(AppStrings.noInternet);
+      return;
+    }
+    setOptOfferLoading(true);
+    // Make the API call
+    try {
+      var changePass = await _homeRepository.optOfferApi(offerId: offerId);
+      if (changePass != null && changePass) {
+        if (context.mounted) {
+          Provider.of<HomeApiProvider>(context, listen: false)
+              .getOfferDetailsApi(offerId: offerId);
+        }
+      }
+      log("api opt offer success $changePass");
+    } catch (ex) {
+      log("api opt offer error $ex");
+      Utils.showToast(ex.toString());
+    } finally {
+      // After completion (success/failure), set isLoading to false
+      setOptOfferLoading(false);
+    }
+  }
+
+  setOptOfferFalse() {
+    _optOfferLoading = false;
   }
 }

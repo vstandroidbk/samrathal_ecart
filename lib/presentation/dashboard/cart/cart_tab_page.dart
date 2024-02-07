@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:samrathal_ecart/presentation/dashboard/profile/order/widget/order_success_screen.dart';
 import 'package:samrathal_ecart/utils/app_utils.dart';
+import 'package:samrathal_ecart/widgets/loader_widget.dart';
 
 import '../../../core/app_colors.dart';
 import '../../../core/app_images.dart';
@@ -15,7 +17,6 @@ import '../../../logic/services/formatter.dart';
 import '../../../widgets/custom_button.dart';
 import '../../../widgets/navigate_anim.dart';
 import '../../../widgets/no_data_found.dart';
-import '../profile/order/widget/order_success_screen.dart';
 import '../profile/payment/payment_method_screen.dart';
 import 'select_address_page.dart';
 import 'widget/cart_item_view_card.dart';
@@ -146,35 +147,44 @@ class _CartTabPageState extends State<CartTabPage> {
                                               )
                                             ],
                                           ),
-                                          5.ph,
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Flexible(
-                                                child: Text(
-                                                  "Shipping Charge",
+                                          if (cartListModel.shippingAmount !=
+                                              null)
+                                            5.ph,
+                                          if (cartListModel.shippingAmount !=
+                                              null)
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Flexible(
+                                                  child: Text(
+                                                    "Shipping Charge",
+                                                    style: AppTextStyles
+                                                        .bodyBlack14
+                                                        .copyWith(
+                                                            color: AppColors
+                                                                .blackColor,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w600),
+                                                  ),
+                                                ),
+                                                8.pw,
+                                                Text(
+                                                  Formatter.formatPrice(
+                                                      cartListModel
+                                                          .shippingAmount!),
                                                   style: AppTextStyles
                                                       .bodyBlack14
                                                       .copyWith(
                                                           color: AppColors
-                                                              .blackColor,
+                                                              .primaryColor,
                                                           fontWeight:
                                                               FontWeight.w600),
-                                                ),
-                                              ),
-                                              8.pw,
-                                              Text(
-                                                Formatter.formatPrice(0),
-                                                style: AppTextStyles.bodyBlack14
-                                                    .copyWith(
-                                                        color: AppColors
-                                                            .primaryColor,
-                                                        fontWeight:
-                                                            FontWeight.w600),
-                                              )
-                                            ],
-                                          ),
+                                                )
+                                              ],
+                                            ),
                                           5.ph,
                                           Row(
                                             mainAxisAlignment:
@@ -194,10 +204,17 @@ class _CartTabPageState extends State<CartTabPage> {
                                               ),
                                               8.pw,
                                               Text(
-                                                Formatter.formatPrice(
-                                                    getCartTotalAmount(
-                                                            cartData) +
-                                                        0),
+                                                cartListModel.shippingAmount !=
+                                                        null
+                                                    ? Formatter.formatPrice(
+                                                        getCartTotalAmount(
+                                                                cartData) +
+                                                            cartListModel
+                                                                .shippingAmount!)
+                                                    : Formatter.formatPrice(
+                                                        getCartTotalAmount(
+                                                                cartData) +
+                                                            0),
                                                 style: AppTextStyles.bodyBlack14
                                                     .copyWith(
                                                         color: AppColors
@@ -215,9 +232,10 @@ class _CartTabPageState extends State<CartTabPage> {
                                           // end: Offset(dx, dy),
                                         ),
                                   12.ph,
-                                  if (addressData != null)
+                                  if (cartListModel != null &&
+                                      cartListModel.distance != null)
                                     Text(
-                                      "Estimate Distance ______ km",
+                                      "Estimate Distance ${cartListModel.distance} km",
                                       style: AppTextStyles.bodyBlack14,
                                     ).animate().slide(
                                           duration: 500.ms,
@@ -339,20 +357,23 @@ class _CartTabPageState extends State<CartTabPage> {
                                         Navigator.push(
                                           context,
                                           FadeAnimatingRoute(
-                                            route:
-                                                const SelectAddressPage(),
+                                            route: const SelectAddressPage(),
                                           ),
                                         ).then((value) {
                                           callApi();
                                         });
                                         return;
                                       }
+                                      cartProvider.setOrderPlaceLoaderFalse();
                                       showModalBottomSheet(
                                         backgroundColor: Colors.transparent,
                                         context: context,
                                         builder: (context) {
                                           return CheckoutDialog(
                                             addressId: addressData.id!,
+                                            shippingCharge:
+                                                cartListModel?.shippingAmount,
+                                            distance: cartListModel?.distance,
                                           );
                                         },
                                       );
@@ -380,8 +401,11 @@ class _CartTabPageState extends State<CartTabPage> {
 
 class CheckoutDialog extends StatefulWidget {
   final String addressId;
+  final num? distance;
+  final num? shippingCharge;
 
-  const CheckoutDialog({super.key, required this.addressId});
+  const CheckoutDialog(
+      {super.key, required this.addressId, this.shippingCharge, this.distance});
 
   @override
   State<CheckoutDialog> createState() => _CheckoutDialogState();
@@ -472,38 +496,61 @@ class _CheckoutDialogState extends State<CheckoutDialog> {
                             ),
                           ));
                     }),
-                CustomButton(
-                  onPressed: () {
-                    if (selectedIndex == -1) {
-                      Utils.showToast("Please select a payment option");
-                      return;
-                    }
-                    if (selectedIndex == 0) {
-                      Navigator.pop(context);
-                      Navigator.push(
-                        context,
-                        FadeAnimatingRoute(
-                          route: const OrderSuccessScreen(),
-                        ),
-                      );
-                    } else if (selectedIndex == 1) {
-                      Navigator.pop(context);
-                      Navigator.push(
-                        context,
-                        FadeAnimatingRoute(
-                          route: PaymentMethodScreen(
-                            screenType: AppStrings.fromCart,
-                            addressId: widget.addressId,
-                          ),
-                        ),
-                      );
-                    }
+                Consumer<CartApiProvider>(
+                  builder: (BuildContext context, CartApiProvider cartProvider,
+                      Widget? child) {
+                    return cartProvider.orderPlaceLoading
+                        ? const CustomButtonLoader()
+                        : CustomButton(
+                            onPressed: () async {
+                              if (selectedIndex == -1) {
+                                Utils.showToast(
+                                    "Please select a payment option");
+                                return;
+                              }
+                              if (selectedIndex == 0) {
+                                var bool = await cartProvider.orderPlaceApi(
+                                    addressId: widget.addressId,
+                                    context: context,
+                                    distance: widget.distance,
+                                    shippingCharge: widget.shippingCharge);
+                                if (context.mounted && bool) {
+                                  Navigator.pop(context);
+                                  Navigator.pushReplacement(
+                                    context,
+                                    FadeAnimatingRoute(
+                                      route: const OrderSuccessScreen(),
+                                    ),
+                                  );
+                                }
+                                // Navigator.push(
+                                //   context,
+                                //   FadeAnimatingRoute(
+                                //     route: const OrderSuccessScreen(),
+                                //   ),
+                                // );
+                              } else if (selectedIndex == 1) {
+                                Navigator.pop(context);
+                                Navigator.push(
+                                  context,
+                                  FadeAnimatingRoute(
+                                    route: PaymentMethodScreen(
+                                      screenType: AppStrings.fromCart,
+                                      addressId: widget.addressId,
+                                      distance: widget.distance,
+                                      shippingCharge: widget.shippingCharge,
+                                    ),
+                                  ),
+                                );
+                              }
+                            },
+                            isGradient: false,
+                            child: Text(
+                              "Proceed".toUpperCase(),
+                              style: AppTextStyles.bodyWhite14,
+                            ),
+                          );
                   },
-                  isGradient: false,
-                  child: Text(
-                    "Proceed".toUpperCase(),
-                    style: AppTextStyles.bodyWhite14,
-                  ),
                 )
               ],
             ),

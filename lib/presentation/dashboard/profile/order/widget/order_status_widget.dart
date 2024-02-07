@@ -15,12 +15,13 @@ class OrderStatusWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-// 1:Placed
-// 2:Approved
-// 3:Shipped
-// 4:Delivered
-// 5:Received
-// 6:Completed
+    // OrderStatus:
+    // 1:Placed
+    // 2:Approved
+    // 3:Shipped
+    // 4:Received
+    // 5:Delivered
+    // 6:Completed
     int status = orderStatus;
     return Column(
       children: [
@@ -328,7 +329,7 @@ class OrderStatusWidget extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Text(
-                              "Delivered",
+                              "Received",
                               style: AppTextStyles.bodyBlack14
                                   .copyWith(fontWeight: FontWeight.w600),
                             ),
@@ -336,18 +337,18 @@ class OrderStatusWidget extends StatelessWidget {
                               height: 2,
                             ),
                             Text(
-                              'We have delivered your order.',
+                              'Your order has been received successfully.',
                               style: AppTextStyles.bodyBlack14,
                             ),
                           ],
                         ),
                       ),
                     ),
-                    if (orderDetailsData.orderDeliverDate != null)
+                    if (orderDetailsData.orderReceiveDate != null)
                       Expanded(
                         flex: 1,
                         child: Text(
-                          orderDetailsData.orderDeliverDate!,
+                          orderDetailsData.orderReceiveDate!,
                           textAlign: TextAlign.end,
                           style: AppTextStyles.bodyBlack14
                               .copyWith(fontWeight: FontWeight.w600),
@@ -413,7 +414,7 @@ class OrderStatusWidget extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Text(
-                              "Received",
+                              "Delivered",
                               style: AppTextStyles.bodyBlack14
                                   .copyWith(fontWeight: FontWeight.w600),
                             ),
@@ -421,18 +422,18 @@ class OrderStatusWidget extends StatelessWidget {
                               height: 2,
                             ),
                             Text(
-                              'Your order has been received successfully.',
+                              'We have delivered your order.',
                               style: AppTextStyles.bodyBlack14,
                             ),
                           ],
                         ),
                       ),
                     ),
-                    if (orderDetailsData.orderReceiveDate != null)
+                    if (orderDetailsData.orderDeliverDate != null)
                       Expanded(
                         flex: 1,
                         child: Text(
-                          orderDetailsData.orderReceiveDate!,
+                          orderDetailsData.orderDeliverDate!,
                           textAlign: TextAlign.end,
                           style: AppTextStyles.bodyBlack14
                               .copyWith(fontWeight: FontWeight.w600),

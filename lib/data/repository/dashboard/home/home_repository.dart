@@ -1,14 +1,13 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:dio/dio.dart';
-
 import '../../../../core/api.dart';
 import '../../../../core/api_const.dart';
 import '../../../../core/app_strings.dart';
 import '../../../../logic/services/DataEncryption.dart';
 import '../../../../logic/services/preferences.dart';
+import '../../../../utils/app_utils.dart';
 import '../../../model/dashboard/home/offer_details_model.dart';
 import '../../../model/dashboard/home/offer_list_model.dart';
 
@@ -66,7 +65,9 @@ class HomeRepository {
 
   Future<OfferDetailsModel?> getOfferDetailsData(
       {required String offerId}) async {
-    var jsonBody = {"offerId": offerId};
+    final userId =
+        await SharedPrefProvider.getString(SharedPrefProvider.userId);
+    var jsonBody = {"user_id": userId, "offerId": offerId};
     try {
       Response response = await _api.sendRequest.post(
           ApiEndPoints.getOfferDetailsData,
@@ -110,5 +111,46 @@ class HomeRepository {
       rethrow;
     }
     return null;
+  }
+
+  Future<bool?> optOfferApi({required String offerId}) async {
+    final userId =
+        await SharedPrefProvider.getString(SharedPrefProvider.userId);
+    var jsonBody = {"user_id": userId, "offerId": offerId};
+    try {
+      Response response = await _api.sendRequest.post(ApiEndPoints.optOffer,
+          data: jsonEncode(DataEncryption.getEncryptedData(jsonBody)));
+      log("api response opt offer response ${jsonEncode(response.data)}");
+      ApiResponse apiResponse =
+          ApiResponse.fromJson(jsonDecode(jsonEncode(response.data)));
+      log("api response opt offer json ${apiResponse.data}");
+      if (apiResponse.status != AppStrings.successTxt) {
+        throw apiResponse.message.toString();
+      }
+      Utils.showToast(apiResponse.message.toString());
+      if (apiResponse.data != null) {
+        var realData = DataEncryption.getDecryptedData(
+            apiResponse.data![0].resKey!, apiResponse.data![0].resData!);
+        log("api response opt offer realData $realData");
+      }
+      return true;
+    } on SocketException catch (e) {
+      throw NetworkException('Network Error: $e');
+    } on DioException catch (e) {
+      if (e.response != null) {
+        switch (e.response!.statusCode) {
+          case 400:
+            throw e.response!.data["message"];
+          case 401:
+            throw e.response!.data["message"];
+          default:
+            throw "Something went wrong..";
+        }
+      } else {
+        throw "Something went wrong..";
+      }
+    } catch (ex) {
+      rethrow;
+    }
   }
 }

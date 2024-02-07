@@ -10,6 +10,7 @@ import '../../../core/app_text_styles.dart';
 import '../../../logic/provider/dashboard/home/home_api_provider.dart';
 import '../../../logic/services/formatter.dart';
 import '../../../widgets/custom_button.dart';
+import '../../../widgets/loader_widget.dart';
 import 'widget/offer_details_shimmer.dart';
 
 class OfferDetailsScreen extends StatefulWidget {
@@ -34,6 +35,7 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
   Future<void> callApi() async {
     var dataProvider = Provider.of<HomeApiProvider>(context, listen: false);
     dataProvider.setOfferDetailsDataNull();
+    dataProvider.setOptOfferFalse();
     await dataProvider.getOfferDetailsApi(offerId: widget.offerId);
     _refreshController.refreshCompleted();
   }
@@ -163,14 +165,36 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
                                 .copyWith(color: AppColors.descColor),
                           ),
                         20.ph,
-                        CustomButton(
-                          onPressed: () {},
-                          isGradient: false,
-                          child: Text(
-                            AppStrings.optOfferTxt,
-                            style: AppTextStyles.bodyWhite14,
-                          ),
-                        )
+                        offerDetailsModel!.offerOptStatus != null &&
+                                offerDetailsModel.offerOptStatus! == 1
+                            ? CustomButton(
+                                onPressed: () {},
+                                isGradient: false,
+                                backgroundColor: AppColors.greyColor,
+                                child: Text(
+                                  AppStrings.optOfferTxt,
+                                  style: TextStyle(color: Colors.grey.shade500),
+                                ))
+                            : Consumer<HomeApiProvider>(
+                                builder: (BuildContext context,
+                                    HomeApiProvider homeProvider,
+                                    Widget? child) {
+                                  return homeProvider.optOfferLoading
+                                      ? const CustomButtonLoader()
+                                      : CustomButton(
+                                          onPressed: () {
+                                            homeProvider.optOfferApi(
+                                                offerId: widget.offerId,
+                                                context: context);
+                                          },
+                                          isGradient: false,
+                                          child: Text(
+                                            AppStrings.optOfferTxt,
+                                            style: AppTextStyles.bodyWhite14,
+                                          ),
+                                        );
+                                },
+                              ),
                       ],
                     );
             },

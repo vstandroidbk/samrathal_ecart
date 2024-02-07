@@ -18,7 +18,7 @@ class SliderWidget extends StatefulWidget {
 }
 
 class _SliderWidgetState extends State<SliderWidget> {
-  int _currentPage = 0;
+  ValueNotifier<int> curPage = ValueNotifier(0);
   final CarouselController _sliderController = CarouselController();
 
   @override
@@ -36,9 +36,7 @@ class _SliderWidgetState extends State<SliderWidget> {
                 viewportFraction: 1,
                 enlargeCenterPage: false,
                 onPageChanged: (index, reason) {
-                  setState(() {
-                    _currentPage = index;
-                  });
+                  curPage.value = index;
                 }),
             items: widget.sliderData?.map((i) {
               return Builder(
@@ -85,16 +83,21 @@ class _SliderWidgetState extends State<SliderWidget> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(widget.sliderData!.length, (index) {
-                  return Container(
-                    width: 8.0,
-                    height: 8.0,
-                    margin: const EdgeInsets.symmetric(horizontal: 4.0),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: _currentPage == index
-                          ? AppColors.enabledSliderColor
-                          : AppColors.disabledSliderColor,
-                    ),
+                  return ValueListenableBuilder(
+                    valueListenable: curPage,
+                    builder: (BuildContext context, value, Widget? child) {
+                      return Container(
+                        width: 8.0,
+                        height: 8.0,
+                        margin: const EdgeInsets.symmetric(horizontal: 4.0),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: curPage.value == index
+                              ? AppColors.enabledSliderColor
+                              : AppColors.disabledSliderColor,
+                        ),
+                      );
+                    },
                   );
                 }),
               ),

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:provider/provider.dart';
 import 'package:samrathal_ecart/utils/app_utils.dart';
+import 'package:samrathal_ecart/widgets/loader_widget.dart';
 import '../../../../core/app_strings.dart';
 import '../../../../core/app_text_styles.dart';
+import '../../../../logic/provider/dashboard/dashboard_api_provider.dart';
 import '../../../../widgets/custom_button.dart';
 import '../../../../widgets/custom_text_field.dart';
 import '../../../../widgets/label_widget.dart';
@@ -19,6 +22,18 @@ class _ChangePasswordState extends State<ChangePassword> {
   TextEditingController newPasswordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    setLoaderFalse();
+    super.initState();
+  }
+
+  Future<void> setLoaderFalse() async {
+    var addressProvider =
+        Provider.of<DashboardApiProvider>(context, listen: false);
+    addressProvider.setUpdatePassLoaderFalse();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,30 +113,39 @@ class _ChangePasswordState extends State<ChangePassword> {
                       return 'Please confirm your password';
                     }
                     if (value != newPasswordController.text) {
-                      return 'Passwords do not match';
+                      return 'Confirm password must be same as new password';
                     }
                     return null;
                   },
                 ),
                 20.ph,
-                CustomButton(
-                  onPressed: () {
-                    removeFocus(context);
-                    var oldPassword = newPasswordController.text.trim();
-                    var newPassword = newPasswordController.text.trim();
-                    if (_formKey.currentState!.validate()) {
-                      // changePassProvider.changePassword(
-                      //     mobile: widget.mobile,
-                      //     context: context,
-                      //     password: password);
-                    }
+                Consumer<DashboardApiProvider>(
+                  builder: (BuildContext context,
+                      DashboardApiProvider dashProvider, Widget? child) {
+                    return dashProvider.updatePassLoading
+                        ? const CustomButtonLoader()
+                        : CustomButton(
+                            onPressed: () {
+                              removeFocus(context);
+                              var oldPassword =
+                                  oldPasswordController.text.trim();
+                              var newPassword =
+                                  newPasswordController.text.trim();
+                              if (_formKey.currentState!.validate()) {
+                                dashProvider.updatePassword(
+                                    oldPass: oldPassword,
+                                    context: context,
+                                    newPass: newPassword);
+                              }
+                            },
+                            isGradient: false,
+                            child: Text(
+                              AppStrings.submitTxt.toUpperCase(),
+                              style: AppTextStyles.bodyWhite16,
+                            ),
+                          ).animate().fadeIn(duration: 500.ms);
                   },
-                  isGradient: false,
-                  child: Text(
-                    AppStrings.submitTxt.toUpperCase(),
-                    style: AppTextStyles.bodyWhite16,
-                  ),
-                ).animate().fadeIn(duration: 500.ms),
+                ),
                 SizedBox(
                   height: mq.height * 0.08,
                 ),

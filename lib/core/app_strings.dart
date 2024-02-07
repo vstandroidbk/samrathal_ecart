@@ -84,6 +84,7 @@ class AppStrings {
 
   static String receiveNowTxt = "Receive now";
   static String payNowTxt = "Pay Now";
+  static String paymentHistoryTxt = "Payment History";
 
   static String orderItemTxt = "Order Items";
   static String shipAddressTxt = "Shipping Address";
@@ -94,6 +95,10 @@ class AppStrings {
   static String fromForgetScreen = "From Forget Screen";
   static String fromOrderScreen = "From Order Screen";
   static String fromOtpScreen = "From otp Screen";
+  static String fromHome = "From Home";
+  static String fromProductList = "From product list";
+  static String fromProductDetails = "From product details";
+  static String fromWishList = "From wishlist";
 
   static String paymentListTxt = "Payment List";
   static String paymentDetailsTxt = "Payment Details";
@@ -186,19 +191,24 @@ final List<Map<String, String>> productList = [
   },
 ];
 
-List<Map<String, dynamic>> dropDownList = [
-  {"id": "all", "status": "All Order"},
-  {"id": "0", "status": "Order Placed"},
-  {"id": "1", "status": "Order confirmed"},
-  {"id": "2", "status": "Order packed"},
-  {"id": "3", "status": "Order on its way"},
-  {"id": "4", "status": "Order out for delivery"},
-  {"id": "5", "status": "Order delivered"},
+// 1:Placed
+// 2:Approved
+// 3:Shipped
+// 4:Delivered
+// 5:Received
+// 6:Completed
+List<Map<String, dynamic>> orderStatusList = [
+  {"id": "ALL", "status": "All Order"},
+  {"id": "1", "status": "Order Placed"},
+  {"id": "2", "status": "Order Approved"},
+  {"id": "3", "status": "Order Shipped"},
+  {"id": "4", "status": "Order Received"},
+  {"id": "5", "status": "Order Delivered"},
+  {"id": "6", "status": "Order Completed"},
 ];
 
 List<Map<String, dynamic>> paymentStatusList = [
-  {"id": "all", "status": "All"},
+  {"id": "ALL", "status": "All"},
   {"id": "0", "status": "Pending"},
-  {"id": "1", "status": "Approved"},
-  {"id": "2", "status": "Rejected"},
+  {"id": "1", "status": "Approved"}
 ];

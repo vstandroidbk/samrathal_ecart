@@ -36,13 +36,22 @@ class GetOrderItemData {
   String? orderAmount;
   String? shippingAmount;
   String? finalOrderAmount;
+  String? settlementPrice;
+  String? settlementPriceType;
 
-  GetOrderItemData({this.orderAmount, this.shippingAmount, this.finalOrderAmount});
+  GetOrderItemData(
+      {this.orderAmount,
+      this.shippingAmount,
+      this.finalOrderAmount,
+      this.settlementPrice,
+      this.settlementPriceType});
 
   GetOrderItemData.fromJson(Map<String, dynamic> json) {
     orderAmount = json['order_amount'];
     shippingAmount = json['shipping_amount'];
     finalOrderAmount = json['final_order_amount'];
+    settlementPrice = json['settlement_price'];
+    settlementPriceType = json['settlement_price_type'];
   }
 
   Map<String, dynamic> toJson() {
@@ -50,6 +59,8 @@ class GetOrderItemData {
     data['order_amount'] = orderAmount;
     data['shipping_amount'] = shippingAmount;
     data['final_order_amount'] = finalOrderAmount;
+    data['settlement_price'] = settlementPrice;
+    data['settlement_price_type'] = settlementPriceType;
     return data;
   }
 }

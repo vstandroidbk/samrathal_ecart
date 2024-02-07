@@ -63,12 +63,21 @@ class PaymentListCard extends StatelessWidget {
                   ),
                   // const Text(":"),
                   Expanded(
-                    child: Text(
-                      getPaymentTypeText(paymentList.paymentType!, paymentList),
-                      textAlign: TextAlign.right,
-                      style: AppTextStyles.bodyBlack14
-                          .copyWith(fontWeight: FontWeight.w500),
-                    ),
+                    child: paymentList.paymentMethod != null &&
+                            paymentList.paymentMethod! == 1
+                        ? Text(
+                            "COD",
+                            textAlign: TextAlign.right,
+                            style: AppTextStyles.bodyBlack14
+                                .copyWith(fontWeight: FontWeight.w500),
+                          )
+                        : Text(
+                            getPaymentTypeText(
+                                paymentList.paymentType!, paymentList),
+                            textAlign: TextAlign.right,
+                            style: AppTextStyles.bodyBlack14
+                                .copyWith(fontWeight: FontWeight.w500),
+                          ),
                   ),
                 ],
               ),
@@ -107,11 +116,18 @@ class PaymentListCard extends StatelessWidget {
                   // const Text(":"),
                   Expanded(
                     child: Text(
-                      getStatus(paymentList.orderStatus!),
+                      // getStatus(paymentList.orderStatus!),
+                      paymentList.paymentStatus != null &&
+                              paymentList.paymentStatus! == 0
+                          ? "Pending"
+                          : "Approved",
                       textAlign: TextAlign.right,
                       style: AppTextStyles.bodyBlack14.copyWith(
-                        color: getStatusColor(paymentList.orderStatus!),
-                      ),
+                          color: paymentList.paymentStatus != null &&
+                                  paymentList.paymentStatus! == 0
+                              ? Colors.red
+                              : Colors.green,
+                          fontWeight: FontWeight.w600),
                     ),
                   ),
                 ],
@@ -129,7 +145,7 @@ class PaymentListCard extends StatelessWidget {
                   Expanded(
                       child: Text(
                     Formatter.formatPrice(
-                      int.parse(
+                      num.parse(
                         paymentList.payAmount!,
                       ),
                     ),
@@ -144,7 +160,7 @@ class PaymentListCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   paymentList.paymentStatus != null &&
-                          paymentList.paymentStatus! == false
+                          paymentList.paymentStatus! == 0
                       ? CustomButton(
                           width: 100,
                           height: 35,
@@ -168,22 +184,24 @@ class PaymentListCard extends StatelessWidget {
                           ),
                         )
                       : const SizedBox(),
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        FadeAnimatingRoute(
-                          route: PaymentDetailsScreen(
-                            orderPaymentId: paymentList.id!,
+                  if (paymentList.paymentMethod != null &&
+                      paymentList.paymentMethod! == 0)
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          FadeAnimatingRoute(
+                            route: PaymentDetailsScreen(
+                              orderPaymentId: paymentList.id!,
+                            ),
                           ),
-                        ),
-                      );
-                    },
-                    child: const Icon(
-                      CupertinoIcons.eye_solid,
-                      color: AppColors.lightGrey,
-                    ),
-                  )
+                        );
+                      },
+                      child: const Icon(
+                        CupertinoIcons.eye_solid,
+                        color: AppColors.lightGrey,
+                      ),
+                    )
                 ],
               ),
             ],

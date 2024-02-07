@@ -28,13 +28,17 @@ class QrPage extends StatefulWidget {
   final String? addressId;
   final String? orderId;
   final String? orderToken;
+  final num? distance;
+  final num? shippingCharge;
 
   const QrPage(
       {super.key,
       required this.screenType,
       required this.addressId,
       this.orderId,
-      this.orderToken});
+      this.orderToken,
+      this.distance,
+      this.shippingCharge});
 
   @override
   State<QrPage> createState() => _QrPageState();
@@ -302,12 +306,21 @@ class _QrPageState
                             GetAmountWidget(
                                 title: AppStrings.totalOrderAmtTxt,
                                 value: paymentDataModel.totalOrderAmount!),
+                            if (widget.shippingCharge != null) 5.ph,
+                            if (widget.shippingCharge != null)
+                              GetAmountWidget(
+                                  title: "Shipping Charge",
+                                  value: widget.shippingCharge!),
                             5.ph,
                             if (paymentDataModel.totalOutstandingAmount != null)
                               GetAmountWidget(
                                   title: AppStrings.outStandingAmtTxt,
-                                  value:
-                                      paymentDataModel.totalOutstandingAmount!),
+                                  value: widget.shippingCharge != null
+                                      ? paymentDataModel
+                                              .totalOutstandingAmount! +
+                                          widget.shippingCharge!
+                                      : paymentDataModel
+                                          .totalOutstandingAmount!),
                           ],
                         ),
                       ),
@@ -517,7 +530,9 @@ class _QrPageState
                                   "addressId": widget.addressId,
                                   "PaymentType": "3",
                                   "paymentId":
-                                      paymentDataModel.qrData![selectedIndex].id
+                                      paymentDataModel.qrData![selectedIndex].id,
+                                  "shipping_amount":widget.shippingCharge,
+                                  "shipping_distance":widget.distance
                                 };
                                 removeFocus(context);
                                 provider.orderPlaceApi(

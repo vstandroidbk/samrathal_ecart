@@ -29,13 +29,17 @@ class UpiPage extends StatefulWidget {
   final String? addressId;
   final String? orderId;
   final String? orderToken;
+  final num? distance;
+  final num? shippingCharge;
 
   const UpiPage(
       {super.key,
       required this.screenType,
       required this.addressId,
       this.orderId,
-      this.orderToken});
+      this.orderToken,
+      this.shippingCharge,
+      this.distance});
 
   @override
   State<UpiPage> createState() => _UpiPageState();
@@ -237,20 +241,29 @@ class _UpiPageState
                             GetAmountWidget(
                                 title: AppStrings.totalOrderAmtTxt,
                                 value: paymentDataModel.totalOrderAmount!),
+                            if (widget.shippingCharge != null) 5.ph,
+                            if (widget.shippingCharge != null)
+                              GetAmountWidget(
+                                  title: "Shipping Charge",
+                                  value: widget.shippingCharge!),
                             5.ph,
                             if (paymentDataModel.totalOutstandingAmount != null)
                               GetAmountWidget(
                                   title: AppStrings.outStandingAmtTxt,
-                                  value:
-                                      paymentDataModel.totalOutstandingAmount!),
+                                  value: widget.shippingCharge != null
+                                      ? paymentDataModel
+                                      .totalOutstandingAmount! +
+                                      widget.shippingCharge!
+                                      : paymentDataModel
+                                      .totalOutstandingAmount!),
                           ],
                         ),
                       ),
                     ).animate().slide(
-                          duration: 500.ms,
-                          begin: const Offset(1, 0),
-                          // end: Offset(dx, dy),
-                        ),
+                      duration: 500.ms,
+                      begin: const Offset(1, 0),
+                      // end: Offset(dx, dy),
+                    ),
                   12.ph,
                   CustomLabelWidget(
                     labelText: AppStrings.uploadScreenshotTxt,
@@ -452,7 +465,9 @@ class _UpiPageState
                                   "addressId": widget.addressId,
                                   "PaymentType": "2",
                                   "paymentId": paymentDataModel
-                                      .upiData![selectedIndex].id
+                                      .upiData![selectedIndex].id,
+                                  "shipping_amount":widget.shippingCharge,
+                                  "shipping_distance":widget.distance
                                 };
                                 removeFocus(context);
                                 provider.orderPlaceApi(

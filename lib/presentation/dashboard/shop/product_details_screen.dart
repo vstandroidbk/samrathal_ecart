@@ -6,12 +6,15 @@ import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:samrathal_ecart/utils/app_utils.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../../core/api_const.dart';
 import '../../../core/app_colors.dart';
 import '../../../core/app_strings.dart';
 import '../../../core/app_text_styles.dart';
+import '../../../logic/provider/dashboard/dashboard_api_provider.dart';
 import '../../../logic/provider/dashboard/shop/add_cart_calculator_provider.dart';
 import '../../../logic/provider/dashboard/shop/shop_api_provider.dart';
+import '../../../logic/provider/dashboard/wishlist/wishlist_api_provider.dart';
 import '../../../logic/services/formatter.dart';
 import '../../../widgets/custom_button.dart';
 import '../../../widgets/custom_paragraph.dart';
@@ -69,18 +72,43 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   ),
                   (route) => false);
             },
-            child: Badge(
-              label: Text(
-                "__",
-                style: AppTextStyles.bodyBlack12,
-              ),
-              backgroundColor: Colors.white,
-              child: const Icon(
-                CupertinoIcons.cart,
-                color: Colors.white,
-              ),
+            child: Consumer<DashboardApiProvider>(
+              builder: (BuildContext context,
+                  DashboardApiProvider dashboardProvider, Widget? child) {
+                var cartCountData = dashboardProvider.cartCountModel?.cartCount;
+                var cartCountModel = dashboardProvider.cartCountModel;
+                return dashboardProvider.cartCountLoading
+                    ? Shimmer.fromColors(
+                        baseColor: AppColors.grey300,
+                        highlightColor: AppColors.grey100,
+                        child: Badge(
+                          label: Text(
+                            "__",
+                            style: AppTextStyles.bodyBlack12,
+                          ),
+                          backgroundColor: Colors.white,
+                          child: const Icon(
+                            CupertinoIcons.cart,
+                            color: Colors.white,
+                          ),
+                        ),
+                      )
+                    : cartCountModel != null && cartCountData != null
+                        ? Badge(
+                            label: Text(
+                              cartCountData.toString(),
+                              style: AppTextStyles.bodyBlack12,
+                            ),
+                            backgroundColor: Colors.white,
+                            child: const Icon(
+                              CupertinoIcons.cart,
+                              color: Colors.white,
+                            ),
+                          )
+                        : const SizedBox();
+              },
             ),
-          ),
+          ).animate().fadeIn(duration: 500.ms),
           16.pw,
         ],
       ),
@@ -178,7 +206,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                     3.ph,
                                     Text(
                                       productDetailsData.retailTonAmount != null
-                                          ? "Price : ${Formatter.formatPrice(int.parse(productDetailsData.retailTonAmount!))} / Ton"
+                                          ? "Price : ${Formatter.formatPrice(num.parse(productDetailsData.retailTonAmount!))} / Ton"
                                           : "N/A",
                                       style: AppTextStyles.bodyBlack14.copyWith(
                                           fontWeight: FontWeight.w600),
@@ -187,14 +215,60 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                     Text(
                                       productDetailsData.wholeSaleTonAmount !=
                                               null
-                                          ? "Whole Sale Price : ${Formatter.formatPrice(int.parse(productDetailsData.wholeSaleTonAmount!))} / Ton"
+                                          ? "Whole Sale Price : ${Formatter.formatPrice(num.parse(productDetailsData.wholeSaleTonAmount!))} / Ton"
                                           : "N/A",
                                       style: AppTextStyles.bodyBlack14.copyWith(
                                           fontWeight: FontWeight.w600),
                                     ),
                                   ],
                                 )),
-                                const Icon(CupertinoIcons.heart)
+                                Consumer<WishlistApiProvider>(
+                                  builder: (BuildContext context,
+                                      WishlistApiProvider wishProvider,
+                                      Widget? child) {
+                                    return wishProvider.addRemoveWishListLoading
+                                        ? const SizedBox()
+                                        : InkWell(
+                                            onTap: () {
+                                              if (productDetailsModel
+                                                      .wishlistStatus ==
+                                                  0) {
+                                                wishProvider
+                                                    .addRemoveWishListApi(
+                                                        from: AppStrings
+                                                            .fromProductDetails,
+                                                        productId:
+                                                            productDetailsData
+                                                                .id!,
+                                                        wishStatus: "0",
+                                                        context: context);
+                                              } else {
+                                                wishProvider
+                                                    .addRemoveWishListApi(
+                                                        from: AppStrings
+                                                            .fromProductDetails,
+                                                        productId:
+                                                            productDetailsData
+                                                                .id!,
+                                                        wishStatus: "1",
+                                                        context: context);
+                                              }
+                                            },
+                                            child: productDetailsModel
+                                                            .wishlistStatus !=
+                                                        null &&
+                                                    productDetailsModel
+                                                            .wishlistStatus ==
+                                                        1
+                                                ? const Icon(
+                                                    CupertinoIcons.heart_fill,
+                                                    color: Colors.red,
+                                                  )
+                                                : const Icon(
+                                                    CupertinoIcons.heart),
+                                          );
+                                  },
+                                )
                               ],
                             ),
                           // packaging size

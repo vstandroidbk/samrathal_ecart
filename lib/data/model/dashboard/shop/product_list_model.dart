@@ -30,14 +30,17 @@ class ProductListData {
   String? productName;
   String? sku;
   String? image;
+  num? wishListStatus;
 
-  ProductListData({this.id, this.productName, this.sku, this.image});
+  ProductListData(
+      {this.id, this.productName, this.sku, this.image, this.wishListStatus});
 
   ProductListData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     productName = json['product_name'];
     sku = json['sku'];
     image = json['image'];
+    wishListStatus = json['wishlist_status'];
   }
 
   Map<String, dynamic> toJson() {
@@ -46,6 +49,7 @@ class ProductListData {
     data['product_name'] = productName;
     data['sku'] = sku;
     data['image'] = image;
+    data['wishlist_status'] = wishListStatus;
     return data;
   }
 }

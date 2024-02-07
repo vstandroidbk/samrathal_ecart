@@ -19,7 +19,7 @@ class OrderScreen extends StatefulWidget {
 }
 
 class _OrderScreenState extends State<OrderScreen> {
-  String dropdownValue = "all";
+  ValueNotifier<String?> orderStatus = ValueNotifier("ALL");
 
   @override
   void initState() {
@@ -31,7 +31,7 @@ class _OrderScreenState extends State<OrderScreen> {
     var dataProvider = Provider.of<OrderApiProvider>(context, listen: false);
     dataProvider.resetOrderHistoryListData();
     dataProvider.setOrderListNull();
-    await dataProvider.getOrderListData(isRefresh);
+    await dataProvider.getOrderListData(isRefresh, orderStatus.value!);
   }
 
   @override
@@ -43,59 +43,63 @@ class _OrderScreenState extends State<OrderScreen> {
                 duration: 500.ms,
               ),
           actions: [
-            Container(
-              height: 35,
-              width: 150,
-              padding: const EdgeInsets.only(left: 5, right: 5),
-              child: DropdownButtonHideUnderline(
-                child: ButtonTheme(
-                  alignedDropdown: true,
-                  child: DropdownButton<String>(
-                    value: dropdownValue,
-                    isExpanded: true,
-                    isDense: true,
-                    style: AppTextStyles.bodyBlack14,
-                    icon: Padding(
-                      padding: const EdgeInsets.only(left: 8),
-                      child: Image.asset(
-                        AppImages.filterImg,
-                        height: 18,
-                        width: 18,
-                        color: Colors.white,
+            ValueListenableBuilder(
+              valueListenable: orderStatus,
+              builder: (BuildContext context, value, Widget? child) {
+                return Container(
+                  height: 35,
+                  width: 150,
+                  padding: const EdgeInsets.only(left: 5, right: 5),
+                  child: DropdownButtonHideUnderline(
+                    child: ButtonTheme(
+                      alignedDropdown: true,
+                      child: DropdownButton<String>(
+                        value: orderStatus.value,
+                        isExpanded: true,
+                        isDense: true,
+                        style: AppTextStyles.bodyBlack14,
+                        icon: Padding(
+                          padding: const EdgeInsets.only(left: 8),
+                          child: Image.asset(
+                            AppImages.filterImg,
+                            height: 18,
+                            width: 18,
+                            color: Colors.white,
+                          ),
+                        ),
+                        onChanged: (onChangedValue) async {
+                          orderStatus.value = onChangedValue;
+                          await callApi(true);
+                        },
+                        selectedItemBuilder: (BuildContext context) {
+                          return orderStatusList.map((value) {
+                            return Center(
+                              child: Text(
+                                value["status"],
+                                style: AppTextStyles.bodyWhite14,
+                              ),
+                            );
+                          }).toList();
+                        },
+                        items: orderStatusList.map(
+                          (item) {
+                            return DropdownMenuItem(
+                              value: item["id"].toString(),
+                              child: Text(
+                                item["status"].toString(),
+                                style: AppTextStyles.bodyBlack14,
+                              ),
+                            );
+                          },
+                        ).toList(),
                       ),
                     ),
-                    onChanged: (onChangedValue) async {
-                      setState(() {
-                        dropdownValue = onChangedValue!;
-                      });
-                    },
-                    selectedItemBuilder: (BuildContext context) {
-                      return dropDownList.map((value) {
-                        return Center(
-                          child: Text(
-                            value["status"],
-                            style: AppTextStyles.bodyWhite14,
-                          ),
-                        );
-                      }).toList();
-                    },
-                    items: dropDownList.map(
-                      (item) {
-                        return DropdownMenuItem(
-                          value: item["id"].toString(),
-                          child: Text(
-                            item["status"].toString(),
-                            style: AppTextStyles.bodyBlack14,
-                          ),
-                        );
-                      },
-                    ).toList(),
                   ),
-                ),
-              ),
-            ).animate().fadeIn(
-                  duration: 500.ms,
-                ),
+                ).animate().fadeIn(
+                      duration: 500.ms,
+                    );
+              },
+            ),
             12.pw
           ],
         ),
@@ -107,13 +111,13 @@ class _OrderScreenState extends State<OrderScreen> {
               enablePullUp: true,
               enablePullDown: true,
               onRefresh: () async {
-                productListProvider.resetOrderHistoryListData();
+                // productListProvider.resetOrderHistoryListData();
                 await callApi(true);
               },
               onLoading: () async {
                 var dataProvider =
                     Provider.of<OrderApiProvider>(context, listen: false);
-                await dataProvider.getOrderListData(false);
+                await dataProvider.getOrderListData(false, orderStatus.value!);
               },
               child: productListProvider.orderListLoading
                   ? const OrderListShimmer()

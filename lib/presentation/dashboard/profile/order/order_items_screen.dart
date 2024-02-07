@@ -237,6 +237,37 @@ class _OrderItemsScreenState extends State<OrderItemsScreen> {
                                         )
                                       ],
                                     ),
+                                    if (orderData.settlementPriceType == "1")
+                                      5.ph,
+                                    if (orderData.settlementPriceType == "1")
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Flexible(
+                                            child: Text(
+                                              "SettlementPrice Total",
+                                              style: AppTextStyles.bodyBlack14
+                                                  .copyWith(
+                                                      color:
+                                                          AppColors.blackColor,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                            ),
+                                          ),
+                                          8.pw,
+                                          Text(
+                                            Formatter.formatPrice(num.parse(
+                                                orderData.settlementPrice!)),
+                                            style: AppTextStyles.bodyBlack14
+                                                .copyWith(
+                                                    color:
+                                                        AppColors.primaryColor,
+                                                    fontWeight:
+                                                        FontWeight.w600),
+                                          )
+                                        ],
+                                      ),
                                   ],
                                 ),
                               ).animate().slideX(

@@ -1,7 +1,8 @@
 class OrderPaymentListModel {
   List<PaymentList>? paymentList;
+  bool? finalPaymentStatus;
 
-  OrderPaymentListModel({this.paymentList});
+  OrderPaymentListModel({this.paymentList, this.finalPaymentStatus});
 
   OrderPaymentListModel.fromJson(Map<String, dynamic> json) {
     if (json['paymentList'] != null) {
@@ -10,6 +11,7 @@ class OrderPaymentListModel {
         paymentList!.add(PaymentList.fromJson(v));
       });
     }
+    finalPaymentStatus = json['final_payment_status'];
   }
 
   Map<String, dynamic> toJson() {
@@ -17,6 +19,7 @@ class OrderPaymentListModel {
     if (paymentList != null) {
       data['paymentList'] = paymentList!.map((v) => v.toJson()).toList();
     }
+    data['final_payment_status'] = finalPaymentStatus;
     return data;
   }
 }
@@ -25,15 +28,16 @@ class PaymentList {
   String? id;
   String? orderId;
   dynamic orderNumber;
-  int? paymentType;
+  dynamic paymentType;
   String? bankName;
   String? accountNumber;
   String? upiId;
   String? qrCodeImage;
-  String? payAmount;
+  dynamic payAmount;
   String? paymentDate;
   String? orderToken;
-  bool? paymentStatus;
+  int? paymentStatus;
+  int? paymentMethod;
   int? orderStatus;
 
   PaymentList(
@@ -49,6 +53,7 @@ class PaymentList {
       this.paymentDate,
       this.orderToken,
       this.paymentStatus,
+      this.paymentMethod,
       this.orderStatus});
 
   PaymentList.fromJson(Map<String, dynamic> json) {
@@ -64,6 +69,7 @@ class PaymentList {
     paymentDate = json['payment_date'];
     orderToken = json['order_token'];
     paymentStatus = json['payment_status'];
+    paymentMethod = json['payment_method'];
     orderStatus = json['order_status'];
   }
 
@@ -81,6 +87,7 @@ class PaymentList {
     data['payment_date'] = paymentDate;
     data['order_token'] = orderToken;
     data['payment_status'] = paymentStatus;
+    data['payment_method'] = paymentMethod;
     data['order_status'] = orderStatus;
     return data;
   }

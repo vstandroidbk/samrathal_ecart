@@ -43,11 +43,12 @@ class Utils {
   }
 }
 
+// OrderStatus:
 // 1:Placed
 // 2:Approved
 // 3:Shipped
-// 4:Delivered
-// 5:Received
+// 4:Received
+// 5:Delivered
 // 6:Completed
 
 String getStatus(int status) {
@@ -59,9 +60,9 @@ String getStatus(int status) {
     case 3:
       return "Order Shipped";
     case 4:
-      return "Order Delivered";
-    case 5:
       return "Order Received";
+    case 5:
+      return "Order Delivered";
     case 6:
       return "Order Completed";
     default:
@@ -78,9 +79,9 @@ Color getStatusColor(int status) {
     case 3:
       return Colors.amber;
     case 4:
-      return Colors.blue;
-    case 5:
       return Colors.indigo;
+    case 5:
+      return Colors.blue;
     case 6:
       return Colors.green;
     default:
@@ -108,22 +109,22 @@ String? findCityIdByName(List<DistrictData>? stateData, String stateName) {
   }
 }
 
-List<List<int>> getSplitList(String inputString) {
+List<List<num>> getSplitList(String inputString) {
   // String inputString = '1-5-1,2-10-2,3-25-1,4-268-2';
   var splitVal = inputString.split(",");
   log("split comma val$splitVal");
-  List<List<int>> resultList = [];
+  List<List<num>> resultList = [];
 
   for (String pair in splitVal) {
-    List<int> values =
-        pair.split('-').map((value) => int.parse(value)).toList();
+    List<num> values =
+        pair.split('-').map((value) => num.parse(value)).toList();
     resultList.add(values);
   }
   log("final list $resultList");
   return resultList;
 }
 
-String getKgVal(List<int> size) {
+String getKgVal(List<num> size) {
   if (size[0] == 1) {
     return "5 Kg";
   } else if (size[0] == 2) {
@@ -136,7 +137,20 @@ String getKgVal(List<int> size) {
   return "";
 }
 
-String getPcsFromTonKg(List<int> size) {
+String getRandomPcsFromTonKg(List<num> size) {
+  if (size[2] == 1) {
+    if (size[0] == 4) {
+      return "${size[3]} Ton";
+    }
+  } else {
+    if (size[0] == 4) {
+      return "${size[3]} Kg";
+    }
+  }
+  return "";
+}
+
+String getPcsFromTonKg(List<num> size) {
   if (size[2] == 1) {
     var qty = size[1] * 1000;
     if (size[0] == 1) {
@@ -182,7 +196,7 @@ num getCartTotalAmount(List<CartData> cartData) {
   return cartTotalAmount;
 }
 
-num getTotalAmount(List<List<int>> resultList, ProductData productData) {
+num getTotalAmount(List<List<num>> resultList, ProductData productData) {
   var retailPrice = num.parse(productData.retailTonAmount!);
   var wholePrice = num.parse(productData.wholeSaleTonAmount!);
   var minWholeSaleTon = productData.wholeSaleTonMinQty!;
@@ -210,7 +224,7 @@ num getTotalAmount(List<List<int>> resultList, ProductData productData) {
   return totalPrice;
 }
 
-num getTotalItemAmount(List<List<int>> resultList, OrderItemData productData) {
+num getTotalItemAmount(List<List<num>> resultList, OrderItemData productData) {
   var retailPrice = num.parse(productData.retailTonAmount!);
   var wholePrice = num.parse(productData.wholeSaleTonAmount!);
   var minWholeSaleTon = num.parse(productData.wholeSaleTonMinQty!);
@@ -221,6 +235,42 @@ num getTotalItemAmount(List<List<int>> resultList, OrderItemData productData) {
       totalQty = totalQty += (size[1] * 1000);
     } else {
       totalQty = totalQty += size[1];
+    }
+  }
+  num qtyInTon = totalQty / 1000;
+  if (qtyInTon >= minWholeSaleTon) {
+    totalPrice = wholePrice * qtyInTon;
+  } else {
+    totalPrice = retailPrice * qtyInTon;
+  }
+  if (kDebugMode) {
+    print("total quantity ${totalQty / 1000}");
+  }
+  if (kDebugMode) {
+    print("total price ${totalQty / 1000}");
+  }
+  return totalPrice;
+}
+
+num getRandomItemAmount(List<List<num>> resultList, OrderItemData productData) {
+  var retailPrice = num.parse(productData.retailTonAmount!);
+  var wholePrice = num.parse(productData.wholeSaleTonAmount!);
+  var minWholeSaleTon = num.parse(productData.wholeSaleTonMinQty!);
+  num totalQty = 0;
+  num totalPrice = 0;
+  for (var size in resultList) {
+    if (size[2] == 1) {
+      if (size[4] == 1) {
+        totalQty = totalQty += (size[3] * 1000);
+      } else {
+        totalQty = totalQty += (size[1] * 1000);
+      }
+    } else {
+      if (size[4] == 1) {
+        totalQty = totalQty += size[3];
+      } else {
+        totalQty = totalQty += size[1];
+      }
     }
   }
   num qtyInTon = totalQty / 1000;
@@ -250,6 +300,7 @@ String getPaymentTypeText(int paymentType, PaymentList paymentList) {
   }
   return "";
 }
+
 // num getGrandTotalAmt(List<List<int>> resultList, num shippingCharge) {
 //   var grandTotal = getTotalAmount(resultList) + shippingCharge;
 //   return grandTotal;

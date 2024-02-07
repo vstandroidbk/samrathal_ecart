@@ -79,7 +79,7 @@ class UpdateCartCalculatorProvider with ChangeNotifier {
       totalOrderPrice = Formatter.formatPrice(totalPrice);
       var remainingQty = minWholeSaleTon * 1000 - totalQty;
       addMoreMessage =
-          "If you will add ${remainingQty / 1000} Ton more then you will get it at $wholePrice/Ton";
+          "If you will add ${(remainingQty / 1000).toStringAsFixed(3)} Ton more then you will get it at $wholePrice/Ton";
     } else {
       num qtyInTon = totalQty / 1000;
       totalOrderQty = "$qtyInTon Ton";
@@ -92,7 +92,7 @@ class UpdateCartCalculatorProvider with ChangeNotifier {
         totalOrderPrice = Formatter.formatPrice(totalPrice);
         var remainingQty = minWholeSaleTon * 1000 - totalQty;
         addMoreMessage =
-            "If you will add ${remainingQty / 1000} Ton more then you will get it at $wholePrice/Ton";
+            "If you will add ${(remainingQty / 1000).toStringAsFixed(3)} Ton more then you will get it at $wholePrice/Ton";
       }
     }
     /*if (productDetails.wholeSaleTonAmount != null &&
@@ -136,26 +136,26 @@ class UpdateCartCalculatorProvider with ChangeNotifier {
     if (textFieldController5.text.trim().isNotEmpty) {
       addCartList.add(AddCartData(
           size: 1,
-          qty: int.parse(textFieldController5.text),
+          qty: num.parse(textFieldController5.text),
           weight: int.parse(dropdownValueFive)));
     }
 
     if (textFieldController10.text.trim().isNotEmpty) {
       addCartList.add(AddCartData(
           size: 2,
-          qty: int.parse(textFieldController10.text),
+          qty: num.parse(textFieldController10.text),
           weight: int.parse(dropdownValueTen)));
     }
     if (textFieldController25.text.trim().isNotEmpty) {
       addCartList.add(AddCartData(
           size: 3,
-          qty: int.parse(textFieldController25.text),
+          qty: num.parse(textFieldController25.text),
           weight: int.parse(dropdownValueTwentyFive)));
     }
     if (randomQtyController.text.trim().isNotEmpty) {
       addCartList.add(AddCartData(
           size: 4,
-          qty: int.parse(randomQtyController.text),
+          qty: num.parse(randomQtyController.text),
           weight: int.parse(dropdownValueRandom)));
     }
     log("selected cart data array: $addCartList");
@@ -191,7 +191,7 @@ class UpdateCartCalculatorProvider with ChangeNotifier {
 
 class AddCartData {
   int size;
-  int qty;
+  num qty;
   int weight;
 
   AddCartData({required this.size, required this.qty, required this.weight});

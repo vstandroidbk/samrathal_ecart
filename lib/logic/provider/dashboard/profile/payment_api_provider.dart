@@ -185,7 +185,8 @@ class PaymentApiProvider with ChangeNotifier {
     orderPaymentListObj.clear();
   }
 
-  Future<void> getOrderPaymentListData(bool isRefresh) async {
+  Future<void> getOrderPaymentListData(
+      bool isRefresh, String paymentStatus) async {
     // set isLoading to true to show the loader
     bool isOnline = await Api.hasNetwork();
     if (!isOnline) {
@@ -197,8 +198,10 @@ class PaymentApiProvider with ChangeNotifier {
     }
     // Make the API call
     try {
-      OrderPaymentListModel? orderPaymentListModel = await _paymentRepository
-          .getOrderPaymentListData(offSetVal: orderPaymentListCurrentPage);
+      OrderPaymentListModel? orderPaymentListModel =
+          await _paymentRepository.getOrderPaymentListData(
+              offSetVal: orderPaymentListCurrentPage,
+              paymentStatus: paymentStatus);
       log("api get order PaymentList list success ${orderPaymentListModel?.paymentList}");
       if (orderPaymentListModel != null &&
           orderPaymentListModel.paymentList != null) {

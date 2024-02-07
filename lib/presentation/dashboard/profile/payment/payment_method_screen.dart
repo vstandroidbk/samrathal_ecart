@@ -15,13 +15,17 @@ class PaymentMethodScreen extends StatefulWidget {
   final String? addressId;
   final String? orderId;
   final String? orderToken;
+  final num? distance;
+  final num? shippingCharge;
 
   const PaymentMethodScreen(
       {super.key,
       required this.screenType,
       this.addressId,
       this.orderId,
-      this.orderToken});
+      this.orderToken,
+      this.distance,
+      this.shippingCharge});
 
   @override
   State<PaymentMethodScreen> createState() => _PaymentMethodScreenState();
@@ -88,18 +92,24 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen>
                       addressId: widget.addressId,
                       orderId: widget.orderId,
                       orderToken: widget.orderToken,
+                      distance: widget.distance,
+                      shippingCharge: widget.shippingCharge,
                     ),
                     UpiPage(
                       screenType: widget.screenType,
                       addressId: widget.addressId,
                       orderId: widget.orderId,
                       orderToken: widget.orderToken,
+                      distance: widget.distance,
+                      shippingCharge: widget.shippingCharge,
                     ),
                     QrPage(
                       screenType: widget.screenType,
                       addressId: widget.addressId,
                       orderId: widget.orderId,
                       orderToken: widget.orderToken,
+                      distance: widget.distance,
+                      shippingCharge: widget.shippingCharge,
                     )
                   ],
                 );

@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:samrathal_ecart/core/app_colors.dart';
 import 'package:samrathal_ecart/utils/app_utils.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../../core/app_strings.dart';
 import '../../../core/app_text_styles.dart';
 import '../../../logic/provider/dashboard/dashboard_api_provider.dart';
@@ -36,7 +38,9 @@ class _HomeTabPageState extends State<HomeTabPage> {
     var dataProvider =
         Provider.of<DashboardApiProvider>(context, listen: false);
     dataProvider.setDashboardDataNull();
+    dataProvider.setCartCountDataNull();
     await dataProvider.getDashboardDataApi();
+    await dataProvider.getCartCount();
     _refreshController.refreshCompleted();
   }
 
@@ -54,10 +58,27 @@ class _HomeTabPageState extends State<HomeTabPage> {
           ],
         ),
         actions: [
-          Text(
-            "total orders __",
-            style: AppTextStyles.bodyWhite14,
-          ).animate().fadeIn(duration: 500.ms),
+          Consumer<DashboardApiProvider>(
+            builder: (BuildContext context,
+                DashboardApiProvider dashboardProvider, Widget? child) {
+              var dashboardModel = dashboardProvider.dashboardDataModel;
+              var orderCount =
+                  dashboardProvider.dashboardDataModel?.totalOrderCount;
+              return dashboardModel != null && orderCount != null
+                  ? Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.white, width: 1),
+                      ),
+                      child: Text(
+                        "Total orders $orderCount",
+                        style: AppTextStyles.bodyWhite14,
+                      ).animate().fadeIn(duration: 500.ms),
+                    )
+                  : const SizedBox();
+            },
+          ),
           8.pw,
           InkWell(
             onTap: () {
@@ -68,16 +89,41 @@ class _HomeTabPageState extends State<HomeTabPage> {
                   ),
                   (route) => false);
             },
-            child: Badge(
-              label: Text(
-                "__",
-                style: AppTextStyles.bodyBlack12,
-              ),
-              backgroundColor: Colors.white,
-              child: const Icon(
-                CupertinoIcons.cart,
-                color: Colors.white,
-              ),
+            child: Consumer<DashboardApiProvider>(
+              builder: (BuildContext context,
+                  DashboardApiProvider dashboardProvider, Widget? child) {
+                var cartCountData = dashboardProvider.cartCountModel?.cartCount;
+                var cartCountModel = dashboardProvider.cartCountModel;
+                return dashboardProvider.cartCountLoading
+                    ? Shimmer.fromColors(
+                        baseColor: AppColors.grey300,
+                        highlightColor: AppColors.grey100,
+                        child: Badge(
+                          label: Text(
+                            "__",
+                            style: AppTextStyles.bodyBlack12,
+                          ),
+                          backgroundColor: Colors.white,
+                          child: const Icon(
+                            CupertinoIcons.cart,
+                            color: Colors.white,
+                          ),
+                        ),
+                      )
+                    : cartCountModel != null && cartCountData != null
+                        ? Badge(
+                            label: Text(
+                              cartCountData.toString(),
+                              style: AppTextStyles.bodyBlack12,
+                            ),
+                            backgroundColor: Colors.white,
+                            child: const Icon(
+                              CupertinoIcons.cart,
+                              color: Colors.white,
+                            ),
+                          )
+                        : const SizedBox();
+              },
             ),
           ).animate().fadeIn(duration: 500.ms),
           16.pw,
@@ -115,13 +161,21 @@ class _HomeTabPageState extends State<HomeTabPage> {
                                   begin: const Offset(1, 0),
                                 ),
                           12.ph,
-                          HomeLabelWidget(labelName: AppStrings.offersTxt)
-                              .animate()
-                              .slide(
-                                duration: 500.ms,
-                                begin: const Offset(-1, 0),
-                              ),
-                          5.ph,
+                          if (dashboardModel != null &&
+                              offerData != null &&
+                              offerData.isNotEmpty &&
+                              dashboardModel.offerImagePath != null)
+                            HomeLabelWidget(labelName: AppStrings.offersTxt)
+                                .animate()
+                                .slide(
+                                  duration: 500.ms,
+                                  begin: const Offset(-1, 0),
+                                ),
+                          if (dashboardModel != null &&
+                              offerData != null &&
+                              offerData.isNotEmpty &&
+                              dashboardModel.offerImagePath != null)
+                            5.ph,
                           if (dashboardModel != null &&
                               offerData != null &&
                               offerData.isNotEmpty &&

@@ -38,6 +38,7 @@ class _PaymentDetailsScreenState extends State<PaymentDetailsScreen> {
     dataProvider.setOrderPaymentDetailsNull();
     await dataProvider.getOrderPaymentDetailsData(
         paymentId: widget.orderPaymentId);
+    _refreshController.refreshCompleted();
   }
 
   @override
@@ -70,143 +71,156 @@ class _PaymentDetailsScreenState extends State<PaymentDetailsScreen> {
                   )
                 : paymentDetailsModel != null && paymentDetailsData != null
                     ? Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 8),
+                        child: Card(
+                          surfaceTintColor: Colors.white,
+                          elevation: 1,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 12),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Expanded(
-                                  child: Text(
-                                    "Payment Screenshot",
-                                    style: AppTextStyles.bodyBlack14
-                                        .copyWith(fontWeight: FontWeight.w500),
-                                  ),
-                                ),
-                                if (paymentImgPath != null &&
-                                    paymentDetailsData.paymentImage != null)
-                                  InkWell(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        FadeAnimatingRoute(
-                                          route: PhotoViewScreen(
-                                              imgUrl: ApiEndPoints.baseUrl +
-                                                  paymentImgPath +
-                                                  paymentDetailsData
-                                                      .paymentImage!),
-                                        ),
-                                      );
-                                    },
-                                    child: CachedNetworkImage(
-                                      imageUrl: ApiEndPoints.baseUrl +
-                                          paymentImgPath +
-                                          paymentDetailsData.paymentImage!,
-                                      fit: BoxFit.fill,
-                                      height: 30,
-                                      width: 30,
-                                      placeholder: (context, url) =>
-                                          const SizedBox(),
-                                      errorWidget: (context, url, error) =>
-                                          const Icon(Icons.error),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        "Payment Screenshot",
+                                        style: AppTextStyles.bodyBlack14
+                                            .copyWith(
+                                                fontWeight: FontWeight.w500),
+                                      ),
                                     ),
-                                  ),
-                              ],
-                            ),
-                            5.ph,
-                            PaymentDetailsItems(
-                                title: "Paid Amount",
-                                desc: Formatter.formatPrice(
-                                    num.parse(paymentDetailsData.payAmount!))),
-                            if (paymentDetailsData.paymentType == 1)
-                              Column(
-                                children: [
-                                  5.ph,
-                                  PaymentDetailsItems(
-                                      title: AppStrings.bankNameTxt,
-                                      desc: paymentDetailsData.bankName!),
-                                  5.ph,
-                                  PaymentDetailsItems(
-                                      title: AppStrings.acNumberTxt,
-                                      desc: paymentDetailsData.accountNumber!),
-                                  5.ph,
-                                  PaymentDetailsItems(
-                                      title: AppStrings.acHolderName,
-                                      desc: paymentDetailsData.holderName!),
-                                  5.ph,
-                                  PaymentDetailsItems(
-                                      title: AppStrings.ifscCodeTxt,
-                                      desc: paymentDetailsData.ifscCode!),
-                                  5.ph,
-                                  PaymentDetailsItems(
-                                      title: AppStrings.micrCodeTxt,
-                                      desc: paymentDetailsData.micrCode!),
-                                  5.ph,
-                                  PaymentDetailsItems(
-                                      title: AppStrings.branchNameTxt,
-                                      desc: paymentDetailsData.branch!),
-                                ],
-                              ),
-                            if (paymentDetailsData.paymentType == 2)
-                              Column(
-                                children: [
-                                  5.ph,
-                                  PaymentDetailsItems(
-                                      title: AppStrings.upiTxt,
-                                      desc: paymentDetailsData.upiId!),
-                                ],
-                              ),
-                            if (paymentDetailsData.paymentType == 3)
-                              Column(
-                                children: [
-                                  5.ph,
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: Text(
-                                          "Payment Via QR",
-                                          style: AppTextStyles.bodyBlack14
-                                              .copyWith(
-                                                  fontWeight: FontWeight.w500),
+                                    if (paymentImgPath != null &&
+                                        paymentDetailsData.paymentImage != null)
+                                      InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            FadeAnimatingRoute(
+                                              route: PhotoViewScreen(
+                                                  imgUrl: ApiEndPoints.baseUrl +
+                                                      paymentImgPath +
+                                                      paymentDetailsData
+                                                          .paymentImage!),
+                                            ),
+                                          );
+                                        },
+                                        child: CachedNetworkImage(
+                                          imageUrl: ApiEndPoints.baseUrl +
+                                              paymentImgPath +
+                                              paymentDetailsData.paymentImage!,
+                                          fit: BoxFit.fill,
+                                          height: 30,
+                                          width: 30,
+                                          placeholder: (context, url) =>
+                                              const SizedBox(),
+                                          errorWidget: (context, url, error) =>
+                                              const Icon(Icons.error),
                                         ),
                                       ),
-                                      if (qrImgPath != null &&
-                                          paymentDetailsData.qrCodeImage !=
-                                              null)
-                                        InkWell(
-                                          onTap: () {
-                                            Navigator.push(
-                                              context,
-                                              FadeAnimatingRoute(
-                                                route:
-                                                    PhotoViewScreen(
+                                  ],
+                                ),
+                                5.ph,
+                                PaymentDetailsItems(
+                                    title: "Paid Amount",
+                                    desc: Formatter.formatPrice(num.parse(
+                                        paymentDetailsData.payAmount!))),
+                                if (paymentDetailsData.paymentType == 1)
+                                  Column(
+                                    children: [
+                                      5.ph,
+                                      PaymentDetailsItems(
+                                          title: AppStrings.bankNameTxt,
+                                          desc: paymentDetailsData.bankName!),
+                                      5.ph,
+                                      PaymentDetailsItems(
+                                          title: AppStrings.acNumberTxt,
+                                          desc: paymentDetailsData
+                                              .accountNumber!),
+                                      5.ph,
+                                      PaymentDetailsItems(
+                                          title: AppStrings.acHolderName,
+                                          desc: paymentDetailsData.holderName!),
+                                      5.ph,
+                                      PaymentDetailsItems(
+                                          title: AppStrings.ifscCodeTxt,
+                                          desc: paymentDetailsData.ifscCode!),
+                                      5.ph,
+                                      PaymentDetailsItems(
+                                          title: AppStrings.micrCodeTxt,
+                                          desc: paymentDetailsData.micrCode!),
+                                      5.ph,
+                                      PaymentDetailsItems(
+                                          title: AppStrings.branchNameTxt,
+                                          desc: paymentDetailsData.branch!),
+                                    ],
+                                  ),
+                                if (paymentDetailsData.paymentType == 2)
+                                  Column(
+                                    children: [
+                                      5.ph,
+                                      PaymentDetailsItems(
+                                          title: AppStrings.upiTxt,
+                                          desc: paymentDetailsData.upiId!),
+                                    ],
+                                  ),
+                                if (paymentDetailsData.paymentType == 3)
+                                  Column(
+                                    children: [
+                                      5.ph,
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              "Payment Via QR",
+                                              style: AppTextStyles.bodyBlack14
+                                                  .copyWith(
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                            ),
+                                          ),
+                                          if (qrImgPath != null &&
+                                              paymentDetailsData.qrCodeImage !=
+                                                  null)
+                                            InkWell(
+                                              onTap: () {
+                                                Navigator.push(
+                                                  context,
+                                                  FadeAnimatingRoute(
+                                                    route: PhotoViewScreen(
                                                         imgUrl: ApiEndPoints
                                                                 .baseUrl +
                                                             qrImgPath +
                                                             paymentDetailsData
                                                                 .qrCodeImage!),
+                                                  ),
+                                                );
+                                              },
+                                              child: CachedNetworkImage(
+                                                imageUrl: ApiEndPoints.baseUrl +
+                                                    qrImgPath +
+                                                    paymentDetailsData
+                                                        .qrCodeImage!,
+                                                fit: BoxFit.fill,
+                                                height: 30,
+                                                width: 30,
+                                                placeholder: (context, url) =>
+                                                    const SizedBox(),
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        const Icon(Icons.error),
                                               ),
-                                            );
-                                          },
-                                          child: CachedNetworkImage(
-                                            imageUrl: ApiEndPoints.baseUrl +
-                                                qrImgPath +
-                                                paymentDetailsData.qrCodeImage!,
-                                            fit: BoxFit.fill,
-                                            height: 30,
-                                            width: 30,
-                                            placeholder: (context, url) =>
-                                                const SizedBox(),
-                                            errorWidget:
-                                                (context, url, error) =>
-                                                    const Icon(Icons.error),
-                                          ),
-                                        ),
+                                            ),
+                                        ],
+                                      ),
                                     ],
-                                  ),
-                                ],
-                              )
-                          ],
+                                  )
+                              ],
+                            ),
+                          ),
                         ),
                       )
                     : const SizedBox();

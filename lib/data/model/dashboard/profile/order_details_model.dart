@@ -36,6 +36,9 @@ class GetOrderDetailsData {
   String? pincode;
   String? address;
   String? landmark;
+  String? settlementPrice;
+  String? settlementPriceType;
+  bool? finalPaymentStatus;
 
   GetOrderDetailsData(
       {this.orderStatus,
@@ -54,7 +57,10 @@ class GetOrderDetailsData {
       this.cityName,
       this.pincode,
       this.address,
-      this.landmark});
+      this.settlementPrice,
+      this.settlementPriceType,
+      this.landmark,
+      this.finalPaymentStatus});
 
   GetOrderDetailsData.fromJson(Map<String, dynamic> json) {
     orderStatus = json['order_status'];
@@ -74,6 +80,9 @@ class GetOrderDetailsData {
     pincode = json['pincode'];
     address = json['address'];
     landmark = json['landmark'];
+    settlementPrice = json['settlement_price'];
+    settlementPriceType = json['settlement_price_type'];
+    finalPaymentStatus = json['final_payment_status'];
   }
 
   Map<String, dynamic> toJson() {
@@ -95,6 +104,9 @@ class GetOrderDetailsData {
     data['pincode'] = pincode;
     data['address'] = address;
     data['landmark'] = landmark;
+    data['settlement_price'] = settlementPrice;
+    data['settlement_price_type'] = settlementPriceType;
+    data['final_payment_status'] = finalPaymentStatus;
     return data;
   }
 }

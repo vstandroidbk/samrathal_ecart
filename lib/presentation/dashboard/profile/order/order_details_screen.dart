@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:samrathal_ecart/presentation/dashboard/profile/order/order_payment_history_screen.dart';
 import 'package:samrathal_ecart/presentation/dashboard/profile/order/widget/order_details_shimmer.dart';
 import 'package:samrathal_ecart/utils/app_utils.dart';
-
 import '../../../../core/app_colors.dart';
 import '../../../../core/app_images.dart';
 import '../../../../core/app_strings.dart';
@@ -15,7 +15,6 @@ import '../../../../logic/services/preferences.dart';
 import '../../../../widgets/custom_button.dart';
 import '../../../../widgets/loader_widget.dart';
 import '../../../../widgets/navigate_anim.dart';
-import '../payment/payment_method_screen.dart';
 import 'order_items_screen.dart';
 import 'widget/order_status_widget.dart';
 
@@ -245,6 +244,37 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                                         )
                                       ],
                                     ),
+                                    if (orderData.settlementPriceType == "1")
+                                      5.ph,
+                                    if (orderData.settlementPriceType == "1")
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Flexible(
+                                            child: Text(
+                                              "Settled Price",
+                                              style: AppTextStyles.bodyBlack14
+                                                  .copyWith(
+                                                      color:
+                                                          AppColors.blackColor,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                            ),
+                                          ),
+                                          8.pw,
+                                          Text(
+                                            Formatter.formatPrice(num.parse(
+                                                orderData.settlementPrice!)),
+                                            style: AppTextStyles.bodyBlack14
+                                                .copyWith(
+                                                    color:
+                                                        AppColors.primaryColor,
+                                                    fontWeight:
+                                                        FontWeight.w600),
+                                          )
+                                        ],
+                                      ),
                                   ],
                                 ),
                               ).animate().slide(
@@ -373,7 +403,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                       padding: const EdgeInsets.all(16),
                       child: Row(
                         children: [
-                          if (orderData.orderStatus == 4)
+                          if (orderData.orderStatus == 3)
                             Expanded(
                               child: orderProvider.sendOtpLoading
                                   ? const CustomButtonLoader()
@@ -388,15 +418,40 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                                       isGradient: false,
                                       backgroundColor: AppColors.redBtnColor,
                                       child: Text(
-                                        AppStrings.receiveNowTxt.toUpperCase(),
+                                        AppStrings.receiveNowTxt,
                                         style: AppTextStyles.bodyWhite14,
                                       ),
                                     ).animate().fadeIn(
                                         duration: 500.ms,
                                       ),
                             ),
-                          if (orderData.orderStatus == 4) 16.pw,
-                          if (orderData.orderStatus != 6)
+                          if (orderData.orderStatus == 3) 16.pw,
+                          if (orderData.orderToken != null)
+                            Expanded(
+                              child: CustomButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    FadeAnimatingRoute(
+                                      route: OrderPaymentHistoryScreen(
+                                        orderId: widget.orderId,
+                                        orderToken: orderData.orderToken!,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                isGradient: false,
+                                backgroundColor: AppColors.blackColor,
+                                child: Text(
+                                  AppStrings.paymentHistoryTxt,
+                                  style: AppTextStyles.bodyWhite14,
+                                ),
+                              ).animate().fadeIn(
+                                    duration: 500.ms,
+                                  ),
+                            )
+                          /*if (orderData.finalPaymentStatus != null &&
+                              orderData.finalPaymentStatus! == false)
                             Expanded(
                               child: CustomButton(
                                 onPressed: () {
@@ -420,7 +475,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                               ).animate().fadeIn(
                                     duration: 500.ms,
                                   ),
-                            ),
+                            ),*/
                         ],
                       ),
                     )

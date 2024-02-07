@@ -7,8 +7,10 @@ import 'package:samrathal_ecart/data/model/dashboard/profile/order_list_model.da
 import 'package:samrathal_ecart/data/repository/dashboard/profile/order_repository.dart';
 import '../../../../core/api.dart';
 import '../../../../core/app_strings.dart';
+import '../../../../data/model/dashboard/profile/order_payment_list_model.dart';
 import '../../../../data/repository/auth/auth_repository.dart';
 import '../../../../presentation/dashboard/profile/order/receive_order_verify_otp.dart';
+import '../../../../presentation/dashboard/profile/order/widget/order_receive_success_screen.dart';
 import '../../../../presentation/dashboard/profile/order/widget/order_success_screen.dart';
 import '../../../../utils/app_utils.dart';
 import '../../../../widgets/navigate_anim.dart';
@@ -42,7 +44,7 @@ class OrderApiProvider with ChangeNotifier {
     orderHistoryListObj.clear();
   }
 
-  Future<void> getOrderListData(bool isRefresh) async {
+  Future<void> getOrderListData(bool isRefresh, String orderStatus) async {
     // set isLoading to true to show the loader
     bool isOnline = await Api.hasNetwork();
     if (!isOnline) {
@@ -55,7 +57,7 @@ class OrderApiProvider with ChangeNotifier {
     // Make the API call
     try {
       OrderListModel? orderListModel = await _orderRepository.getOrderListData(
-          offSetVal: orderListCurrentPage);
+          offSetVal: orderListCurrentPage, orderStatus: orderStatus);
       log("api get order list success ${orderListModel?.getOrderData}");
       if (orderListModel != null && orderListModel.getOrderData != null) {
         _orderListModel = orderListModel;
@@ -260,7 +262,7 @@ class OrderApiProvider with ChangeNotifier {
           Navigator.pushReplacement(
             context,
             FadeAnimatingRoute(
-              route: const OrderSuccessScreen(),
+              route: const OrderReceiveSuccessScreen(),
             ),
           );
         });
@@ -279,5 +281,82 @@ class OrderApiProvider with ChangeNotifier {
 
   setReceiveOrderFalse() {
     _receiveOrderLoading = false;
+  }
+
+  // get order payment list data api call -------------->>
+  bool _orderPaymentListLoading = false;
+
+  bool get orderPaymentListLoading => _orderPaymentListLoading;
+
+  OrderPaymentListModel? _orderPaymentListModel = OrderPaymentListModel();
+
+  OrderPaymentListModel? get orderPaymentListModel => _orderPaymentListModel;
+
+  setOrderPaymentListLoading(bool value) {
+    _orderPaymentListLoading = value;
+    notifyListeners();
+  }
+
+  RefreshController orderPaymentListRefreshController =
+      RefreshController(initialRefresh: false);
+
+  List<PaymentList> orderPaymentListObj = [];
+  int orderPaymentListCurrentPage = 1;
+
+  void resetOrderPaymentListData() {
+    orderPaymentListCurrentPage = 1;
+    orderPaymentListObj.clear();
+  }
+
+  Future<void> getOrderPaymentListData(
+      {required bool isRefresh,
+      required String paymentStatus,
+      required String orderId}) async {
+    // set isLoading to true to show the loader
+    bool isOnline = await Api.hasNetwork();
+    if (!isOnline) {
+      Utils.showToast(AppStrings.noInternet);
+      return;
+    }
+    if (isRefresh) {
+      setOrderPaymentListLoading(true);
+    }
+    // Make the API call
+    try {
+      OrderPaymentListModel? orderPaymentListModel =
+          await _orderRepository.getOrderPaymentHistoryList(
+              offSetVal: orderPaymentListCurrentPage,
+              paymentStatus: paymentStatus,
+              orderId: orderId);
+      log("api get order PaymentList list success ${orderPaymentListModel?.paymentList}");
+      if (orderPaymentListModel != null &&
+          orderPaymentListModel.paymentList != null) {
+        _orderPaymentListModel = orderPaymentListModel;
+        orderPaymentListObj.addAll(orderPaymentListModel.paymentList!);
+        orderPaymentListCurrentPage++;
+        if (isRefresh) {
+          orderPaymentListRefreshController.refreshCompleted();
+        } else {
+          orderPaymentListRefreshController.loadComplete();
+        }
+        notifyListeners();
+      }
+    } catch (ex) {
+      _orderPaymentListModel = null;
+      orderPaymentListRefreshController.loadFailed();
+      log("api get order PaymentList list error $ex");
+      Utils.showToast(ex.toString());
+      notifyListeners();
+    } finally {
+      // After completion (success/failure), set isLoading to false
+      setOrderPaymentListLoading(false);
+      orderPaymentListRefreshController.loadComplete();
+      notifyListeners();
+    }
+  }
+
+  setOrderPaymentListNull() {
+    _orderPaymentListLoading = false;
+    _orderPaymentListModel = null;
   }
 }

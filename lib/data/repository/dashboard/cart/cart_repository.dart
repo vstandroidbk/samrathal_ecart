@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+
 import 'package:dio/dio.dart';
+
 import '../../../../core/api.dart';
 import '../../../../core/api_const.dart';
 import '../../../../core/app_strings.dart';
@@ -68,8 +70,7 @@ class CartRepository {
         await SharedPrefProvider.getString(SharedPrefProvider.userId);
     var jsonBody = {"user_id": userId};
     try {
-      Response response = await _api.sendRequest.post(
-          ApiEndPoints.listCartItem,
+      Response response = await _api.sendRequest.post(ApiEndPoints.listCartItem,
           data: jsonEncode(DataEncryption.getEncryptedData(jsonBody)));
       log("api response get cart list item response ${jsonEncode(response.data)}");
       ApiResponse apiResponse =
@@ -112,13 +113,11 @@ class CartRepository {
     return null;
   }
 
-  Future<CartItemDetailsModel?> getCartItemDetails({required String productId}) async {
+  Future<CartItemDetailsModel?> getCartItemDetails(
+      {required String productId}) async {
     final userId =
         await SharedPrefProvider.getString(SharedPrefProvider.userId);
-    var jsonBody = {
-      "user_id": userId,
-      "productId": productId
-    };
+    var jsonBody = {"user_id": userId, "productId": productId};
     try {
       Response response = await _api.sendRequest.post(
           ApiEndPoints.getCartItemDetails,
@@ -251,6 +250,51 @@ class CartRepository {
       //   // log("exception error headers ${e.response!.headers}");
       //   // log("exception error request options ${e.response!.requestOptions}");
       // }
+    } catch (ex) {
+      rethrow;
+    }
+  }
+
+  Future<bool?> codOrderPlaceApi(
+      {required String addressId,
+      num? distance,
+      num? shippingCharge}) async {
+    final userId =
+        await SharedPrefProvider.getString(SharedPrefProvider.userId);
+    var jsonBody = {
+      "user_id": userId,
+      "addressId": addressId,
+      "shipping_amount": shippingCharge ?? "0",
+      "shipping_distance": distance ?? "0"
+    };
+    try {
+      Response response = await _api.sendRequest.post(
+          ApiEndPoints.codOrderPlace,
+          data: jsonEncode(DataEncryption.getEncryptedData(jsonBody)));
+      log("api response cod order place api response ${jsonEncode(response.data)}");
+      ApiResponse apiResponse =
+          ApiResponse.fromJson(jsonDecode(jsonEncode(response.data)));
+      log("api response cod order place api json ${apiResponse.data}");
+      if (apiResponse.status != AppStrings.successTxt) {
+        throw apiResponse.message.toString();
+      }
+      Utils.showToast(apiResponse.message.toString());
+      return true;
+    } on SocketException catch (e) {
+      throw NetworkException('Network Error: $e');
+    } on DioException catch (e) {
+      if (e.response != null) {
+        switch (e.response!.statusCode) {
+          case 400:
+            throw e.response!.data["message"];
+          case 401:
+            throw e.response!.data["message"];
+          default:
+            throw "Something went wrong..";
+        }
+      } else {
+        throw "Something went wrong..";
+      }
     } catch (ex) {
       rethrow;
     }

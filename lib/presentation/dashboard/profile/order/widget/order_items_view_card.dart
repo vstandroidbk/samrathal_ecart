@@ -78,7 +78,11 @@ class OrderItemsViewCard extends StatelessWidget {
                         ),
                       ),
                     ],
-                  )
+                  ),
+                  RandomItemPcView(
+                    listSplitData: splitList,
+                    orderItemData: orderItemData,
+                  ),
                 ],
               ),
             ),
@@ -89,8 +93,70 @@ class OrderItemsViewCard extends StatelessWidget {
   }
 }
 
+class RandomItemPcView extends StatelessWidget {
+  final List<List<num>> listSplitData;
+  final OrderItemData orderItemData;
+
+  const RandomItemPcView(
+      {super.key, required this.listSplitData, required this.orderItemData});
+
+  @override
+  Widget build(BuildContext context) {
+    var orderPrice = getRandomItemAmount(listSplitData, orderItemData);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: listSplitData.map((size) {
+        String pcFromTonKg = getRandomPcsFromTonKg(size);
+        return size[4] == 1
+            ? Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Expanded(
+                    child: Text(
+                      "",
+                      textAlign: TextAlign.start,
+                      style: AppTextStyles.bodyBlack14
+                          .copyWith(fontWeight: FontWeight.w700),
+                    ),
+                  ),
+                  Expanded(
+                      child: Column(
+                    children: [
+                      5.ph,
+                      Text(
+                        "Random settled Qty * $pcFromTonKg",
+                        textAlign: TextAlign.start,
+                        style: AppTextStyles.bodyBlack14.copyWith(
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.textLight),
+                      ),
+                      5.ph,
+                      Row(
+                        children: [
+                          Expanded(
+                            flex: 1,
+                            child: Text(
+                              "Settled Amount  ${Formatter.formatPrice(orderPrice)}",
+                              textAlign: TextAlign.end,
+                              style: AppTextStyles.bodyBlack14.copyWith(
+                                  fontWeight: FontWeight.w700,
+                                  color: AppColors.primaryColor),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ))
+                ],
+              )
+            : const SizedBox();
+      }).toList(),
+    );
+  }
+}
+
 class OrderItemPcView extends StatelessWidget {
-  final List<List<int>> listSplitData;
+  final List<List<num>> listSplitData;
 
   const OrderItemPcView({super.key, required this.listSplitData});
 

@@ -131,7 +131,8 @@ class _AddToCartDialogState extends State<AddToCartDialog> {
                                       amtCalProvider.textFieldController5,
                                       5,
                                       validateInput5,
-                                      amtCalProvider),
+                                      amtCalProvider,
+                                      amtCalProvider.dropdownValueFive),
                                 ),
                               ),
                               // 8.pw,
@@ -157,6 +158,12 @@ class _AddToCartDialogState extends State<AddToCartDialog> {
                                                 onChangedValue!;
                                             amtCalProvider.calculateAmountQty(
                                                 widget.productDetails);
+                                            validateInput5(
+                                                amtCalProvider
+                                                    .textFieldController5.text,
+                                                amtCalProvider,
+                                                amtCalProvider
+                                                    .dropdownValueFive);
                                           });
                                         },
                                         selectedItemBuilder:
@@ -238,7 +245,8 @@ class _AddToCartDialogState extends State<AddToCartDialog> {
                                       amtCalProvider.textFieldController10,
                                       10,
                                       validateInput10,
-                                      amtCalProvider),
+                                      amtCalProvider,
+                                      amtCalProvider.dropdownValueTen),
                                 ),
                               ),
                               // 8.pw,
@@ -264,6 +272,12 @@ class _AddToCartDialogState extends State<AddToCartDialog> {
                                                 onChangedValue!;
                                             amtCalProvider.calculateAmountQty(
                                                 widget.productDetails);
+                                            validateInput10(
+                                                amtCalProvider
+                                                    .textFieldController10.text,
+                                                amtCalProvider,
+                                                amtCalProvider
+                                                    .dropdownValueTen);
                                           });
                                         },
                                         selectedItemBuilder:
@@ -345,7 +359,8 @@ class _AddToCartDialogState extends State<AddToCartDialog> {
                                       amtCalProvider.textFieldController25,
                                       25,
                                       validateInput25,
-                                      amtCalProvider),
+                                      amtCalProvider,
+                                      amtCalProvider.dropdownValueTwentyFive),
                                 ),
                               ),
                               // 8.pw,
@@ -373,6 +388,12 @@ class _AddToCartDialogState extends State<AddToCartDialog> {
                                                 onChangedValue!;
                                             amtCalProvider.calculateAmountQty(
                                                 widget.productDetails);
+                                            validateInput25(
+                                                amtCalProvider
+                                                    .textFieldController25.text,
+                                                amtCalProvider,
+                                                amtCalProvider
+                                                    .dropdownValueTwentyFive);
                                           });
                                         },
                                         selectedItemBuilder:
@@ -454,7 +475,11 @@ class _AddToCartDialogState extends State<AddToCartDialog> {
                                       textController:
                                           amtCalProvider.randomQtyController,
                                       hintText: AppStrings.quantityTxt,
-                                      digitOnly: true,
+                                      digitOnly:
+                                          amtCalProvider.dropdownValueRandom ==
+                                                  "1"
+                                              ? false
+                                              : true,
                                       // inputFormatter: <TextInputFormatter>[
                                       //   FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
                                       // ],
@@ -630,29 +655,37 @@ class _AddToCartDialogState extends State<AddToCartDialog> {
       String hintText,
       TextEditingController controller,
       int multiple,
-      void Function(String, AddCartCalculatorProvider) validationFunction,
-      AddCartCalculatorProvider amtCalProvider) {
+      void Function(String, AddCartCalculatorProvider, String unit)
+          validationFunction,
+      AddCartCalculatorProvider amtCalProvider,
+      String unit) {
     return CustomTextField(
       textController: controller,
       maxLine: 1,
-      digitOnly: true,
+      // digitOnly: true,
       keyboardType: TextInputType.number,
       hintText: hintText,
       textInputAction: TextInputAction.done,
       onChanged: (input) {
-        validationFunction(input, amtCalProvider);
+        validationFunction(input, amtCalProvider, unit);
         amtCalProvider.calculateAmountQty(widget.productDetails);
       },
     );
   }
 
-  void validateInput5(String input, AddCartCalculatorProvider amtCalProvider) {
+  void validateInput5(
+      String input, AddCartCalculatorProvider amtCalProvider, String unit) {
     setState(() {
       if (input.isEmpty) {
         amtCalProvider.errorMessage5 = '';
         return;
       }
-      int? number = int.tryParse(input);
+      num? number = 0;
+      if (unit == "1") {
+        number = num.tryParse(input)! * 1000;
+      } else {
+        number = num.tryParse(input);
+      }
       if (number == null || number % 5 != 0) {
         amtCalProvider.errorMessage5 = 'Please enter a multiple of 5.';
       } else {
@@ -661,13 +694,19 @@ class _AddToCartDialogState extends State<AddToCartDialog> {
     });
   }
 
-  void validateInput10(String input, AddCartCalculatorProvider amtCalProvider) {
+  void validateInput10(
+      String input, AddCartCalculatorProvider amtCalProvider, String unit) {
     setState(() {
       if (input.isEmpty) {
         amtCalProvider.errorMessage10 = '';
         return;
       }
-      int? number = int.tryParse(input);
+      num? number = 0;
+      if (unit == "1") {
+        number = num.tryParse(input)! * 1000;
+      } else {
+        number = num.tryParse(input);
+      }
       if (number == null || number % 10 != 0) {
         amtCalProvider.errorMessage10 = 'Please enter a multiple of 10.';
       } else {
@@ -676,13 +715,19 @@ class _AddToCartDialogState extends State<AddToCartDialog> {
     });
   }
 
-  void validateInput25(String input, AddCartCalculatorProvider amtCalProvider) {
+  void validateInput25(
+      String input, AddCartCalculatorProvider amtCalProvider, String unit) {
     setState(() {
       if (input.isEmpty) {
         amtCalProvider.errorMessage25 = '';
         return;
       }
-      int? number = int.tryParse(input);
+      num? number = 0;
+      if (unit == "1") {
+        number = num.tryParse(input)! * 1000;
+      } else {
+        number = num.tryParse(input);
+      }
       if (number == null || number % 25 != 0) {
         amtCalProvider.errorMessage25 = 'Please enter a multiple of 25.';
       } else {

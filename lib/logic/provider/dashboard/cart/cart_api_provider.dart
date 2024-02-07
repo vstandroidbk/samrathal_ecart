@@ -1,12 +1,17 @@
 import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:samrathal_ecart/logic/provider/dashboard/dashboard_api_provider.dart';
+
 import '../../../../core/api.dart';
 import '../../../../core/app_strings.dart';
 import '../../../../data/model/dashboard/cart/cart_item_details_model.dart';
 import '../../../../data/model/dashboard/cart/cart_item_list_model.dart';
 import '../../../../data/repository/dashboard/cart/cart_repository.dart';
+import '../../../../presentation/dashboard/profile/payment/widget/payment_success_screen.dart';
 import '../../../../utils/app_utils.dart';
+import '../../../../widgets/navigate_anim.dart';
 import '../shop/shop_api_provider.dart';
 
 class CartApiProvider with ChangeNotifier {
@@ -41,6 +46,8 @@ class CartApiProvider with ChangeNotifier {
       if (context.mounted) {
         Provider.of<ShopApiProvider>(context, listen: false)
             .getProductDetailsApi(productId: productId);
+        Provider.of<DashboardApiProvider>(context, listen: false)
+            .getCartCount();
       }
       return true;
     } catch (ex) {
@@ -216,6 +223,8 @@ class CartApiProvider with ChangeNotifier {
       log("api remove cart data $addCartStatus");
       if (context.mounted) {
         Provider.of<CartApiProvider>(context, listen: false).getCartListApi();
+        Provider.of<DashboardApiProvider>(context, listen: false)
+            .getCartCount();
       }
       return true;
     } catch (ex) {
@@ -230,5 +239,49 @@ class CartApiProvider with ChangeNotifier {
 
   setRemoveCartLoaderFalse() {
     _removeCartLoading = false;
+  }
+
+  // cod order place api ------------>>
+  bool _orderPlaceLoading = false;
+
+  bool get orderPlaceLoading => _orderPlaceLoading;
+
+  setOrderPlaceLoading(bool value) {
+    _orderPlaceLoading = value;
+    notifyListeners();
+  }
+
+  Future<bool> orderPlaceApi(
+      {required String addressId,
+      num? distance,
+      num? shippingCharge,
+      required BuildContext context}) async {
+    // set isLoading to true to show the loader
+    bool isOnline = await Api.hasNetwork();
+    if (!isOnline) {
+      Utils.showToast(AppStrings.noInternet);
+      return false;
+    }
+    setOrderPlaceLoading(true);
+    // Make the API call
+    try {
+      var orderPlaceStatus = await _cartRepository.codOrderPlaceApi(
+          addressId: addressId,
+          distance: distance,
+          shippingCharge: shippingCharge);
+      log("api cod order place success $orderPlaceStatus");
+      return true;
+    } catch (ex) {
+      log("api cod order place error $ex");
+      Utils.showToast(ex.toString());
+      return false;
+    } finally {
+      // After completion (success/failure), set isLoading to false
+      setOrderPlaceLoading(false);
+    }
+  }
+
+  setOrderPlaceLoaderFalse() {
+    _orderPlaceLoading = false;
   }
 }

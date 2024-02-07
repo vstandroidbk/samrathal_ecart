@@ -9,14 +9,14 @@ import '../../../../../widgets/custom_button.dart';
 import '../../../../../widgets/navigate_anim.dart';
 import '../../../dashboard_screen.dart';
 
-class OrderSuccessScreen extends StatefulWidget {
-  const OrderSuccessScreen({super.key});
+class OrderReceiveSuccessScreen extends StatefulWidget {
+  const OrderReceiveSuccessScreen({super.key});
 
   @override
-  State<OrderSuccessScreen> createState() => _OrderSuccessScreenState();
+  State<OrderReceiveSuccessScreen> createState() => _OrderReceiveSuccessScreenState();
 }
 
-class _OrderSuccessScreenState extends State<OrderSuccessScreen> {
+class _OrderReceiveSuccessScreenState extends State<OrderReceiveSuccessScreen> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -32,7 +32,7 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen> {
             Lottie.asset(AppImages.successLottie),
             Center(
               child: Text(
-                "Order Placed Successfully",
+                "Order Received Successfully",
                 style: AppTextStyles.bodyWhite20,
               ),
             )

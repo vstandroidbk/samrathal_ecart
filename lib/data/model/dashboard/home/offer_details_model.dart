@@ -1,14 +1,17 @@
 class OfferDetailsModel {
   OfferDetails? offerDetails;
   String? offerImagePath;
+  int? offerOptStatus;
 
-  OfferDetailsModel({this.offerDetails, this.offerImagePath});
+  OfferDetailsModel(
+      {this.offerDetails, this.offerImagePath, this.offerOptStatus});
 
   OfferDetailsModel.fromJson(Map<String, dynamic> json) {
     offerDetails = json['offerDetails'] != null
         ? OfferDetails.fromJson(json['offerDetails'])
         : null;
     offerImagePath = json['offerImagePath'];
+    offerOptStatus = json['offer_opt_status'];
   }
 
   Map<String, dynamic> toJson() {
@@ -17,6 +20,7 @@ class OfferDetailsModel {
       data['offerDetails'] = offerDetails!.toJson();
     }
     data['offerImagePath'] = offerImagePath;
+    data['offer_opt_status'] = offerOptStatus;
     return data;
   }
 }

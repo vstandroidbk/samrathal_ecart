@@ -15,6 +15,7 @@ class ApiEndPoints {
   static const String registerUser = "register-user";
   static const String forgotPassword = "forgot-password";
   static const String changePassword = "change-password";
+  static const String updatePassword = "update-password";
   static const String addAddress = "add-address-details";
   static const String updateAddress = "update-address-data";
   static const String updatePrimaryAddress = "update-primary-status";
@@ -28,6 +29,7 @@ class ApiEndPoints {
   static const String getProductDetailsData = "get-product-details";
   static const String getOfferListData = "get-offer-list";
   static const String getOfferDetailsData = "get-offer-details";
+  static const String optOffer = "offer-opt";
 
   static const String addProductToCart = "add-to-cart";
   static const String listCartItem = "list-cart-item";
@@ -43,8 +45,14 @@ class ApiEndPoints {
   static const String orderItemDetails = "order-item-details";
 
   static const String orderPaymentList = "order-payment-list";
+  static const String orderPaymentHistoryList = "order-payment-history";
   static const String orderPaymentDetails = "order-payment-details";
   static const String orderReceiveVerify = "order-receive-verify";
+
+  static const String totalCartCount = "total-cart-count";
+  static const String addRemoveWish = "add-remove-wishlist";
+  static const String wishList = "wishlist-list";
+  static const String codOrderPlace = "cod-order-placed";
 }
 
 class BadRequestException implements Exception {

@@ -93,7 +93,7 @@ class OrderViewCard extends StatelessWidget {
                           Flexible(
                             child: Text(
                               Formatter.formatPrice(
-                                  int.parse(getOrderData.finalOrderAmount!)),
+                                  num.parse(getOrderData.finalOrderAmount!)),
                               style: AppTextStyles.bodyBlack14.copyWith(
                                   fontWeight: FontWeight.w700,
                                   color: Colors.black),
@@ -109,6 +109,21 @@ class OrderViewCard extends StatelessWidget {
                           ))
                         ],
                       ),
+                      if (getOrderData.settlementPriceType == "1") 5.ph,
+                      if (getOrderData.settlementPriceType == "1")
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Flexible(
+                              child: Text(
+                                "Settled Price  ${Formatter.formatPrice(num.parse(getOrderData.settlementPrice!))}",
+                                style: AppTextStyles.bodyBlack14.copyWith(
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.black),
+                              ),
+                            )
+                          ],
+                        ),
                     ],
                   ),
                 ),

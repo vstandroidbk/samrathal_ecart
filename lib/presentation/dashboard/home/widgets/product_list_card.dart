@@ -1,6 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:samrathal_ecart/core/app_strings.dart';
+import 'package:samrathal_ecart/logic/provider/dashboard/wishlist/wishlist_api_provider.dart';
 import '../../../../core/api_const.dart';
 import '../../../../core/app_colors.dart';
 import '../../../../core/app_text_styles.dart';
@@ -61,17 +64,46 @@ class ProductListCard extends StatelessWidget {
                             errorWidget: (context, url, error) =>
                                 const Icon(Icons.error),
                           ),
-                          Positioned(
-                            bottom: -8,
-                            right: 1,
-                            child: FloatingActionButton(
-                              mini: true,
-                              heroTag: productData.image!,
-                              shape: const CircleBorder(),
-                              backgroundColor: Colors.white,
-                              child: const Icon(CupertinoIcons.heart),
-                              onPressed: () {},
-                            ),
+                          Consumer<WishlistApiProvider>(
+                            builder: (BuildContext context,
+                                WishlistApiProvider wishProvider,
+                                Widget? child) {
+                              return wishProvider.addRemoveWishListLoading
+                                  ? const SizedBox()
+                                  : Positioned(
+                                      bottom: -8,
+                                      right: 1,
+                                      child: FloatingActionButton(
+                                        mini: true,
+                                        heroTag: productData.image!,
+                                        shape: const CircleBorder(),
+                                        backgroundColor: Colors.white,
+                                        child: productData.wishlistStatus !=
+                                                    null &&
+                                                productData.wishlistStatus == 1
+                                            ? const Icon(
+                                                CupertinoIcons.heart_fill,
+                                                color: Colors.red,
+                                              )
+                                            : const Icon(CupertinoIcons.heart),
+                                        onPressed: () {
+                                          if (productData.wishlistStatus == 0) {
+                                            wishProvider.addRemoveWishListApi(
+                                                from: AppStrings.fromHome,
+                                                productId: productData.id!,
+                                                wishStatus: "0",
+                                                context: context);
+                                          } else {
+                                            wishProvider.addRemoveWishListApi(
+                                                from: AppStrings.fromHome,
+                                                productId: productData.id!,
+                                                wishStatus: "1",
+                                                context: context);
+                                          }
+                                        },
+                                      ),
+                                    );
+                            },
                           )
                         ],
                       )),

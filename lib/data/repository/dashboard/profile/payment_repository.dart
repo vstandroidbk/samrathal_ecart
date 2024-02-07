@@ -124,7 +124,9 @@ class PaymentRepository {
       "payAmount": jsonData["payAmount"],
       "addressId": jsonData["addressId"] ?? "1",
       "PaymentType": jsonData["PaymentType"],
-      "paymentId": jsonData["paymentId"]
+      "paymentId": jsonData["paymentId"],
+      "shipping_amount": jsonData["shipping_amount"] ?? "0",
+      "shipping_distance": jsonData["shipping_distance"] ?? "0"
     };
     try {
       Response response = await _api.sendRequest.post(ApiEndPoints.orderPlaced,
@@ -159,10 +161,14 @@ class PaymentRepository {
   }
 
   Future<OrderPaymentListModel?> getOrderPaymentListData(
-      {required int offSetVal}) async {
+      {required int offSetVal, required String paymentStatus}) async {
     final userId =
         await SharedPrefProvider.getString(SharedPrefProvider.userId);
-    var jsonBody = {"user_id": userId, "offsetValue": offSetVal};
+    var jsonBody = {
+      "user_id": userId,
+      "offsetValue": offSetVal,
+      "paymentStatus": paymentStatus
+    };
     try {
       Response response = await _api.sendRequest.post(
           ApiEndPoints.orderPaymentList,

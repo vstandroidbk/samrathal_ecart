@@ -129,7 +129,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       InkWell(
                         onTap: () {
                           selectedValue.value =
-                              (selectedValue.value == 1) ? null : 1;
+                          (selectedValue.value == 1) ? null : 1;
                         },
                         child: ValueListenableBuilder(
                           valueListenable: selectedValue,
@@ -156,7 +156,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       InkWell(
                         onTap: () {
                           selectedValue.value =
-                              (selectedValue.value == 2) ? null : 2;
+                          (selectedValue.value == 2) ? null : 2;
                         },
                         child: ValueListenableBuilder(
                           valueListenable: selectedValue,
@@ -260,33 +260,33 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     return registerUserProvider.registerLoading
                         ? const CustomButtonLoader()
                         : CustomButton(
-                            onPressed: () {
-                              removeFocus(context);
-                              var name = nameController.text.trim();
-                              var password = passwordController.text.trim();
-                              var companyName =
-                                  companyNameController.text.trim();
-                              var gstNumber = gstNumberController.text.trim();
-                              var billingAddress =
-                                  billingAddressController.text.trim();
-                              if (_formKey.currentState!.validate()) {
-                                registerUserProvider.registerUser(
-                                    context: context,
-                                    name: name,
-                                    password: password,
-                                    companyName: companyName,
-                                    gstNumber: gstNumber,
-                                    billingAddress: billingAddress,
-                                    companyType: selectedValue.value!,
-                                    mobile: widget.mobile);
-                              }
-                            },
-                            isGradient: false,
-                            child: Text(
-                              AppStrings.nextTxt.toUpperCase(),
-                              style: AppTextStyles.bodyWhite16,
-                            ),
-                          ).animate().fadeIn(duration: 500.ms);
+                      onPressed: () {
+                        removeFocus(context);
+                        var name = nameController.text.trim();
+                        var password = passwordController.text.trim();
+                        var companyName =
+                        companyNameController.text.trim();
+                        var gstNumber = gstNumberController.text.trim();
+                        var billingAddress =
+                        billingAddressController.text.trim();
+                        if (_formKey.currentState!.validate()) {
+                          registerUserProvider.registerUser(
+                              context: context,
+                              name: name,
+                              password: password,
+                              companyName: companyName,
+                              gstNumber: gstNumber,
+                              billingAddress: billingAddress,
+                              companyType: selectedValue.value!,
+                              mobile: widget.mobile);
+                        }
+                      },
+                      isGradient: false,
+                      child: Text(
+                        AppStrings.nextTxt.toUpperCase(),
+                        style: AppTextStyles.bodyWhite16,
+                      ),
+                    ).animate().fadeIn(duration: 500.ms);
                   },
                 ),
               ],

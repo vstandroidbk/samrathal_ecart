@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:samrathal_ecart/logic/provider/dashboard/profile/order_api_provider.dart';
 import 'package:samrathal_ecart/logic/provider/dashboard/profile/payment_api_provider.dart';
+import 'package:samrathal_ecart/logic/provider/dashboard/wishlist/wishlist_api_provider.dart';
 import 'core/app_colors.dart';
 import 'core/app_theme.dart';
 import 'logic/provider/auth/auth_api_provider.dart';
@@ -50,6 +51,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => CartApiProvider()),
         ChangeNotifierProvider(create: (_) => PaymentApiProvider()),
         ChangeNotifierProvider(create: (_) => OrderApiProvider()),
+        ChangeNotifierProvider(create: (_) => WishlistApiProvider()),
       ],
       child: MaterialApp(
         title: 'Samrathal E-cart',

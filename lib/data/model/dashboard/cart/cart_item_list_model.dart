@@ -2,8 +2,15 @@ class CartItemListModel {
   List<CartData>? cartData;
   CartAddressData? addressData;
   String? productImagePath;
+  num? shippingAmount;
+  num? distance;
 
-  CartItemListModel({this.cartData, this.addressData, this.productImagePath});
+  CartItemListModel(
+      {this.cartData,
+      this.addressData,
+      this.productImagePath,
+      this.shippingAmount,
+      this.distance});
 
   CartItemListModel.fromJson(Map<String, dynamic> json) {
     if (json['cartData'] != null) {
@@ -16,6 +23,8 @@ class CartItemListModel {
         ? CartAddressData.fromJson(json['addressData'])
         : null;
     productImagePath = json['productImagePath'];
+    shippingAmount = json['shipping_amount'];
+    distance = json['shipping_distance'];
   }
 
   Map<String, dynamic> toJson() {
@@ -27,6 +36,8 @@ class CartItemListModel {
       data['addressData'] = addressData!.toJson();
     }
     data['productImagePath'] = productImagePath;
+    data['shipping_amount'] = shippingAmount;
+    data['shipping_distance'] = distance;
     return data;
   }
 }

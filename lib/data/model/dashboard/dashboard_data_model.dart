@@ -2,6 +2,7 @@ class DashboardDataModel {
   List<SliderData>? sliderData;
   List<OfferData>? offerData;
   List<ProductData>? productData;
+  num? totalOrderCount;
   String? productImagePath;
   String? offerImagePath;
   String? sliderImagePath;
@@ -10,6 +11,7 @@ class DashboardDataModel {
       {this.sliderData,
       this.offerData,
       this.productData,
+      this.totalOrderCount,
       this.productImagePath,
       this.offerImagePath,
       this.sliderImagePath});
@@ -33,6 +35,7 @@ class DashboardDataModel {
         productData!.add(ProductData.fromJson(v));
       });
     }
+    totalOrderCount = json['totalOrderCount'];
     productImagePath = json['productImagePath'];
     offerImagePath = json['offerImagePath'];
     sliderImagePath = json['sliderImagePath'];
@@ -49,6 +52,7 @@ class DashboardDataModel {
     if (productData != null) {
       data['productData'] = productData!.map((v) => v.toJson()).toList();
     }
+    data['totalOrderCount'] = totalOrderCount;
     data['productImagePath'] = productImagePath;
     data['offerImagePath'] = offerImagePath;
     data['sliderImagePath'] = sliderImagePath;
@@ -96,14 +100,17 @@ class ProductData {
   String? productName;
   String? sku;
   String? image;
+  num? wishlistStatus;
 
-  ProductData({this.id, this.productName, this.sku, this.image});
+  ProductData(
+      {this.id, this.productName, this.sku, this.image, this.wishlistStatus});
 
   ProductData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     productName = json['product_name'];
     sku = json['sku'];
     image = json['image'];
+    wishlistStatus = json['wishlist_status'];
   }
 
   Map<String, dynamic> toJson() {
@@ -112,6 +119,7 @@ class ProductData {
     data['product_name'] = productName;
     data['sku'] = sku;
     data['image'] = image;
+    data['wishlist_status'] = wishlistStatus;
     return data;
   }
 }

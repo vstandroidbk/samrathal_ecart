@@ -29,13 +29,17 @@ class BankAcPage extends StatefulWidget {
   final String? addressId;
   final String? orderId;
   final String? orderToken;
+  final num? distance;
+  final num? shippingCharge;
 
   const BankAcPage(
       {super.key,
       required this.screenType,
       required this.addressId,
       this.orderId,
-      this.orderToken});
+      this.orderToken,
+      this.distance,
+      this.shippingCharge});
 
   @override
   State<BankAcPage> createState() => _BankAcPageState();
@@ -224,13 +228,13 @@ class _BankAcPageState
                                                 5.ph,
                                                 GetAcDetailsWidget(
                                                     title:
-                                                    AppStrings.bankNameTxt,
+                                                        AppStrings.bankNameTxt,
                                                     value: bankData[index]
                                                         .bankName!),
                                                 5.ph,
                                                 GetAcDetailsWidget(
                                                     title:
-                                                    AppStrings.acHolderName,
+                                                        AppStrings.acHolderName,
                                                     value: bankData[index]
                                                         .holderName!),
                                                 5.ph,
@@ -344,12 +348,21 @@ class _BankAcPageState
                             GetAmountWidget(
                                 title: AppStrings.totalOrderAmtTxt,
                                 value: paymentDataModel.totalOrderAmount!),
+                            if (widget.shippingCharge != null) 5.ph,
+                            if (widget.shippingCharge != null)
+                              GetAmountWidget(
+                                  title: "Shipping Charge",
+                                  value: widget.shippingCharge!),
                             5.ph,
                             if (paymentDataModel.totalOutstandingAmount != null)
                               GetAmountWidget(
                                   title: AppStrings.outStandingAmtTxt,
-                                  value:
-                                      paymentDataModel.totalOutstandingAmount!),
+                                  value: widget.shippingCharge != null
+                                      ? paymentDataModel
+                                              .totalOutstandingAmount! +
+                                          widget.shippingCharge!
+                                      : paymentDataModel
+                                          .totalOutstandingAmount!),
                           ],
                         ),
                       ),
@@ -559,7 +572,9 @@ class _BankAcPageState
                                   "addressId": widget.addressId,
                                   "PaymentType": "1",
                                   "paymentId": paymentDataModel
-                                      .bankData![selectedIndex].id
+                                      .bankData![selectedIndex].id,
+                                  "shipping_amount": widget.shippingCharge,
+                                  "shipping_distance": widget.distance
                                 };
                                 removeFocus(context);
                                 provider.orderPlaceApi(

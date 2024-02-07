@@ -2,21 +2,22 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../../../../core/api_const.dart';
 import '../../../../core/app_colors.dart';
 import '../../../../core/app_strings.dart';
 import '../../../../core/app_text_styles.dart';
-import '../../../../data/model/dashboard/shop/product_list_model.dart';
+import '../../../../data/model/dashboard/wishlist/wishlist_model.dart';
 import '../../../../logic/provider/dashboard/wishlist/wishlist_api_provider.dart';
 import '../../../../widgets/navigate_anim.dart';
-import '../product_details_screen.dart';
+import '../../shop/product_details_screen.dart';
 
-class ShopProductListCard extends StatelessWidget {
-  final ProductListData productListData;
+class WishlistProductListCard extends StatelessWidget {
+  final WishListData wishListData;
   final String productImgPath;
 
-  const ShopProductListCard(
-      {super.key, required this.productListData, required this.productImgPath});
+  const WishlistProductListCard(
+      {super.key, required this.wishListData, required this.productImgPath});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +27,7 @@ class ShopProductListCard extends StatelessWidget {
           context,
           FadeAnimatingRoute(
             route: ProductDetailsScreen(
-              productId: productListData.id!,
+              productId: wishListData.productId!,
             ),
           ),
         );
@@ -48,16 +49,10 @@ class ShopProductListCard extends StatelessWidget {
                       child: Stack(
                         clipBehavior: Clip.none,
                         children: [
-                          // Image.asset(
-                          //   productList[index]["img"]!,
-                          //   fit: BoxFit.fill,
-                          //   width: double.infinity,
-                          //   height: double.infinity,
-                          // ),
                           CachedNetworkImage(
                             imageUrl: ApiEndPoints.baseUrl +
                                 productImgPath +
-                                productListData.image!,
+                                wishListData.image!,
                             fit: BoxFit.fill,
                             height: double.infinity,
                             width: double.infinity,
@@ -76,36 +71,20 @@ class ShopProductListCard extends StatelessWidget {
                                       right: 1,
                                       child: FloatingActionButton(
                                         mini: true,
-                                        heroTag: productListData.image!,
+                                        heroTag: wishListData.image!,
                                         shape: const CircleBorder(),
                                         backgroundColor: Colors.white,
-                                        child: productListData.wishListStatus !=
-                                                    null &&
-                                                productListData
-                                                        .wishListStatus ==
-                                                    1
-                                            ? const Icon(
-                                                CupertinoIcons.heart_fill,
-                                                color: Colors.red,
-                                              )
-                                            : const Icon(CupertinoIcons.heart),
+                                        child: const Icon(
+                                          CupertinoIcons.heart_fill,
+                                          color: Colors.red,
+                                        ),
                                         onPressed: () {
-                                          if (productListData.wishListStatus ==
-                                              0) {
-                                            wishProvider.addRemoveWishListApi(
-                                                from:
-                                                    AppStrings.fromProductList,
-                                                productId: productListData.id!,
-                                                wishStatus: "0",
-                                                context: context);
-                                          } else {
-                                            wishProvider.addRemoveWishListApi(
-                                                from:
-                                                    AppStrings.fromProductList,
-                                                productId: productListData.id!,
-                                                wishStatus: "1",
-                                                context: context);
-                                          }
+                                          wishProvider.addRemoveWishListApi(
+                                              from: AppStrings.fromWishList,
+                                              productId:
+                                                  wishListData.productId!,
+                                              wishStatus: "1",
+                                              context: context);
                                         },
                                       ),
                                     );
@@ -120,14 +99,14 @@ class ShopProductListCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          productListData.productName!,
+                          wishListData.productName!,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: AppTextStyles.bodyBlack14
                               .copyWith(fontWeight: FontWeight.w700),
                         ),
                         Text(
-                          productListData.sku!,
+                          wishListData.sku!,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: AppTextStyles.bodyBlack14

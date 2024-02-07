@@ -194,7 +194,7 @@ class CartItemViewCard extends StatelessWidget {
 }
 
 class CartItemPcView extends StatelessWidget {
-  final List<List<int>> listSplitData;
+  final List<List<num>> listSplitData;
 
   const CartItemPcView({super.key, required this.listSplitData});
 

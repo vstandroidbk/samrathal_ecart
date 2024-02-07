@@ -7,6 +7,8 @@ import '../../../core/api_const.dart';
 import '../../../core/app_strings.dart';
 import '../../../logic/services/DataEncryption.dart';
 import '../../../logic/services/preferences.dart';
+import '../../../utils/app_utils.dart';
+import '../../model/dashboard/cart/cart_count_model.dart';
 import '../../model/dashboard/dashboard_data_model.dart';
 import '../../model/dashboard/profile/profile_data_model.dart';
 
@@ -109,5 +111,95 @@ class DashboardRepository {
       rethrow;
     }
     return null;
+  }
+
+  Future<CartCountModel?> getCartItemCount() async {
+    final userId =
+        await SharedPrefProvider.getString(SharedPrefProvider.userId);
+    var jsonBody = {"user_id": userId};
+    try {
+      Response response = await _api.sendRequest.post(
+          ApiEndPoints.totalCartCount,
+          data: jsonEncode(DataEncryption.getEncryptedData(jsonBody)));
+      log("api response get cart count item response ${jsonEncode(response.data)}");
+      ApiResponse apiResponse =
+          ApiResponse.fromJson(jsonDecode(jsonEncode(response.data)));
+      log("api response get cart count item json ${apiResponse.data}");
+      if (apiResponse.status != AppStrings.successTxt) {
+        throw apiResponse.message.toString();
+      }
+      // Utils.showToast(apiResponse.message.toString());
+      if (apiResponse.data != null) {
+        var realData = DataEncryption.getDecryptedData(
+            apiResponse.data![0].resKey!, apiResponse.data![0].resData!);
+        log("api response get cart count item realData $realData");
+        return CartCountModel.fromJson(realData);
+      }
+    } on SocketException catch (e) {
+      throw NetworkException('Network Error: $e');
+    } on DioException catch (e) {
+      if (e.response != null) {
+        switch (e.response!.statusCode) {
+          case 400:
+            throw e.response!.data["message"];
+          case 401:
+            throw e.response!.data["message"];
+          default:
+            throw "Something went wrong..";
+        }
+      } else {
+        throw "Something went wrong..";
+      }
+    } catch (ex) {
+      rethrow;
+    }
+    return null;
+  }
+
+  Future<bool?> updatePassword(
+      {required String oldPassword, required String newPassword}) async {
+    final userId =
+        await SharedPrefProvider.getString(SharedPrefProvider.userId);
+    var jsonBody = {
+      "user_id": userId,
+      "oldPassword": oldPassword,
+      "newPassword": newPassword
+    };
+    try {
+      Response response = await _api.sendRequest.post(
+          ApiEndPoints.updatePassword,
+          data: jsonEncode(DataEncryption.getEncryptedData(jsonBody)));
+      log("api response update password response ${jsonEncode(response.data)}");
+      ApiResponse apiResponse =
+          ApiResponse.fromJson(jsonDecode(jsonEncode(response.data)));
+      log("api response update password json ${apiResponse.data}");
+      if (apiResponse.status != AppStrings.successTxt) {
+        throw apiResponse.message.toString();
+      }
+      Utils.showToast(apiResponse.message.toString());
+      if (apiResponse.data != null) {
+        var realData = DataEncryption.getDecryptedData(
+            apiResponse.data![0].resKey!, apiResponse.data![0].resData!);
+        log("api response update password realData $realData");
+      }
+      return true;
+    } on SocketException catch (e) {
+      throw NetworkException('Network Error: $e');
+    } on DioException catch (e) {
+      if (e.response != null) {
+        switch (e.response!.statusCode) {
+          case 400:
+            throw e.response!.data["message"];
+          case 401:
+            throw e.response!.data["message"];
+          default:
+            throw "Something went wrong..";
+        }
+      } else {
+        throw "Something went wrong..";
+      }
+    } catch (ex) {
+      rethrow;
+    }
   }
 }
